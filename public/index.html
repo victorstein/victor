@@ -11,9 +11,149 @@
       href="https://use.fontawesome.com/releases/v5.0.6/css/all.css"
       rel="stylesheet"
     />
+    <link href="https://fonts.googleapis.com/css?family=Poppins&display=swap" rel="stylesheet">
+    <style>
+      body {
+          padding: 0px;
+          margin: 0px;
+          overflow: hidden;
+      }
+
+      .fadeIn {
+        animation: fadein 2s;
+      }
+
+      .fadeOut {
+        opacity: 0;
+      }
+
+        @keyframes fadein {
+            from { opacity: 0; }
+            to   { opacity: 1; }
+        }
+
+      .sidebar {
+        top: 42px !important;
+      }
+
+      #title-bar {
+          -webkit-app-region: drag;
+          height: 40px;
+          text-align: center;
+          line-height: 40px;
+          vertical-align: middle;
+          background-color: #03a9f4;
+          padding: none;
+          margin: 0px;
+          box-shadow: 2px 21px 43px -21px rgba(0,0,0,0.75);
+          background-color: #1E1E2E;
+      }
+
+      #title {
+          position: fixed;
+          top: 0px;
+          left: 6px;
+          color:white;
+          font-family: 'Poppins', sans-serif;
+      }
+
+      #title-bar-btns {
+          -webkit-app-region: no-drag;
+          position: fixed;
+          top: 0px;
+          right: 6px;
+      }
+
+      #min-btn {
+        border: none;
+        border-radius: 50%;
+        width: 15px;
+        height: 15px;
+        margin-left: 7px;
+        outline: none;
+        background: linear-gradient(to right, #f18d11, #f5af19);
+        color: white;
+      }
+            
+      #max-btn {
+        border: none;
+        border-radius: 50%;
+        width: 15px;
+        margin-left: 7px;
+        height: 15px;
+        outline: none;
+        background: linear-gradient(to right, #1ebf56, #2bdc48);
+        color: white;
+      }
+            
+      #close-btn {
+        border: none;
+        border-radius: 50%;
+        width: 15px;
+        margin-left: 7px;
+        height: 15px;
+        outline: none;
+        background: linear-gradient(to right, #e63e3e, #ff5757);
+        color: white;
+      }
+
+  </style>
   </head>
 
-  <body>
+  <body class='sidebar-mini'>
+  <div id="title-bar">
+       <div id="title" class="fadeOut">
+           <span style="vertical-align: middle;"><img src="https://res.cloudinary.com/dvuhobfx2/image/upload/v1578983760/Icon_quhp2d.png" style="width:20px;height:20px;"/></span>
+           VICTOR
+       </div>
+       <div id="title-bar-btns">
+            <button id="min-btn" />
+            <button id="max-btn" />
+            <button id="close-btn" />
+       </div>
+  </div>
     <div id="app"></div>
+    <script>
+      (function () {
+          // Retrieve remote BrowserWindow
+          const {BrowserWindow} = require('electron').remote
+    
+          function init() {
+              // Minimize task
+              document.getElementById("min-btn").addEventListener("click", (e) => {
+                  var window = BrowserWindow.getFocusedWindow();
+                  window.minimize();
+              });
+    
+              // Maximize window
+              document.getElementById("max-btn").addEventListener("click", (e) => {
+                  var window = BrowserWindow.getFocusedWindow();
+                  if(window.isMaximized()){
+                      window.unmaximize();
+                  }else{
+                      window.maximize();
+                  }
+              });
+    
+              // Close app
+              document.getElementById("close-btn").addEventListener("click", (e) => {
+                  var window = BrowserWindow.getFocusedWindow();
+                  window.close();
+              });
+          };
+    
+          document.onreadystatechange =  () => {
+              if (document.readyState == "complete") {
+                  init();
+              }
+          };
+      })();
+
+      document.fonts.ready.then(function () {
+        var element = document.getElementById("title");
+        element.classList.remove("fadeOut");
+        element.classList.add("fadeIn");
+      });
+      </script>
   </body>
 </html>

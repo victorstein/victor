@@ -13,22 +13,31 @@ if (require("electron-squirrel-startup")) {
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let mainWindow: null | BrowserWindow;
+let splashWindow: null | BrowserWindow;
 
 const createWindow = () => {
   // Create the browser window.
   mainWindow = new BrowserWindow({
-    width: 800,
-    height: 600,
+    width: 1250,
+    height: 700,
+    show: false,
+    frame: false,
+    backgroundColor: '#1E1E2E',
     webPreferences: {
       nodeIntegration: true,
     },
+  });
+  mainWindow.once('ready-to-show', () => {
+    console.log('show')
+    mainWindow.show();
   });
 
   // and load the index.html of the app.
   mainWindow.loadURL(MAIN_WINDOW_WEBPACK_ENTRY);
 
   // Open the DevTools.
-  mainWindow.webContents.openDevTools();
+  mainWindow.webContents.openDevTools({mode:'undocked'});
+
 
   // Emitted when the window is closed.
   mainWindow.on("closed", () => {
@@ -38,6 +47,7 @@ const createWindow = () => {
     mainWindow = null;
   });
 };
+
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
