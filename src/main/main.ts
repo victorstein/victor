@@ -1,8 +1,15 @@
 import { app, BrowserWindow } from "electron";
+import * as path from 'path'
 
 declare global {
   const MAIN_WINDOW_WEBPACK_ENTRY: string;
 }
+
+const splash = require('url').format({
+  protocol: 'file',
+  slashes: true,
+  pathname: path.resolve(__dirname, '../renderer/splash/splash.html')
+})
 
 // Handle creating/removing shortcuts on Windows when installing/uninstalling.
 if (require("electron-squirrel-startup")) {
@@ -28,8 +35,10 @@ const createWindow = () => {
     },
   });
   mainWindow.once('ready-to-show', () => {
-    console.log('show')
-    mainWindow.show();
+    setTimeout(_ => {
+      splashWindow.close();
+      mainWindow.show();
+    }, 5000)
   });
 
   // and load the index.html of the app.
@@ -48,11 +57,38 @@ const createWindow = () => {
   });
 };
 
+const createSplash = () => {
+  // Create the browser window.
+  splashWindow = new BrowserWindow({
+    width: 500,
+    height: 500,
+    frame: false,
+    backgroundColor: '#FFF',
+    webPreferences: {
+      nodeIntegration: true,
+    },
+  });
+
+  // and load the index.html of the app.
+  splashWindow.loadURL(splash);
+
+  // Emitted when the window is closed.
+  splashWindow.on("closed", () => {
+    // Dereference the window object, usually you would store windows
+    // in an array if your app supports multi windows, this is the time
+    // when you should delete the corresponding element.
+    splashWindow = null;
+  });
+};
+
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
-app.on("ready", createWindow);
+app.on("ready", () => {
+  createSplash()
+  createWindow() 
+});
 
 // Quit when all windows are closed.
 app.on("window-all-closed", () => {
