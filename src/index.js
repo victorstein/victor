@@ -14,6 +14,7 @@
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 */
+import { hot } from 'react-hot-loader/root'
 import React from 'react'
 import { MemoryRouter as Router, Route, Switch, Redirect } from 'react-router-dom'
 
@@ -26,7 +27,7 @@ import 'assets/scss/black-dashboard-pro-react.scss?v=1.0.0'
 import 'assets/demo/demo.css'
 import 'react-notification-alert/dist/animate.css'
 
-export default () => (
+const main = () => (
   <Router>
     <Switch>
       <Route path='/auth' render={props => <AuthLayout {...props} />} />
@@ -36,3 +37,5 @@ export default () => (
     </Switch>
   </Router>
 )
+
+export default hot(main)
