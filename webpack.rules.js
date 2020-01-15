@@ -29,14 +29,7 @@ module.exports = [
     use: ['style-loader', 'css-loader', 'sass-loader']
   },
   {
-    test: /\.(svg|ico|icns)$/,
-    loader: 'file-loader',
-    options: {
-      name: '[path][name].[ext]'
-    }
-  },
-  {
-    test: /\.(woff|woff2|eot|ttf|gif|png|jpg)$/,
+    test: /\.(woff|woff2|eot|ttf|gif|png|jpg|svg)$/,
     loader: 'url-loader',
     options: {
       name: '[path][name].[ext]',
