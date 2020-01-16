@@ -20,13 +20,18 @@ import { Route, Switch } from "react-router-dom";
 import PerfectScrollbar from "perfect-scrollbar";
 // react plugin for creating notifications over the dashboard
 import NotificationAlert from "react-notification-alert";
+import {
+  Row,
+  Col
+} from "reactstrap";
 
 // core components
 import AdminNavbar from "components/Navbars/AdminNavbar.jsx";
 import Footer from "components/Footer/Footer.jsx";
 import Sidebar from "components/Sidebar/Sidebar.jsx";
 
-import routes from "routes.js";
+//import routes from "routes.js";
+import routes from "../../victorRoutes";
 
 import logo from "assets/img/react-logo.png";
 
@@ -43,7 +48,6 @@ class Admin extends React.Component {
     };
   }
   componentDidMount() {
-    console.log(this.state)
     if (navigator.platform.indexOf("Win") > -1) {
       document.documentElement.className += " perfect-scrollbar-on";
       document.documentElement.classList.remove("perfect-scrollbar-off");
@@ -90,7 +94,7 @@ class Admin extends React.Component {
     ) {
       this.setState({ opacity: 0 });
     }
-  };
+  }
   getRoutes = routes => {
     return routes.map((prop, key) => {
       if (prop.collapse) {
@@ -107,49 +111,17 @@ class Admin extends React.Component {
       } else {
         return null;
       }
-    });
-  };
-  getActiveRoute = routes => {
-    let activeRoute = "Default Brand Text";
-    for (let i = 0; i < routes.length; i++) {
-      if (routes[i].collapse) {
-        let collapseActiveRoute = this.getActiveRoute(routes[i].views);
-        if (collapseActiveRoute !== activeRoute) {
-          return collapseActiveRoute;
-        }
-      } else {
-        if (
-          window.location.pathname.indexOf(
-            routes[i].layout + routes[i].path
-          ) !== -1
-        ) {
-          return routes[i].name;
-        }
-      }
-    }
-    return activeRoute;
-  };
+    })
+  }
   handleActiveClick = color => {
     this.setState({ activeColor: color });
   };
   handleMiniClick = () => {
-    let notifyMessage = "Sidebar mini ";
     if (document.body.classList.contains("sidebar-mini")) {
       this.setState({ sidebarMini: false });
-      notifyMessage += "deactivated...";
     } else {
       this.setState({ sidebarMini: true });
-      notifyMessage += "activated...";
     }
-    let options = {};
-    options = {
-      place: "tr",
-      message: notifyMessage,
-      type: "primary",
-      icon: "tim-icons icon-bell-55",
-      autoDismiss: 7
-    };
-    this.refs.notificationAlert.notificationAlert(options);
     document.body.classList.toggle("sidebar-mini");
   };
   toggleSidebar = () => {
@@ -197,20 +169,21 @@ class Admin extends React.Component {
           className="main-panel"
           ref="mainPanel"
           data={this.state.activeColor}
-        >
+        >  
           <AdminNavbar
             {...this.props}
             handleMiniClick={this.handleMiniClick}
-            brandText={this.getActiveRoute(routes)}
             sidebarOpened={this.state.sidebarOpened}
             toggleSidebar={this.toggleSidebar}
           />
+          <div className="content">
+          <Row>
+            <Col xs="12">
           <Switch>{this.getRoutes(routes)}</Switch>
-          {// we don't want the Footer to be rendered on full screen maps page
-          this.props.location.pathname.indexOf("full-screen-map") !==
-          -1 ? null : (
-            <Footer fluid />
-          )}
+          </Col>
+          </Row>
+          </div>
+          <Footer fluid />
         </div>
       </div>
     );
