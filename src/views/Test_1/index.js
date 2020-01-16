@@ -2,7 +2,6 @@ import React from 'react'
 // reactstrap components
 import {
     Card,
-    CardHeader,
     CardBody,
     CardFooter,
     CardTitle,

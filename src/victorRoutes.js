@@ -12,22 +12,22 @@ const routes = [
   {
     path: "/test1",
     name: "Test1",
-    icon: "tim-icons icon-chart-pie-36",
+    icon: "tim-icons icon-app",
     component: Test1,
     layout: "/admin"
   },
   {
     path: "/test2",
     name: "Test2",
-    icon: "tim-icons icon-chart-pie-36",
-    component: Dashboard,
+    icon: "tim-icons icon-bulb-63",
+    component: Test1,
     layout: "/admin"
   },
   {
     path: "/test3",
     name: "Test3",
-    icon: "tim-icons icon-chart-pie-36",
-    component: Dashboard,
+    icon: "tim-icons icon-controller",
+    component: Test1,
     layout: "/admin"
   }
 ]
