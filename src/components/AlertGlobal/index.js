@@ -14,7 +14,7 @@ const DEFAULT_OPTIONS = {
 
 class AlertGlobal extends React.Component {
   componentDidUpdate (prevProps) {
-    if (this.props.message !== prevProps.message && this.props.message) {
+    if (this.props.message) {
       let options = {}
       if (this.props.options) {
         options = this.props.options
