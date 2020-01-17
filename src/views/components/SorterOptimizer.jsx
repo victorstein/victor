@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { Row, Col, Card, CardHeader, CardTitle, Nav, CardBody, NavItem, NavLink, TabContent, TabPane, Table } from 'reactstrap'
 import imageSort from '../../utils/imageSort'
+const { shell } = require('electron')
 
 export default function SorterOptimizer (props) {
   const [ images, setImages ] = useState(null)
@@ -14,6 +15,7 @@ export default function SorterOptimizer (props) {
 
   useEffect(() => {
     if (props.files !== null) {
+      console.log(props.files)
       fetchInfo()
     }
   }, [props.files])
@@ -21,6 +23,10 @@ export default function SorterOptimizer (props) {
   const changeActiveTab = (e, tadName) => {
     e.preventDefault()
     setHorizontalTabs(tadName)
+  }
+
+  const openImage = (path) => {
+    shell.openItem(path)
   }
 
   return (
@@ -125,7 +131,7 @@ export default function SorterOptimizer (props) {
                                     <td>{x.filepath}</td>
                                     <td>{x.width} x {x.height}</td>
                                     <td>
-                                      <a>Open Image Viewer</a>
+                                      <a className='btn-simple btn btn-info' onClick={() => openImage(x.filepath)}>Preview</a>
                                     </td>
                                   </tr>
                                 )

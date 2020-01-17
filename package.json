@@ -110,6 +110,7 @@
     "url-loader": "^3.0.0"
   },
   "devDependencies": {
+    "electron-prebuilt-compile": "1.7.9",
     "@babel/plugin-proposal-class-properties": "^7.7.4",
     "@babel/plugin-proposal-object-rest-spread": "^7.7.7",
     "@babel/preset-env": "^7.7.7",
