@@ -5,6 +5,9 @@
 =========================================================
 
 */
+import 'core-js/stable'
+import 'regenerator-runtime/runtime'
+import { hot } from 'react-hot-loader/root'
 import React, { createContext, useReducer } from 'react'
 import { ApolloProvider } from '@apollo/react-hooks'
 import {
@@ -22,9 +25,14 @@ import initialState from './store/initialState'
 import reducer from './store/reducer'
 import client from './apolloClient'
 
+import 'assets/css/nucleo-icons.css'
+import 'assets/scss/black-dashboard-pro-react.scss?v=1.0.0'
+import 'assets/demo/demo.css'
+import 'react-notification-alert/dist/animate.css'
+
 export const GlobalContext = createContext()
 
-const App = () => {
+const Main = () => {
   const [state, dispatch] = useReducer(reducer, initialState)
 
   return (
@@ -43,4 +51,4 @@ const App = () => {
   )
 }
 
-export default App
+export default hot(Main)

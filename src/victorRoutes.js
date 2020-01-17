@@ -1,4 +1,6 @@
-import Dashboard from "views/Dashboard.jsx";
+import Dashboard from 'views/Dashboard.jsx'
+import ImageEditor from 'views/pages/ImageEditor.jsx'
+
 import Test1 from './views/Test_1'
 
 const routes = [
@@ -7,6 +9,13 @@ const routes = [
     name: "Dashboard",
     icon: "tim-icons icon-chart-pie-36",
     component: Dashboard,
+    layout: "/admin"
+  },
+  {
+    path: "/imageEditor",
+    name: "Image Editor",
+    icon: "tim-icons icon-image-02",
+    component: ImageEditor,
     layout: "/admin"
   },
   {

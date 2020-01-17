@@ -14,70 +14,67 @@
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 */
-import React from "react";
-import { Route, Switch } from "react-router-dom";
+import React from 'react'
+import { Route, Switch } from 'react-router-dom'
 // javascript plugin used to create scrollbars on windows
-import PerfectScrollbar from "perfect-scrollbar";
+import PerfectScrollbar from 'perfect-scrollbar'
 // react plugin for creating notifications over the dashboard
-import NotificationAlert from "react-notification-alert";
-import {
-  Row,
-  Col
-} from "reactstrap";
+import NotificationAlert from 'react-notification-alert'
+import { Row, Col } from 'reactstrap'
 
 // core components
-import AdminNavbar from "components/Navbars/AdminNavbar.jsx";
-import Footer from "components/Footer/Footer.jsx";
-import Sidebar from "components/Sidebar/Sidebar.jsx";
+import AdminNavbar from 'components/Navbars/AdminNavbar.jsx'
+import Footer from 'components/Footer/Footer.jsx'
+import Sidebar from 'components/Sidebar/Sidebar.jsx'
 
 //import routes from "routes.js";
-import routes from "../../victorRoutes";
+import routes from '../../victorRoutes'
 
-import logo from "assets/img/react-logo.png";
+import logo from 'assets/img/react-logo.png'
 
-var ps;
+var ps
 
 class Admin extends React.Component {
-  constructor(props) {
-    super(props);
+  constructor (props) {
+    super(props)
     this.state = {
-      activeColor: "blue",
+      activeColor: 'blue',
       sidebarMini: true,
       opacity: 0,
-      sidebarOpened: false
-    };
+      sidebarOpened: false,
+    }
   }
-  componentDidMount() {
-    if (navigator.platform.indexOf("Win") > -1) {
-      document.documentElement.className += " perfect-scrollbar-on";
-      document.documentElement.classList.remove("perfect-scrollbar-off");
-      ps = new PerfectScrollbar(this.refs.mainPanel);
-      let tables = document.querySelectorAll(".table-responsive");
+  componentDidMount () {
+    if (navigator.platform.indexOf('Win') > -1) {
+      document.documentElement.className += ' perfect-scrollbar-on'
+      document.documentElement.classList.remove('perfect-scrollbar-off')
+      ps = new PerfectScrollbar(this.refs.mainPanel)
+      let tables = document.querySelectorAll('.table-responsive')
       for (let i = 0; i < tables.length; i++) {
-        ps = new PerfectScrollbar(tables[i]);
+        ps = new PerfectScrollbar(tables[i])
       }
     }
-    window.addEventListener("scroll", this.showNavbarButton);
+    window.addEventListener('scroll', this.showNavbarButton)
   }
-  componentWillUnmount() {
-    if (navigator.platform.indexOf("Win") > -1) {
-      ps.destroy();
-      document.documentElement.className += " perfect-scrollbar-off";
-      document.documentElement.classList.remove("perfect-scrollbar-on");
+  componentWillUnmount () {
+    if (navigator.platform.indexOf('Win') > -1) {
+      ps.destroy()
+      document.documentElement.className += ' perfect-scrollbar-off'
+      document.documentElement.classList.remove('perfect-scrollbar-on')
     }
-    window.removeEventListener("scroll", this.showNavbarButton);
+    window.removeEventListener('scroll', this.showNavbarButton)
   }
-  componentDidUpdate(e) {
+  componentDidUpdate (e) {
     if (e.location.pathname !== e.history.location.pathname) {
-      if (navigator.platform.indexOf("Win") > -1) {
-        let tables = document.querySelectorAll(".table-responsive");
+      if (navigator.platform.indexOf('Win') > -1) {
+        let tables = document.querySelectorAll('.table-responsive')
         for (let i = 0; i < tables.length; i++) {
-          ps = new PerfectScrollbar(tables[i]);
+          ps = new PerfectScrollbar(tables[i])
         }
       }
-      document.documentElement.scrollTop = 0;
-      document.scrollingElement.scrollTop = 0;
-      this.refs.mainPanel.scrollTop = 0;
+      document.documentElement.scrollTop = 0
+      document.scrollingElement.scrollTop = 0
+      this.refs.mainPanel.scrollTop = 0
     }
   }
   showNavbarButton = () => {
@@ -86,72 +83,72 @@ class Admin extends React.Component {
       document.scrollingElement.scrollTop > 50 ||
       this.refs.mainPanel.scrollTop > 50
     ) {
-      this.setState({ opacity: 1 });
+      this.setState({ opacity: 1 })
     } else if (
       document.documentElement.scrollTop <= 50 ||
       document.scrollingElement.scrollTop <= 50 ||
       this.refs.mainPanel.scrollTop <= 50
     ) {
-      this.setState({ opacity: 0 });
+      this.setState({ opacity: 0 })
     }
   }
   getRoutes = routes => {
     return routes.map((prop, key) => {
       if (prop.collapse) {
-        return this.getRoutes(prop.views);
+        return this.getRoutes(prop.views)
       }
-      if (prop.layout === "/admin") {
+      if (prop.layout === '/admin') {
         return (
           <Route
             path={prop.layout + prop.path}
             component={prop.component}
             key={key}
           />
-        );
+        )
       } else {
-        return null;
+        return null
       }
     })
   }
   handleActiveClick = color => {
-    this.setState({ activeColor: color });
-  };
+    this.setState({ activeColor: color })
+  }
   handleMiniClick = () => {
-    if (document.body.classList.contains("sidebar-mini")) {
-      this.setState({ sidebarMini: false });
+    if (document.body.classList.contains('sidebar-mini')) {
+      this.setState({ sidebarMini: false })
     } else {
-      this.setState({ sidebarMini: true });
+      this.setState({ sidebarMini: true })
     }
-    document.body.classList.toggle("sidebar-mini");
-  };
+    document.body.classList.toggle('sidebar-mini')
+  }
   toggleSidebar = () => {
     this.setState({
-      sidebarOpened: !this.state.sidebarOpened
-    });
-    document.documentElement.classList.toggle("nav-open");
-  };
+      sidebarOpened: !this.state.sidebarOpened,
+    })
+    document.documentElement.classList.toggle('nav-open')
+  }
   closeSidebar = () => {
     this.setState({
-      sidebarOpened: false
-    });
-    document.documentElement.classList.remove("nav-open");
-  };
-  render() {
+      sidebarOpened: false,
+    })
+    document.documentElement.classList.remove('nav-open')
+  }
+  render () {
     return (
-      <div className="wrapper">
-        <div className="rna-container">
-          <NotificationAlert ref="notificationAlert" />
+      <div className='wrapper'>
+        <div className='rna-container'>
+          <NotificationAlert ref='notificationAlert' />
         </div>
         <div
-          className="navbar-minimize-fixed"
+          className='navbar-minimize-fixed'
           style={{ opacity: this.state.opacity }}
         >
           <button
-            className="minimize-sidebar btn btn-link btn-just-icon"
+            className='minimize-sidebar btn btn-link btn-just-icon'
             onClick={this.handleMiniClick}
           >
-            <i className="tim-icons icon-align-center visible-on-sidebar-regular text-muted" />
-            <i className="tim-icons icon-bullet-list-67 visible-on-sidebar-mini text-muted" />
+            <i className='tim-icons icon-align-center visible-on-sidebar-regular text-muted' />
+            <i className='tim-icons icon-bullet-list-67 visible-on-sidebar-mini text-muted' />
           </button>
         </div>
         <Sidebar
@@ -159,35 +156,35 @@ class Admin extends React.Component {
           routes={routes}
           activeColor={this.state.activeColor}
           logo={{
-            outterLink: "https://www.creative-tim.com/",
-            text: "Creative Tim",
-            imgSrc: logo
+            outterLink: 'https://www.creative-tim.com/',
+            text: 'Creative Tim',
+            imgSrc: logo,
           }}
           closeSidebar={this.closeSidebar}
         />
         <div
-          className="main-panel"
-          ref="mainPanel"
+          className='main-panel'
+          ref='mainPanel'
           data={this.state.activeColor}
-        >  
+        >
           <AdminNavbar
             {...this.props}
             handleMiniClick={this.handleMiniClick}
             sidebarOpened={this.state.sidebarOpened}
             toggleSidebar={this.toggleSidebar}
           />
-          <div className="content">
-          <Row>
-            <Col xs="12">
-          <Switch>{this.getRoutes(routes)}</Switch>
-          </Col>
-          </Row>
+          <div className='content'>
+            <Row>
+              <Col xs='12'>
+                <Switch>{this.getRoutes(routes)}</Switch>
+              </Col>
+            </Row>
           </div>
           <Footer fluid />
         </div>
       </div>
-    );
+    )
   }
 }
 
-export default Admin;
+export default Admin
