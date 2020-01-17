@@ -28,7 +28,7 @@ import Footer from 'components/Footer/Footer.jsx'
 import Sidebar from 'components/Sidebar/Sidebar.jsx'
 
 //import routes from "routes.js";
-import routes from '../../victorRoutes'
+import routes from '../../routes.js'
 
 import logo from 'assets/img/react-logo.png'
 
@@ -190,3 +190,4 @@ class Admin extends React.Component {
 }
 
 export default Admin
+

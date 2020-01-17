@@ -21,7 +21,7 @@ import { Route, Switch } from "react-router-dom";
 //import Footer from "components/Footer/Footer.jsx";
 
 //import routes from "routes.js";
-import routes from '../../victorRoutes'
+import routes from '../../routes.js'
 
 class Pages extends React.Component {
   getRoutes = routes => {
