@@ -1,0 +1,4 @@
+div.rna-container > div > div > div.alert {
+    margin-top: 25px !important;
+    z-index: 200 !important;
+}
