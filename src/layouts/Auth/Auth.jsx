@@ -17,10 +17,11 @@
 import React from "react";
 import { Route, Switch } from "react-router-dom";
 
-import AuthNavbar from "components/Navbars/AuthNavbar.jsx";
-import Footer from "components/Footer/Footer.jsx";
+//import AuthNavbar from "components/Navbars/AuthNavbar.jsx";
+//import Footer from "components/Footer/Footer.jsx";
 
-import routes from "routes.js";
+//import routes from "routes.js";
+import routes from '../../victorRoutes'
 
 class Pages extends React.Component {
   getRoutes = routes => {
@@ -39,8 +40,8 @@ class Pages extends React.Component {
       } else {
         return null;
       }
-    });
-  };
+    })
+  }
   getActiveRoute = routes => {
     let activeRoute = "Default Brand Text";
     for (let i = 0; i < routes.length; i++) {
@@ -60,7 +61,7 @@ class Pages extends React.Component {
       }
     }
     return activeRoute;
-  };
+  }
   getFullPageName = routes => {
     let pageName = this.getActiveRoute(routes);
     switch (pageName) {
@@ -75,22 +76,22 @@ class Pages extends React.Component {
       default:
         return "Default Brand Text";
     }
-  };
+  }
   componentDidMount() {
     document.documentElement.classList.remove("nav-open");
   }
   render() {
     return (
       <>
-        <AuthNavbar brandText={this.getActiveRoute(routes) + " Page"} />
         <div className="wrapper wrapper-full-page" ref="fullPages">
           <div className={"full-page " + this.getFullPageName(routes)}>
+
             <Switch>{this.getRoutes(routes)}</Switch>
-            <Footer fluid />
+
           </div>
         </div>
       </>
-    );
+    )
   }
 }
 

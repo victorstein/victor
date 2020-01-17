@@ -7,7 +7,7 @@ import {
     CardTitle,
     Row,
     Col
-  } from "reactstrap";
+  } from "reactstrap"
 
 const Test1 = () => {
     return (

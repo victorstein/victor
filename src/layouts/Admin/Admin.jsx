@@ -58,7 +58,9 @@ class Admin extends React.Component {
   }
   componentWillUnmount () {
     if (navigator.platform.indexOf('Win') > -1) {
-      ps.destroy()
+      if(ps.destroy) {
+        ps.destroy()
+      }
       document.documentElement.className += ' perfect-scrollbar-off'
       document.documentElement.classList.remove('perfect-scrollbar-on')
     }

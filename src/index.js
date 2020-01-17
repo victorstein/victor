@@ -5,10 +5,12 @@
 =========================================================
 
 */
+
+import { hot } from 'react-hot-loader/root'
 import 'core-js/stable'
 import 'regenerator-runtime/runtime'
-import { hot } from 'react-hot-loader/root'
 import React, { createContext, useReducer } from 'react'
+
 import { ApolloProvider } from '@apollo/react-hooks'
 import {
   MemoryRouter as Router,

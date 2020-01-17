@@ -27,10 +27,10 @@ const routes = [
   },
   {
     path: "/test2",
-    name: "Test2",
-    icon: "tim-icons icon-bulb-63",
+    name: "Auth Test",
+    icon: "tim-icons icon-app",
     component: Test1,
-    layout: "/admin"
+    layout: "/auth"
   },
   {
     path: "/test3",
