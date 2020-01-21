@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import dotenv from 'dotenv'
 // reactstrap components
 import {
   Card,
@@ -11,6 +12,8 @@ import {
 
 import AlertGlobal from '../../components/AlertGlobal'
 
+dotenv.config()
+
 function makeid (length) {
   var result = ''
   var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
@@ -21,10 +24,19 @@ function makeid (length) {
   return result
 }
 
+const URI = process.env.APOLLO_URI || 'http://localhost:302000/graphql'
+
 const Test1 = () => {
+  const [message, setMessage] = useState(null)
+
+  const CambiarMensage = () => {
+    console.log(process.env)
+    setMessage(makeid(20))
+  }
   return (
     <Card className='card-stats'>
       <CardBody>
+        <AlertGlobal message={message} icon='icon-controller' />
         <Row>
           <Col xs='5'>
             <div className='info-icon text-center icon-warning'>
@@ -42,7 +54,7 @@ const Test1 = () => {
       <CardFooter>
         <hr />
         <div className='stats'>
-          <i className='tim-icons icon-refresh-01' /> Update Now
+          <Button onClick={() => CambiarMensage()}>GGGGG</Button>
         </div>
       </CardFooter>
     </Card>

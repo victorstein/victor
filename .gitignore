@@ -4,3 +4,5 @@ out
 .env
 .vscode
 package-lock.json
+package-lock.json
+yarn-lock.json
