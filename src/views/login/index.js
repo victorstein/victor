@@ -7,6 +7,8 @@ import {
   Row, Col, Card, CardBody, CardTitle, CardHeader, CardFooter
 } from 'reactstrap'
 import { ValidatorFormChange } from './validationLogin'
+import { loginGql } from '../../utils/Graphql/Queries'
+import { useLazyQuery } from '@apollo/react-hooks'
 
 const LoginIndex = () => {
   const [emailInput, setemailInput] = useState({
@@ -21,32 +23,38 @@ const LoginIndex = () => {
     error: false,
     labelError: ''
   })
+  const [fetchLogin, { loading, error, data }] = useLazyQuery(loginGql('token refreshToken'))
 
   const submitFormLogin = (e) => {
     e.preventDefault()
-    if (!emailInput.error || !passwordInput.error) {
-      if (emailInput.value === '' || passwordInput.value === '') {
-        setemailInput({
-          ...emailInput,
-          labelError: 'Input email is required',
-          error: true,
-          className: 'has-danger'
-        })
-        setpasswordInput({
-          ...passwordInput,
-          labelError: 'Password email is required',
-          error: true,
-          className: 'has-danger'
-        })
-      } else {
-        const formInput = {
-          email: emailInput.value,
-          password: passwordInput.value
+    try {
+      if (!emailInput.error || !passwordInput.error) {
+        if (emailInput.value === '' || passwordInput.value === '') {
+          setemailInput({
+            ...emailInput,
+            labelError: 'Input email is required',
+            error: true,
+            className: 'has-danger'
+          })
+          setpasswordInput({
+            ...passwordInput,
+            labelError: 'Password email is required',
+            error: true,
+            className: 'has-danger'
+          })
+        } else {
+          console.log('login')
+          fetchLogin({ variables: { email: emailInput.value, password: passwordInput.value } })
         }
-        console.log(formInput)
       }
+    } catch (e) {
+      console.log(e)
     }
   }
+  // console.log(loginGql('token refreshToken'))
+  if (data) { console.log(data) }
+
+  if (error) { console.log(error) }
 
   return (
     <div style={{ margin: '0 auto', float: 'none', marginTop: '30%' }}>
