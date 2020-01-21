@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import dotenv from 'dotenv'
 // reactstrap components
 import {
     Card,
@@ -10,7 +11,10 @@ import {
     Button
   } from "reactstrap"
 
+
   import AlertGlobal from '../../components/AlertGlobal'
+  
+  dotenv.config()
 
   function makeid(length) {
     var result           = '';
@@ -22,10 +26,13 @@ import {
     return result;
  }
 
+ const URI = process.env.APOLLO_URI || 'http://localhost:302000/graphql'
+
 const Test1 = () => {
   const [message, setMessage] = useState(null)
 
   const CambiarMensage = () => {
+    console.log(process.env)
     setMessage(makeid(20))
   }
     return (

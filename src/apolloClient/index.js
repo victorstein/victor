@@ -1,3 +1,4 @@
+import dotenv from 'dotenv'
 import { InMemoryCache } from 'apollo-boost'
 import { ApolloClient } from 'apollo-client'
 import { createUploadLink } from 'apollo-upload-client'
@@ -5,7 +6,15 @@ import { setContext } from 'apollo-link-context'
 import { ApolloLink, Observable } from 'apollo-link'
 import { onError } from 'apollo-link-error'
 
-const URI = process.env.REACT_APP_APOLLO_URI || 'http://localhost:302000/graphql'
+dotenv.config()
+
+const NODE_ENV = process.env.NODE_ENV || 'development'
+let URI = ''
+if (NODE_ENV === 'production') {
+  URI = process.env.APOLLO_URI_PROD || 'http://localhost:302000/graphql'
+} else {
+  URI = process.env.APOLLO_URI_DEV || 'http://localhost:302000/graphql'
+}
 
 const httpLink = createUploadLink({
   uri: URI
