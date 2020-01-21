@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import {
   FormGroup,
   Label,
@@ -9,8 +9,10 @@ import {
 import { ValidatorFormChange } from './validationLogin'
 import { loginGql } from '../../utils/Graphql/Queries'
 import { useLazyQuery } from '@apollo/react-hooks'
+import { ClipLoader } from 'react-spinners'
+import useAuth from '../../utils/Auth'
 
-const LoginIndex = () => {
+const LoginIndex = (props) => {
   const [emailInput, setemailInput] = useState({
     className: '',
     value: '',
@@ -24,37 +26,42 @@ const LoginIndex = () => {
     labelError: ''
   })
   const [fetchLogin, { loading, error, data }] = useLazyQuery(loginGql('token refreshToken'))
+  const { login } = useAuth()
 
   const submitFormLogin = (e) => {
     e.preventDefault()
     try {
+      if (passwordInput.value === '') {
+        return setpasswordInput({
+          ...passwordInput,
+          labelError: 'Password email is required',
+          error: true,
+          className: 'has-danger'
+        })
+      }
+      if (emailInput.value === '') {
+        return setemailInput({
+          ...emailInput,
+          labelError: 'Input email is required',
+          error: true,
+          className: 'has-danger'
+        })
+      }
       if (!emailInput.error || !passwordInput.error) {
-        if (emailInput.value === '' || passwordInput.value === '') {
-          setemailInput({
-            ...emailInput,
-            labelError: 'Input email is required',
-            error: true,
-            className: 'has-danger'
-          })
-          setpasswordInput({
-            ...passwordInput,
-            labelError: 'Password email is required',
-            error: true,
-            className: 'has-danger'
-          })
-        } else {
-          console.log('login')
-          fetchLogin({ variables: { email: emailInput.value, password: passwordInput.value } })
-        }
+        return fetchLogin({ variables: { email: emailInput.value, password: passwordInput.value } })
       }
     } catch (e) {
       console.log(e)
+      if (error) { console.log('graphQLErrors', error.graphQLErrors) }
     }
   }
-  // console.log(loginGql('token refreshToken'))
-  if (data) { console.log(data) }
 
-  if (error) { console.log(error) }
+  useEffect(() => {
+    if (data) {
+      const reqLogin = data.login
+      login(reqLogin.token, reqLogin.refreshToken, props.history)
+    }
+  }, [data])
 
   return (
     <div style={{ margin: '0 auto', float: 'none', marginTop: '30%' }}>
@@ -113,12 +120,17 @@ const LoginIndex = () => {
               <Row className='pt-2'>
                 <Col>
                   <Button
-                    disabled={(emailInput.error || passwordInput.error) ? true : null}
+                    disabled={(emailInput.error || passwordInput.error) || loading ? true : null}
                     className='w-100'
                     color='primary'
                     type='submit'
                   >
-                    Login
+                    {(!loading) ? 'Login' : null}
+                    <ClipLoader
+                      color='#FFF'
+                      size={25}
+                      loading={loading}
+                    />
                   </Button>
                 </Col>
               </Row>
