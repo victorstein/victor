@@ -37,3 +37,13 @@ export const roleByIdGQL = (data = '') => {
 `
   return gql`${schema}`
 }
+
+export const requestPasswordResetGql = () => {
+  const schema = `query requestPasswordReset(
+    $email: String!,
+  ){
+    requestPasswordReset(email : $email)
+  }
+`
+  return gql`${schema}`
+}
