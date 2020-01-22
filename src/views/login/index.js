@@ -4,7 +4,7 @@ import {
   Label,
   Input,
   Button,
-  Row, Col, Card, CardBody, CardTitle, CardHeader, CardFooter
+  Row, Col, Card, CardBody, CardTitle, CardHeader, CardFooter, Alert
 } from 'reactstrap'
 import { ValidatorFormChange } from './validationLogin'
 import { loginGql } from '../../utils/Graphql/Queries'
@@ -57,7 +57,8 @@ const LoginIndex = (props) => {
   }
 
   useEffect(() => {
-    if (data) {
+    if (data && !error) {
+      console.log(data)
       const reqLogin = data.login
       login(reqLogin.token, reqLogin.refreshToken, props.history)
     }
@@ -65,6 +66,7 @@ const LoginIndex = (props) => {
 
   return (
     <div style={{ margin: '0 auto', float: 'none', marginTop: '30%' }}>
+
       <Card>
         <CardHeader>
           <CardTitle tag='h4' className='text-center'>Login</CardTitle>
@@ -117,23 +119,35 @@ const LoginIndex = (props) => {
               </Row>
             </FormGroup>
             <CardFooter>
-              <Row className='pt-2'>
-                <Col>
-                  <Button
-                    disabled={(emailInput.error || passwordInput.error) || loading ? true : null}
-                    className='w-100'
-                    color='primary'
-                    type='submit'
-                  >
-                    {(!loading) ? 'Login' : null}
-                    <ClipLoader
-                      color='#FFF'
-                      size={25}
-                      loading={loading}
-                    />
-                  </Button>
-                </Col>
-              </Row>
+              {
+                (error) &&
+                  <Alert className='mt-2' color='danger'>
+                    <Row>
+                      <Col className='col-1'>
+                        <i class='tim-icons icon-alert-circle-exc' />
+                      </Col>
+                      <Col className='col-11'>
+                        <p>{error.graphQLErrors.map(({ message }) => {
+                          return message
+                        })}
+                        </p>
+                      </Col>
+                    </Row>
+                  </Alert>
+              }
+              <Button
+                disabled={(emailInput.error || passwordInput.error) || loading ? true : null}
+                className='w-100'
+                color='primary'
+                type='submit'
+              >
+                {(!loading) ? 'Login' : null}
+                <ClipLoader
+                  color='#FFF'
+                  size={25}
+                  loading={loading}
+                />
+              </Button>
             </CardFooter>
           </form>
         </CardBody>
