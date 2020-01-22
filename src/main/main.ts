@@ -38,7 +38,7 @@ const createWindow = () => {
     setTimeout(_ => {
       splashWindow.close();
       mainWindow.show();
-    }, 5000)
+    }, 500)
   });
 
   // and load the index.html of the app.
