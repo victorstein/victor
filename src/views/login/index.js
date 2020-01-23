@@ -7,11 +7,11 @@ import {
   Row, Col, Card, CardBody, CardTitle, CardHeader, CardFooter, Alert
 } from 'reactstrap'
 import { ValidatorFormChange } from './validationLogin'
-import { loginGql, requestPasswordResetGql } from '../../utils/Graphql/Queries'
+import { loginGql } from '../../utils/Graphql/Queries'
 import { useLazyQuery } from '@apollo/react-hooks'
 import { ClipLoader } from 'react-spinners'
 import useAuth from '../../utils/Auth'
-import ReactBSAlert from 'react-bootstrap-sweetalert'
+import ResetPassword from './ResetPassword'
 
 const LoginIndex = (props) => {
   const [emailInput, setemailInput] = useState({
@@ -20,12 +20,7 @@ const LoginIndex = (props) => {
     error: false,
     labelError: ''
   })
-  const [resetPasswordInput, setResetPasswordInput] = useState({
-    className: '',
-    value: '',
-    error: false,
-    labelError: ''
-  })
+
   const [passwordInput, setpasswordInput] = useState({
     className: '',
     value: '',
@@ -34,7 +29,6 @@ const LoginIndex = (props) => {
   })
   const [alertResetPassword, setAlertResetPassword] = useState(false)
   const [fetchLogin, { loading, error, data }] = useLazyQuery(loginGql('token refreshToken'))
-  const [fetchResetPassword, reqfetchResetPassword] = useLazyQuery(requestPasswordResetGql(), { fetchPolicy: 'no-cache' })
   const { login } = useAuth()
 
   const submitFormLogin = (e) => {
@@ -82,35 +76,6 @@ const LoginIndex = (props) => {
     }
   }
 
-  const submitResetPassword = (e) => {
-    e.preventDefault()
-    try {
-      if (resetPasswordInput.value === '') {
-        return setResetPasswordInput({
-          ...setResetPasswordInput,
-          labelError: 'Input email is required',
-          error: true,
-          className: 'has-danger'
-        })
-      } else {
-        console.log(resetPasswordInput.value)
-        fetchResetPassword({ variables: { email: resetPasswordInput.value } })
-
-        if (!reqfetchResetPassword.loading) {
-          setAlertResetPassword(false)
-          setResetPasswordInput({
-            className: '',
-            value: '',
-            error: false,
-            labelError: ''
-          })
-        }
-      }
-    } catch (e) {
-      console.log(e)
-    }
-  }
-
   useEffect(() => {
     if (data && !error) {
       console.log(data)
@@ -123,60 +88,7 @@ const LoginIndex = (props) => {
     <div style={{ margin: '0 auto', float: 'none', marginTop: '30%' }}>
       {
         (alertResetPassword) &&
-          <ReactBSAlert
-            style={{ display: 'block', marginTop: '-100px' }}
-            title='Reset Password'
-            onConfirm={() => setAlertResetPassword(false)}
-            showConfirm={false}
-            btnSize=''
-          >
-            <Row>
-
-              <Col className='col-12'>
-                <form>
-                  <FormGroup className={`has-label ${resetPasswordInput.className}`}>
-                    <label htmlFor='emailResetPassword'>Enter the email linked to the account</label>
-                    <Input
-                      type='email'
-                      name='emailResetPassword'
-                      placeholder='Enter email'
-                      onChange={e => ValidatorFormChange(e, setResetPasswordInput, resetPasswordInput, 'email')}
-                    />
-                    {resetPasswordInput.error &&
-                      <label className='error'>
-                        {resetPasswordInput.labelError}
-                      </label>}
-                  </FormGroup>
-                </form>
-              </Col>
-              <Col className='pt-2'>
-                <Button
-                  disabled={(reqfetchResetPassword.loading) ? true : null}
-                  className='w-100'
-                  color='danger'
-                  onClick={() => setAlertResetPassword(false)}
-                >
-                   Cancel
-                </Button>
-              </Col>
-              <Col className='pt-2'>
-                <Button
-                  disabled={(resetPasswordInput.error || reqfetchResetPassword.loading) ? true : null}
-                  className='w-100'
-                  color='success'
-                  onClick={(e) => submitResetPassword(e)}
-                >
-                  {(!reqfetchResetPassword.loading) ? 'Send' : null}
-                  <ClipLoader
-                    color='#FFF'
-                    size={20}
-                    loading={reqfetchResetPassword.loading}
-                  />
-                </Button>
-              </Col>
-
-            </Row>
-          </ReactBSAlert>
+          <ResetPassword alertResetPassword={alertResetPassword} setAlertResetPassword={setAlertResetPassword} />
       }
       <Card>
         <CardHeader>
@@ -229,12 +141,6 @@ const LoginIndex = (props) => {
                     href='#'
                     onClick={() => {
                       setAlertResetPassword(true)
-                      setResetPasswordInput({
-                        className: '',
-                        value: '',
-                        error: false,
-                        labelError: ''
-                      })
                     }}
                   >
                     <span>Reset Password...</span>
@@ -250,9 +156,12 @@ const LoginIndex = (props) => {
                       <Col className='col-1'>
                         <i class='tim-icons icon-alert-circle-exc' />
                       </Col>
-                      <Col className='col-11'>
+                      <Col className='col-11 text-left'>
+                        <h4 className='alert-heading'>Error!</h4>
+                      </Col>
+                      <Col className='col-12 text-sm-left'>
                         <p>{error.graphQLErrors.map(({ message }) => {
-                          return message
+                          return message.split(':')[1]
                         })}
                         </p>
                       </Col>
