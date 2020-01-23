@@ -29,6 +29,7 @@ const LoginIndex = (props) => {
     error: false,
     labelError: ''
   })
+  const [classAlert, setClassAlert] = useState('danger')
   const [isResendEmail, setIsResendEmail] = useState(false)
   const [alertResetPassword, setAlertResetPassword] = useState(false)
   const [fetchLogin, { loading, error, data }] = useLazyQuery(loginGql('token refreshToken'))
@@ -98,6 +99,10 @@ const LoginIndex = (props) => {
   const resendEmailButton = () => {
     const message = error.graphQLErrors.map(({ message }) => message.split(':')[1])
     if (message[0].includes('verified')) {
+      console.log(classAlert)
+      if (classAlert !== 'warning') {
+        setClassAlert('warning')
+      }
       return (
         <Row>
           <Col className='col-4' />
@@ -153,7 +158,7 @@ const LoginIndex = (props) => {
           }
           {
             ((error && !isResendEmail) || (reqFechResendVerificationEmail.loading && !reqFechResendVerificationEmail.error)) &&
-              <Alert className='mt-2' color='danger'>
+              <Alert className='mt-2' color={`${classAlert}`}>
                 <Row>
                   <Col className='col-1'>
                     <i className='tim-icons icon-alert-circle-exc' />
@@ -188,9 +193,6 @@ const LoginIndex = (props) => {
                       return message.split(':')[1]
                     })}
                     </p>
-                    <div className='text-center'>
-                      {resendEmailButton()}
-                    </div>
                   </Col>
                 </Row>
               </Alert>
