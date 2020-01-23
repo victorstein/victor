@@ -12,6 +12,7 @@ import { useLazyQuery } from '@apollo/react-hooks'
 import { ClipLoader } from 'react-spinners'
 import useAuth from '../../utils/Auth'
 import ResetPassword from './ResetPassword'
+import './styles.scss'
 
 const LoginIndex = (props) => {
   const [emailInput, setemailInput] = useState({
@@ -84,8 +85,23 @@ const LoginIndex = (props) => {
     }
   }, [data])
 
+  const resendEmailButton = () => {
+    const message = error.graphQLErrors.map(({ message }) => message.split(':')[1])
+    if (message[0].includes('verified')) {
+      return (
+        <Button
+          size='sm'
+          style={{ color: 'white', borderColor: 'white' }}
+          className='btn-simple'
+          color='primary'
+        >Resend Email
+        </Button>
+      )
+    }
+  }
+
   return (
-    <div style={{ margin: '0 auto', float: 'none', marginTop: '30%' }}>
+    <div className=''>
       {
         (alertResetPassword) &&
           <ResetPassword alertResetPassword={alertResetPassword} setAlertResetPassword={setAlertResetPassword} />
@@ -95,6 +111,28 @@ const LoginIndex = (props) => {
           <CardTitle tag='h4' className='text-center'>Login</CardTitle>
         </CardHeader>
         <CardBody>
+          {
+            (error) &&
+              <Alert className='mt-2' color='danger'>
+                <Row>
+                  <Col className='col-1'>
+                    <i class='tim-icons icon-alert-circle-exc' />
+                  </Col>
+                  <Col className='col-11 text-left'>
+                    <h4 className='alert-heading'>Error!</h4>
+                  </Col>
+                  <Col className='col-12 text-sm-left'>
+                    <p className='alertText'>{error.graphQLErrors.map(({ message }) => {
+                      return message.split(':')[1]
+                    })}
+                    </p>
+                    <div className='text-center'>
+                      {resendEmailButton()}
+                    </div>
+                  </Col>
+                </Row>
+              </Alert>
+          }
           <form onSubmit={submitFormLogin}>
             <FormGroup className={`has-label ${emailInput.className}`}>
               <Label for='exampleEmail'>Email address</Label>
@@ -149,25 +187,7 @@ const LoginIndex = (props) => {
               </Row>
             </FormGroup>
             <CardFooter>
-              {
-                (error) &&
-                  <Alert className='mt-2' color='danger'>
-                    <Row>
-                      <Col className='col-1'>
-                        <i class='tim-icons icon-alert-circle-exc' />
-                      </Col>
-                      <Col className='col-11 text-left'>
-                        <h4 className='alert-heading'>Error!</h4>
-                      </Col>
-                      <Col className='col-12 text-sm-left'>
-                        <p>{error.graphQLErrors.map(({ message }) => {
-                          return message.split(':')[1]
-                        })}
-                        </p>
-                      </Col>
-                    </Row>
-                  </Alert>
-              }
+
               <Button
                 disabled={(emailInput.error || passwordInput.error) || loading ? true : null}
                 className='w-100'
