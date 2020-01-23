@@ -80,8 +80,8 @@ class Pages extends React.Component {
   render() {
     return (
       <>
-        <div className="wrapper wrapper-full-page" ref="fullPages">
-          <div className={"full-page " + this.getFullPageName(routes)}>
+        <div className="wrapper wrapper-full-page d-flex align-items-center justify-content-center" ref="fullPages">
+          <div className={"w-100 full-page " + this.getFullPageName(routes)}>
             <Container>
               <Row>
                 <Col>
