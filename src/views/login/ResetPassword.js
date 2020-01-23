@@ -58,7 +58,7 @@ const ResetPassword = (props) => {
               <Alert className='mt-2' color='danger'>
                 <Row>
                   <Col className='col-1'>
-                    <i class='tim-icons icon-alert-circle-exc' />
+                    <i className='tim-icons icon-alert-circle-exc' />
                   </Col>
                   <Col className='col-11 text-left'>
                     <h4 className='alert-heading'>Error!</h4>
@@ -77,7 +77,7 @@ const ResetPassword = (props) => {
               <Alert className='mt-2' color='success'>
                 <Row>
                   <Col className='col-1'>
-                    <i class='tim-icons icon-alert-circle-exc' />
+                    <i className='tim-icons icon-alert-circle-exc' />
                   </Col>
                   <Col className='col-11 text-left'>
                     <h4 className='alert-heading'>Well done!</h4>
