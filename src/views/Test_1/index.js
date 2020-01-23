@@ -7,7 +7,7 @@ import {
   Col,
   FormGroup,
   Label,
-  Input,
+  Input
 } from 'reactstrap'
 
 import CodeEditor from '../../components/CodeEditor'
