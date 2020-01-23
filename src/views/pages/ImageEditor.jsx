@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { Row, Col, Input, Button, FormGroup } from 'reactstrap'
 import uncompress from '../../utils/decompress'
+import Sorter from '../components/SorterOptimizer'
 
 const { dialog } = require('electron').remote
 
@@ -64,7 +65,6 @@ function ImageEditor () {
   const unZip = async () => {
     let extracted = await uncompress(zipPath, finalPath)
     setFiles(extracted)
-    console.log(extracted)
   }
 
   return (
@@ -75,7 +75,7 @@ function ImageEditor () {
           <h5 className='mb-4'>Multi Media Management & Resizing Algorithm</h5>
         </Col>
       </Row>
-      <Row>
+      <Row className='d-flex align-items-baseline'>
         <Col>
           <FormGroup className={zipSelected ? 'has-success' : 'has-info'}>
             <Input type='button' id='select-file' onClick={() => openModal()} value='1. Select .zip file' />
@@ -90,6 +90,9 @@ function ImageEditor () {
           <Button disabled={!pathSelected || files !== null} onClick={() => unZip()} color='success'>START THE PROCESS</Button>
         </Col>
       </Row>
+      <div className='mt-5'>
+        <Sorter files={files} finalPath={finalPath} />
+      </div>
     </div>
   )
 }

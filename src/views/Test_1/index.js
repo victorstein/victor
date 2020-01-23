@@ -1,0 +1,64 @@
+import React, { useState } from 'react'
+import dotenv from 'dotenv'
+// reactstrap components
+import {
+  Card,
+  CardBody,
+  CardFooter,
+  CardTitle,
+  Row,
+  Col
+} from 'reactstrap'
+
+import AlertGlobal from '../../components/AlertGlobal'
+
+dotenv.config()
+
+function makeid (length) {
+  var result = ''
+  var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
+  var charactersLength = characters.length
+  for (var i = 0; i < length; i++) {
+    result += characters.charAt(Math.floor(Math.random() * charactersLength))
+  }
+  return result
+}
+
+const URI = process.env.APOLLO_URI || 'http://localhost:302000/graphql'
+
+const Test1 = () => {
+  const [message, setMessage] = useState(null)
+
+  const CambiarMensage = () => {
+    console.log(process.env)
+    setMessage(makeid(20))
+  }
+  return (
+    <Card className='card-stats'>
+      <CardBody>
+        <AlertGlobal message={message} icon='icon-controller' />
+        <Row>
+          <Col xs='5'>
+            <div className='info-icon text-center icon-warning'>
+              <i className='tim-icons icon-chat-33' />
+            </div>
+          </Col>
+          <Col xs='7'>
+            <div className='numbers'>
+              <p className='card-category'>Number</p>
+              <CardTitle tag='h3'>150GB</CardTitle>
+            </div>
+          </Col>
+        </Row>
+      </CardBody>
+      <CardFooter>
+        <hr />
+        <div className='stats'>
+          <Button onClick={() => CambiarMensage()}>GGGGG</Button>
+        </div>
+      </CardFooter>
+    </Card>
+  )
+}
+
+export default Test1

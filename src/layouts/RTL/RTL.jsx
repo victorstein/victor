@@ -72,6 +72,9 @@ class Admin extends React.Component {
     document.documentElement.classList.remove("rtl-active");
   }
   componentDidUpdate(e) {
+    
+    console.log('componentDidUpdate')
+
     if (e.location.pathname !== e.history.location.pathname) {
       if (navigator.platform.indexOf("Win") > -1) {
         let tables = document.querySelectorAll(".table-responsive");
@@ -206,7 +209,7 @@ class Admin extends React.Component {
           closeSidebar={this.closeSidebar}
         />
         <div
-          className="main-panel"
+          className="main-panel bg-danger"
           ref="mainPanel"
           data={this.state.activeColor}
         >
