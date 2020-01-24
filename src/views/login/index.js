@@ -130,7 +130,7 @@ const LoginIndex = (props) => {
   }
 
   return (
-    <div>
+    <div className='loginForm'>
       {
         (alertResetPassword) &&
           <ResetPassword alertResetPassword={alertResetPassword} setAlertResetPassword={setAlertResetPassword} />
