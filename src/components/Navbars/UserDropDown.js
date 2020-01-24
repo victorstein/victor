@@ -9,7 +9,7 @@ import {
   UncontrolledDropdown,
   NavLink,
   Row,
-  Col,
+  Col
 } from 'reactstrap'
 
 const UserDropDown = props => {
