@@ -20,7 +20,9 @@ import {
 } from 'react-router-dom'
 
 import AuthLayout from 'layouts/Auth/Auth.jsx'
-import AdminLayout from 'layouts/Admin/Admin.jsx'
+
+import AdminLayout from 'layouts/Admin/index.js'
+//import AdminLayout from 'layouts/Admin/Admin.jsx'
 import RTLLayout from 'layouts/RTL/RTL.jsx'
 
 import initialState from './store/initialState'

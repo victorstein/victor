@@ -25,11 +25,19 @@ module.exports = [
     ]
   },
   {
-    test: /\.(scss|css)$/,
+    test: /\.(css)$/,
+    use: ['style-loader', 'css-loader']
+  },
+  {
+    test: /\.(scss)$/,
     use: ['style-loader', 'css-loader', 'sass-loader']
   },
   {
-    test: /\.(woff|woff2|eot|ttf|gif|png|jpg|svg)$/,
+    test: /\.ttf$/,
+    use: ['file-loader']
+  },
+  {
+    test: /\.(woff|woff2|eot|gif|png|jpg|svg)$/,
     loader: 'url-loader',
     options: {
       name: '[path][name].[ext]',

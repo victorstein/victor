@@ -10,6 +10,7 @@ const routes = [
     name: 'Dashboard',
     icon: 'tim-icons icon-chart-pie-36',
     component: Dashboard,
+    role: [],
     layout: '/admin'
   },
   {
@@ -17,6 +18,7 @@ const routes = [
     name: 'Image Editor',
     icon: 'tim-icons icon-image-02',
     component: ImageEditor,
+    role: ['Admin', 'User'],
     layout: '/admin'
   },
   {
@@ -24,6 +26,7 @@ const routes = [
     name: 'Test1',
     icon: 'tim-icons icon-app',
     component: Test1,
+    role: [],
     layout: '/admin'
   },
   {
@@ -31,6 +34,7 @@ const routes = [
     name: 'Login',
     icon: 'tim-icons icon-single-02',
     component: Login,
+    role: [],
     layout: '/auth'
   },
   {
@@ -38,6 +42,7 @@ const routes = [
     name: 'Test3',
     icon: 'tim-icons icon-controller',
     component: Test1,
+    role: [],
     layout: '/admin'
   }
 ]

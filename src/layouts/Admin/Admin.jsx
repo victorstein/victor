@@ -67,7 +67,7 @@ class Admin extends React.Component {
     window.removeEventListener('scroll', this.showNavbarButton)
   }
   componentDidUpdate (e) {
-    if (e.location.pathname !== e.history.location.pathname) {
+    if (e.routerProps.location.pathname !== e.routerProps.history.location.pathname) {
       if (navigator.platform.indexOf('Win') > -1) {
         let tables = document.querySelectorAll('.table-responsive')
         for (let i = 0; i < tables.length; i++) {
@@ -154,7 +154,7 @@ class Admin extends React.Component {
           </button>
         </div>
         <Sidebar
-          {...this.props}
+          {...this.props.routerProps}
           routes={routes}
           activeColor={this.state.activeColor}
           logo={{
@@ -170,7 +170,7 @@ class Admin extends React.Component {
           data={this.state.activeColor}
         >
           <AdminNavbar
-            {...this.props}
+            {...this.props.routerProps}
             handleMiniClick={this.handleMiniClick}
             sidebarOpened={this.state.sidebarOpened}
             toggleSidebar={this.toggleSidebar}

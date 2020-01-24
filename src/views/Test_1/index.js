@@ -1,62 +1,73 @@
 import React, { useState } from 'react'
-import dotenv from 'dotenv'
 // reactstrap components
 import {
   Card,
   CardBody,
-  CardFooter,
-  CardTitle,
   Row,
-  Col
+  Col,
+  FormGroup,
+  Label,
+  Input
 } from 'reactstrap'
 
-import AlertGlobal from '../../components/AlertGlobal'
-
-dotenv.config()
-
-function makeid (length) {
-  var result = ''
-  var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
-  var charactersLength = characters.length
-  for (var i = 0; i < length; i++) {
-    result += characters.charAt(Math.floor(Math.random() * charactersLength))
-  }
-  return result
-}
-
-const URI = process.env.APOLLO_URI || 'http://localhost:302000/graphql'
+import CodeEditor from '../../components/CodeEditor'
 
 const Test1 = () => {
-  const [message, setMessage] = useState(null)
-
-  const CambiarMensage = () => {
-    console.log(process.env)
-    setMessage(makeid(20))
+  const [typeEditor, setTypeEditor] = useState('raw')
+  const [valueCode, setValueCode] = useState('')
+  const changeTypeRadio = value => {
+    setTypeEditor(value)
+  }
+  const setNewValue = value => {
+    setValueCode(value)
   }
   return (
     <Card className='card-stats'>
       <CardBody>
-        <AlertGlobal message={message} icon='icon-controller' />
         <Row>
-          <Col xs='5'>
-            <div className='info-icon text-center icon-warning'>
-              <i className='tim-icons icon-chat-33' />
-            </div>
-          </Col>
-          <Col xs='7'>
-            <div className='numbers'>
-              <p className='card-category'>Number</p>
-              <CardTitle tag='h3'>150GB</CardTitle>
-            </div>
+          <Col xs='12'>
+            <FormGroup check inline className='form-check-radio mb-3'>
+              <Label className='form-check-label'>
+                <Input
+                  type='radio'
+                  name='exampleRadios1'
+                  id='exampleRadios11'
+                  value='raw'
+                  onClick={() => changeTypeRadio('raw')}
+                  defaultChecked
+                />
+                Raw
+                <span className='form-check-sign'></span>
+              </Label>
+            </FormGroup>
+            <FormGroup check inline className='form-check-radio'>
+              <Label className='form-check-label'>
+                <Input
+                  type='radio'
+                  name='exampleRadios1'
+                  id='exampleRadios12'
+                  value='editor'
+                  onClick={() => changeTypeRadio('editor')}
+                />
+                Code Editor
+                <span className='form-check-sign'></span>
+              </Label>
+            </FormGroup>
+            {typeEditor === 'raw' ? (
+              <Input
+                type='textarea'
+                rows='30'
+                name='exampleRadios122'
+                value={valueCode}
+                onChange={e => setValueCode(e.target.value)}
+                id='exampleRadios1222'
+              />
+            ) : (
+              <CodeEditor code={valueCode} lenguaje='xml' setChange={setNewValue} />
+            )}
           </Col>
         </Row>
       </CardBody>
-      <CardFooter>
-        <hr />
-        <div className='stats'>
-          <Button onClick={() => CambiarMensage()}>GGGGG</Button>
-        </div>
-      </CardFooter>
     </Card>
   )
 }
