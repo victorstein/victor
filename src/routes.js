@@ -51,7 +51,8 @@ const routes = [
     name: 'Templates',
     icon: 'tim-icons icon-palette',
     component: Templates,
-    layout: '/admin'
+    layout: '/admin',
+    role: []
   }
 ]
 

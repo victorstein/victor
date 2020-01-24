@@ -257,7 +257,7 @@ const LoginIndex = (props) => {
               <Button
                 disabled={(emailInput.error || passwordInput.error) || loading ? true : null}
                 className='w-100'
-                color='primary'
+                color='success'
                 type='submit'
               >
                 {(!loading) ? 'Login' : null}
