@@ -51,7 +51,7 @@ const ResetPassword = (props) => {
       showConfirm={false}
       btnSize=''
     >
-      <Row>
+      <Row className='resetPasswordForm'>
         <Col className='col-12'>
           {
             (reqfetchResetPassword.error) &&
