@@ -16,6 +16,7 @@
 */
 import React from "react";
 import { Route, Switch } from "react-router-dom";
+import Animation from './Animation'
 
 import routes from '../../routes.js'
 import { Row, Col, Container } from 'reactstrap'
@@ -81,17 +82,23 @@ class Pages extends React.Component {
     return (
       <>
         <div className="wrapper wrapper-full-page d-flex align-items-center justify-content-center" ref="fullPages">
+          <div className='container-fluid p-0 m-0'>
+            <Row>
+              <Col>
+                <Animation />
+              </Col>
+            </Row>
+          </div>
           <div className={"w-100 full-page " + this.getFullPageName(routes)}>
             <Container>
               <Row>
+                <Col className='col-2' />
                 <Col>
-                  <h3>lottiefiles</h3>
-                </Col>
-                <Col>
-                <div className='container'>
-                  <Switch>{this.getRoutes(routes)}</Switch>
+                  <div className='container'>
+                    <Switch>{this.getRoutes(routes)}</Switch>
                   </div>
                 </Col>
+                <Col  className='col-2'/>
               </Row>
             </Container>
           </div>
