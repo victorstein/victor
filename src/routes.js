@@ -3,6 +3,7 @@ import ImageEditor from 'views/pages/ImageEditor.jsx'
 
 import Test1 from './views/Test_1'
 import Login from './views/login'
+import Templates from './views/Templates'
 
 const routes = [
   {
@@ -43,6 +44,13 @@ const routes = [
     icon: 'tim-icons icon-controller',
     component: Test1,
     role: [],
+    layout: '/admin'
+  },
+  {
+    path: '/templates',
+    name: 'Templates',
+    icon: 'tim-icons icon-palette',
+    component: Templates,
     layout: '/admin'
   }
 ]
