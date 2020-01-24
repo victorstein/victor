@@ -8,7 +8,8 @@ import {
 } from 'reactstrap'
 import { ValidatorFormChange } from './validationLogin'
 import { loginGql } from '../../utils/Graphql/Queries'
-import { useLazyQuery } from '@apollo/react-hooks'
+import { resendVerificationEmailpGql } from '../../utils/Graphql/Mutations'
+import { useLazyQuery, useMutation } from '@apollo/react-hooks'
 import { ClipLoader } from 'react-spinners'
 import useAuth from '../../utils/Auth'
 import ResetPassword from './ResetPassword'
@@ -28,8 +29,11 @@ const LoginIndex = (props) => {
     error: false,
     labelError: ''
   })
+  const [classAlert, setClassAlert] = useState('danger')
+  const [isResendEmail, setIsResendEmail] = useState(false)
   const [alertResetPassword, setAlertResetPassword] = useState(false)
   const [fetchLogin, { loading, error, data }] = useLazyQuery(loginGql('token refreshToken'))
+  const [fechresendVerificationEmail, reqFechResendVerificationEmail] = useMutation(resendVerificationEmailpGql(), { fetchPolicy: 'no-cache' })
   const { login } = useAuth()
 
   const submitFormLogin = (e) => {
@@ -69,6 +73,7 @@ const LoginIndex = (props) => {
         })
       }
       if (!emailInput.error || !passwordInput.error) {
+        setIsResendEmail(false)
         return fetchLogin({ variables: { email: emailInput.value, password: passwordInput.value } })
       }
     } catch (e) {
@@ -85,23 +90,47 @@ const LoginIndex = (props) => {
     }
   }, [data])
 
+  const fechResendEmail = (e) => {
+    e.preventDefault()
+    setIsResendEmail(true)
+    fechresendVerificationEmail({ variables: { email: emailInput.value } })
+  }
+
   const resendEmailButton = () => {
     const message = error.graphQLErrors.map(({ message }) => message.split(':')[1])
     if (message[0].includes('verified')) {
+      console.log(classAlert)
+      if (classAlert !== 'warning') {
+        setClassAlert('warning')
+      }
       return (
-        <Button
-          size='sm'
-          style={{ color: 'white', borderColor: 'white' }}
-          className='btn-simple'
-          color='primary'
-        >Resend Email
-        </Button>
+        <Row>
+          <Col className='col-4' />
+          <Col className='col-4'>
+            <Button
+              size='sm'
+              disabled={reqFechResendVerificationEmail.loading}
+              style={{ color: 'white', borderColor: 'white' }}
+              className='btn-simple w-100'
+              color='primary'
+              onClick={(e) => fechResendEmail(e)}
+            >
+              <ClipLoader
+                color='#FFF'
+                size={25}
+                loading={reqFechResendVerificationEmail.loading}
+              />
+              {(!reqFechResendVerificationEmail.loading) ? 'Resend Email' : null}
+            </Button>
+          </Col>
+          <Col className='col-4' />
+        </Row>
       )
     }
   }
 
   return (
-    <div className=''>
+    <div className='loginForm'>
       {
         (alertResetPassword) &&
           <ResetPassword alertResetPassword={alertResetPassword} setAlertResetPassword={setAlertResetPassword} />
@@ -112,11 +141,27 @@ const LoginIndex = (props) => {
         </CardHeader>
         <CardBody>
           {
-            (error) &&
-              <Alert className='mt-2' color='danger'>
+            (isResendEmail && reqFechResendVerificationEmail.data) &&
+              <Alert className='mt-2' color='success'>
                 <Row>
                   <Col className='col-1'>
-                    <i class='tim-icons icon-alert-circle-exc' />
+                    <i className='tim-icons icon-alert-circle-exc' />
+                  </Col>
+                  <Col className='col-11 text-left'>
+                    <h4 className='alert-heading'>Well done!</h4>
+                  </Col>
+                  <Col className='col-12 text-sm-left'>
+                    <p className='alertText'>We have sent a verification email to your email address. Please check your inbox</p>
+                  </Col>
+                </Row>
+              </Alert>
+          }
+          {
+            ((error && !isResendEmail) || (reqFechResendVerificationEmail.loading && !reqFechResendVerificationEmail.error)) &&
+              <Alert className='mt-2' color={`${classAlert}`}>
+                <Row>
+                  <Col className='col-1'>
+                    <i className='tim-icons icon-alert-circle-exc' />
                   </Col>
                   <Col className='col-11 text-left'>
                     <h4 className='alert-heading'>Error!</h4>
@@ -129,6 +174,25 @@ const LoginIndex = (props) => {
                     <div className='text-center'>
                       {resendEmailButton()}
                     </div>
+                  </Col>
+                </Row>
+              </Alert>
+          }
+          {
+            (reqFechResendVerificationEmail.error && isResendEmail) &&
+              <Alert className='mt-2' color='danger'>
+                <Row>
+                  <Col className='col-1'>
+                    <i class='tim-icons icon-alert-circle-exc' />
+                  </Col>
+                  <Col className='col-11 text-left'>
+                    <h4 className='alert-heading'>Error!</h4>
+                  </Col>
+                  <Col className='col-12 text-sm-left'>
+                    <p className='alertText'>{reqFechResendVerificationEmail.graphQLErrors.map(({ message }) => {
+                      return message.split(':')[1]
+                    })}
+                    </p>
                   </Col>
                 </Row>
               </Alert>
@@ -165,15 +229,17 @@ const LoginIndex = (props) => {
             </FormGroup>
             <FormGroup check>
               <Row>
-                <Col className='text-left'>
-                  <Label check>
-                    <Input type='checkbox' />{' '}
-                    Check me out
-                    <span className='form-check-sign'>
-                      <span className='check' />
-                    </span>
-                  </Label>
-                </Col>
+                {
+                  // <Col className='text-left'>
+                  //   <Label check>
+                  //     <Input type='checkbox' />{' '}
+                  //   Check me out
+                  //     <span className='form-check-sign'>
+                  //       <span className='check' />
+                  //     </span>
+                  //   </Label>
+                  // </Col>
+                }
                 <Col className='text-right'>
                   <a
                     href='#'

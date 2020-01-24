@@ -1,6 +1,6 @@
 import gql from 'graphql-tag'
 
-export const createUserGql = (arrryData = '') => {
+export const createUserGql = (data = '') => {
   const schema = `mutation signUp(
       $firstName: String!
       $lastName: String!
@@ -15,9 +15,17 @@ export const createUserGql = (arrryData = '') => {
         password : $password
         confirmPassword: $confirmPassword
       ){
-      ${arrryData}
+      ${data}
     }
   }
   `
+  return gql`${schema}`
+}
+
+export const resendVerificationEmailpGql = () => {
+  const schema = `mutation resendVerificationEmail( $email: String! ){
+    resendVerificationEmail(email : $email)
+  }
+`
   return gql`${schema}`
 }
