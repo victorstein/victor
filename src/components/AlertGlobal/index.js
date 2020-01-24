@@ -18,8 +18,8 @@ class AlertGlobal extends React.Component {
       let options = {}
       if (this.props.options) {
         options = this.props.options
-        options['message'] = this.props.message
-      } else {        
+        options.message = this.props.message
+      } else {
         options = {
           ...DEFAULT_OPTIONS,
           message: this.props.message,

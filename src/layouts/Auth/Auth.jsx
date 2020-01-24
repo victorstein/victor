@@ -17,11 +17,8 @@
 import React from "react";
 import { Route, Switch } from "react-router-dom";
 
-//import AuthNavbar from "components/Navbars/AuthNavbar.jsx";
-//import Footer from "components/Footer/Footer.jsx";
-
-//import routes from "routes.js";
 import routes from '../../routes.js'
+import { Row, Col, Container } from 'reactstrap'
 
 class Pages extends React.Component {
   getRoutes = routes => {
@@ -83,11 +80,20 @@ class Pages extends React.Component {
   render() {
     return (
       <>
-        <div className="wrapper wrapper-full-page" ref="fullPages">
-          <div className={"full-page " + this.getFullPageName(routes)}>
-
-            <Switch>{this.getRoutes(routes)}</Switch>
-
+        <div className="wrapper wrapper-full-page d-flex align-items-center justify-content-center" ref="fullPages">
+          <div className={"w-100 full-page " + this.getFullPageName(routes)}>
+            <Container>
+              <Row>
+                <Col>
+                  <h3>lottiefiles</h3>
+                </Col>
+                <Col>
+                <div className='container'>
+                  <Switch>{this.getRoutes(routes)}</Switch>
+                  </div>
+                </Col>
+              </Row>
+            </Container>
           </div>
         </div>
       </>
