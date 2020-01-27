@@ -80,20 +80,20 @@ const TableTemplates = () => {
           <CardTitle tag='h4'>Templates list</CardTitle>
         </CardHeader>
         <CardBody>
-          <Table>
+          <Table responsive className='table'>
             <thead className='text-primary'>
               <tr>
-                <th>
+                <th scope='col' style={{ maxWidth: '275px', width: '275px' }}>
                   <Row>
-                    <Col className='col-2 mt-2'>
-                         Name
+                    <Col style={{ paddingTop: '0.6rem' }} className='text-center col-4'>
+                          Name
                     </Col>
-                    <Col className='col-9'>
+                    <Col className='col-8'>
                       <InputGroup
                         size='sm'
-                        className={`text-right ${classnames({
-                          'input-group-focus': focusInput.inputName.focus
-                        })}`}
+                        className={`text-left ${classnames({
+                      'input-group-focus': focusInput.inputName.focus
+                    })}`}
                       >
                         <InputGroupAddon addonType='prepend'>
                           <InputGroupText><i className='fas fa-search' /></InputGroupText>
@@ -119,10 +119,10 @@ const TableTemplates = () => {
                     </Col>
                   </Row>
                 </th>
-                <th>Description</th>
-                <th className='text-center'>Teme</th>
-                <th className='text-right'>Layouts</th>
-                <th className='text-center'>Actions</th>
+                <th scope='col'>Description</th>
+                <th scope='col' className='text-center'>Teme</th>
+                <th scope='col' className='text-right'>Layouts</th>
+                <th scope='col' className='text-center'>Actions</th>
               </tr>
             </thead>
             <tbody>
