@@ -92,13 +92,13 @@ class Pages extends React.Component {
           <div className={"w-100 full-page " + this.getFullPageName(routes)}>
             <Container>
               <Row>
-                <Col className='col-2' />
+                <Col className='col-1' />
                 <Col>
                   <div className='container'>
                     <Switch>{this.getRoutes(routes)}</Switch>
                   </div>
                 </Col>
-                <Col  className='col-2'/>
+                <Col  className='col-1'/>
               </Row>
             </Container>
           </div>
