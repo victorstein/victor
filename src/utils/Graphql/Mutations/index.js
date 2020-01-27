@@ -21,11 +21,3 @@ export const createUserGql = (data = '') => {
   `
   return gql`${schema}`
 }
-
-export const resendVerificationEmailpGql = () => {
-  const schema = `mutation resendVerificationEmail( $email: String! ){
-    resendVerificationEmail(email : $email)
-  }
-`
-  return gql`${schema}`
-}

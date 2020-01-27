@@ -47,3 +47,11 @@ export const requestPasswordResetGql = () => {
 `
   return gql`${schema}`
 }
+
+export const resendVerificationEmailpGql = () => {
+  const schema = `query resendVerificationEmail( $email: String! ){
+    resendVerificationEmail(email : $email)
+  }
+`
+  return gql`${schema}`
+}
