@@ -191,11 +191,12 @@ class AdminNavbar extends React.Component {
                 </li>
 
                 <li className="separator d-lg-none" />
-                
+
               </Nav>
             </Collapse>
           </Container>
         </Navbar>
+        
         <Modal
           modalClassName="modal-search"
           isOpen={this.state.modalSearch}
@@ -219,4 +220,5 @@ class AdminNavbar extends React.Component {
   }
 }
 
-export default AdminNavbar;
+export default AdminNavbar
+

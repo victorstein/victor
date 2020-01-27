@@ -11,7 +11,6 @@ import routes from '../../routes'
 const DEFAULT_ROUTE_USER = '/admin/dashboard'
 const DEFAULT_ROUTE_ADMIN = '/admin/dashboard'
 
-
 const AdminLayout = props => {
   const { state, dispatch } = useContext(GlobalContext)
   const [verifyLogin, setVerifyLogin] = useState(false)
