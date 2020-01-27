@@ -7,9 +7,9 @@ import {
   Row, Col, Card, CardBody, CardTitle, CardHeader, CardFooter, Alert
 } from 'reactstrap'
 import { ValidatorFormChange } from './validationLogin'
-import { loginGql } from '../../utils/Graphql/Queries'
-import { resendVerificationEmailpGql } from '../../utils/Graphql/Mutations'
-import { useLazyQuery, useMutation } from '@apollo/react-hooks'
+import { loginGql, resendVerificationEmailpGql } from '../../utils/Graphql/Queries'
+
+import { useLazyQuery } from '@apollo/react-hooks'
 import { ClipLoader } from 'react-spinners'
 import useAuth from '../../utils/Auth'
 import ResetPassword from './ResetPassword'
@@ -33,7 +33,7 @@ const LoginIndex = (props) => {
   const [isResendEmail, setIsResendEmail] = useState(false)
   const [alertResetPassword, setAlertResetPassword] = useState(false)
   const [fetchLogin, { loading, error, data }] = useLazyQuery(loginGql('token refreshToken'))
-  const [fechresendVerificationEmail, reqFechResendVerificationEmail] = useMutation(resendVerificationEmailpGql(), { fetchPolicy: 'no-cache' })
+  const [fechresendVerificationEmail, reqFechResendVerificationEmail] = useLazyQuery(resendVerificationEmailpGql(), { fetchPolicy: 'no-cache' })
   const { login } = useAuth()
 
   const submitFormLogin = (e) => {
@@ -92,40 +92,50 @@ const LoginIndex = (props) => {
 
   const fechResendEmail = (e) => {
     e.preventDefault()
-    setIsResendEmail(true)
-    fechresendVerificationEmail({ variables: { email: emailInput.value } })
+    try {
+      setIsResendEmail(true)
+      fechresendVerificationEmail({ variables: { email: emailInput.value } })
+    } catch (e) {
+      console.log(e)
+    }
   }
 
   const resendEmailButton = () => {
-    const message = error.graphQLErrors.map(({ message }) => message.split(':')[1])
-    if (message[0].includes('verified')) {
-      console.log(classAlert)
-      if (classAlert !== 'warning') {
-        setClassAlert('warning')
+    try {
+      console.log(error)
+      const message = error.graphQLErrors.map(({ message }) => message.split(':')[1])
+
+      if (message[0].includes('verified')) {
+        console.log(classAlert)
+        if (classAlert !== 'warning') {
+          setClassAlert('warning')
+        }
+        return (
+          <Row>
+            <Col className='col-3' />
+            <Col className='col-6 w-100'>
+              <Button
+                size='sm'
+                disabled={reqFechResendVerificationEmail.loading}
+                style={{ color: 'white', borderColor: 'white' }}
+                className='btn-simple w-100'
+                color='primary'
+                onClick={(e) => fechResendEmail(e)}
+              >
+                <ClipLoader
+                  color='#FFF'
+                  size={25}
+                  loading={reqFechResendVerificationEmail.loading}
+                />
+                {(!reqFechResendVerificationEmail.loading) ? 'Resend Email' : null}
+              </Button>
+            </Col>
+            <Col className='col-3' />
+          </Row>
+        )
       }
-      return (
-        <Row>
-          <Col className='col-4' />
-          <Col className='col-4'>
-            <Button
-              size='sm'
-              disabled={reqFechResendVerificationEmail.loading}
-              style={{ color: 'white', borderColor: 'white' }}
-              className='btn-simple w-100'
-              color='primary'
-              onClick={(e) => fechResendEmail(e)}
-            >
-              <ClipLoader
-                color='#FFF'
-                size={25}
-                loading={reqFechResendVerificationEmail.loading}
-              />
-              {(!reqFechResendVerificationEmail.loading) ? 'Resend Email' : null}
-            </Button>
-          </Col>
-          <Col className='col-4' />
-        </Row>
-      )
+    } catch (e) {
+      console.log(e)
     }
   }
 
@@ -147,7 +157,7 @@ const LoginIndex = (props) => {
                   <Col className='col-1'>
                     <i className='tim-icons icon-alert-circle-exc' />
                   </Col>
-                  <Col className='col-11 text-left'>
+                  <Col className='col-10 text-left'>
                     <h4 className='alert-heading'>Well done!</h4>
                   </Col>
                   <Col className='col-12 text-sm-left'>
@@ -163,7 +173,7 @@ const LoginIndex = (props) => {
                   <Col className='col-1'>
                     <i className='tim-icons icon-alert-circle-exc' />
                   </Col>
-                  <Col className='col-11 text-left'>
+                  <Col className='col-10 text-left'>
                     <h4 className='alert-heading'>Error!</h4>
                   </Col>
                   <Col className='col-12 text-sm-left'>
@@ -185,7 +195,7 @@ const LoginIndex = (props) => {
                   <Col className='col-1'>
                     <i class='tim-icons icon-alert-circle-exc' />
                   </Col>
-                  <Col className='col-11 text-left'>
+                  <Col className='col-10 text-left'>
                     <h4 className='alert-heading'>Error!</h4>
                   </Col>
                   <Col className='col-12 text-sm-left'>
