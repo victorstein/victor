@@ -1,0 +1,29 @@
+$blueColor: #27293d;
+
+.iccon{
+    .has-label:after {
+        top: 44px !important;
+    }
+}
+
+.form-group{
+    label{
+        color: $blueColor;
+    }
+    &.has-danger{
+        .form-control{
+            margin-bottom: 5px;
+        }
+        label{
+            &.error{
+                color: red;
+            }
+        }
+    }
+    &.has-success{
+        input{
+            color: black;
+        }
+    }
+}
+ 
