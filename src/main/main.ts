@@ -1,5 +1,8 @@
 import { app, BrowserWindow } from "electron";
 import * as path from 'path'
+import Jimp from 'jimp/es'
+const { ipcMain } = require('electron');
+var fs = require('fs')
 
 declare global {
   const MAIN_WINDOW_WEBPACK_ENTRY: string;
@@ -38,7 +41,7 @@ const createWindow = () => {
     setTimeout(_ => {
       splashWindow.close();
       mainWindow.show();
-    }, 5000)
+    }, 500)
   });
 
   // and load the index.html of the app.
@@ -109,3 +112,32 @@ app.on("activate", () => {
 
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and import them here.
+
+//execute Jimp
+async function converter(filepath, rootPath, fileName, width, height, folder) {
+  try {
+
+    new Jimp(filepath, (err, img) => {
+      if(err) {console.log('fatal: ', err)}
+      img.cover(width, height) // resize
+        .quality(60) // set quality JPEG
+        .filterType(-1)
+        .deflateLevel(1)
+        .deflateStrategy(3)
+        .write(`${rootPath}\\final\\${folder}\\${fileName}`) // save
+    })
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+
+ipcMain.on('trigger-jimp', async (event, args) => {
+
+  let { filepath, rootPath, fileName, width, height, folder, type } = args
+
+  await converter(filepath, rootPath, fileName, width, height, folder)
+  event.reply(`${type}-ready`, 1)
+});
+
+  // finish Jimp execution
