@@ -1,8 +1,6 @@
 import React, { useState } from 'react'
 import {
-  BreadcrumbItem,
   Button,
-  ButtonGroup,
   Card,
   CardHeader,
   CardBody,
@@ -14,7 +12,6 @@ import {
   Label,
   FormGroup,
   Input,
-  Progress,
   Table,
   Row,
   Col,
@@ -25,12 +22,17 @@ import {
   Pagination, PaginationItem, PaginationLink, CardFooter
 } from 'reactstrap'
 import classnames from 'classnames'
+import Select from 'react-select'
 
-const TableTemplates = () => {
+const TableTemplates = (props) => {
   const [focusInput, setFocusInput] = useState({
     inputName: {
       focus: false
     }
+  })
+  const [singleSelect, setSingleSelect] = useState({
+    label: '5',
+    value: '5'
   })
 
   return (
@@ -78,6 +80,14 @@ const TableTemplates = () => {
             </UncontrolledDropdown>
           </div>
           <CardTitle tag='h4'>Templates list</CardTitle>
+          <Button
+            onClick={(e) => props.setOpenModal(true)}
+            className='btn-simple'
+            color='success'
+          >
+            <i className='fas fa-plus-circle mr-2' />
+           Add Template
+          </Button>
         </CardHeader>
         <CardBody>
           <Table responsive className='table'>
@@ -86,7 +96,7 @@ const TableTemplates = () => {
                 <th scope='col' style={{ maxWidth: '275px', width: '275px' }}>
                   <Row>
                     <Col style={{ paddingTop: '0.6rem' }} className='text-center col-4'>
-                          Name
+                       Name
                     </Col>
                     <Col className='col-8'>
                       <InputGroup
@@ -120,8 +130,7 @@ const TableTemplates = () => {
                   </Row>
                 </th>
                 <th scope='col'>Description</th>
-                <th scope='col' className='text-center'>Teme</th>
-                <th scope='col' className='text-right'>Layouts</th>
+                <th scope='col' className='text-center'>Page</th>
                 <th scope='col' className='text-center'>Actions</th>
               </tr>
             </thead>
@@ -130,7 +139,6 @@ const TableTemplates = () => {
                 <td className='text-left'>Andrew Mike</td>
                 <td>Develop</td>
                 <td className='text-center'>2013</td>
-                <td className='text-right'>€ 99,225</td>
                 <td className='text-center'>
                   <Button
                     className='btn-link btn-icon'
@@ -186,11 +194,26 @@ const TableTemplates = () => {
                     <Label for='inputState'>Page</Label>
                   </Col>
                   <Col>
-                    <Input className='tableTemplates' type='select' name='select' id='inputState'>
-                      <option style={{ color: 'black' }}>5</option>
-                      <option style={{ color: 'black' }}>10</option>
-                      <option style={{ color: 'black' }}>15</option>
-                    </Input>
+                    <Select
+                      className='react-select primary'
+                      classNamePrefix='react-select'
+                      name='singleSelect'
+                      value={singleSelect}
+                      onChange={(value) => {
+                        setSingleSelect(value)
+                      }}
+                      options={[
+                        {
+                          value: '',
+                          label: 'Perpage',
+                          isDisabled: true
+                        },
+                        { value: '5', label: '5' },
+                        { value: '10', label: '10' },
+                        { value: '15', label: '15' }
+                      ]}
+                      placeholder='Perpage'
+                    />
                   </Col>
                 </Row>
               </FormGroup>
