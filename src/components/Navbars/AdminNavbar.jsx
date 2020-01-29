@@ -16,7 +16,7 @@
 */
 import React from "react";
 // nodejs library that concatenates classes
-import classNames from "classnames";
+import classNames from "classnames"
 
 // reactstrap components
 import {
@@ -35,7 +35,9 @@ import {
   Container,
   Modal,
   UncontrolledTooltip
-} from "reactstrap";
+} from "reactstrap"
+
+import UserDropDown from './UserDropDown'
 
 class AdminNavbar extends React.Component {
   constructor(props) {
@@ -71,13 +73,13 @@ class AdminNavbar extends React.Component {
       });
     } else {
       this.setState({
-        color: "bg-white"
+        color: "bg-NavBar"
       });
     }
     this.setState({
       collapseOpen: !this.state.collapseOpen
     });
-  };
+  }
  
   render() {
     return (
@@ -144,7 +146,7 @@ class AdminNavbar extends React.Component {
             <Collapse navbar isOpen={this.state.collapseOpen}>
               <Nav className="ml-auto" navbar>
                 
-                <UncontrolledDropdown nav>
+                <UncontrolledDropdown nav className='text-center d-flex align-items-center justify-content-center'>
                   <DropdownToggle
                     caret
                     color="default"
@@ -183,38 +185,18 @@ class AdminNavbar extends React.Component {
                     </NavLink>
                   </DropdownMenu>
                 </UncontrolledDropdown>
-                <UncontrolledDropdown nav>
-                  <DropdownToggle
-                    caret
-                    color="default"
-                    data-toggle="dropdown"
-                    nav
-                    onClick={e => e.preventDefault()}
-                  >
-                    <div className="photo">
-                      <img alt="..." src={require("assets/img/mike.jpg")} />
-                    </div>
-                    <b className="caret d-none d-lg-block d-xl-block" />
-                    <p className="d-lg-none">Log out</p>
-                  </DropdownToggle>
-                  <DropdownMenu className="dropdown-navbar" right tag="ul">
-                    <NavLink tag="li">
-                      <DropdownItem className="nav-item">Profile</DropdownItem>
-                    </NavLink>
-                    <NavLink tag="li">
-                      <DropdownItem className="nav-item">Settings</DropdownItem>
-                    </NavLink>
-                    <DropdownItem divider tag="li" />
-                    <NavLink tag="li">
-                      <DropdownItem className="nav-item">Log out</DropdownItem>
-                    </NavLink>
-                  </DropdownMenu>
-                </UncontrolledDropdown>
+
+                <li className='dropdown nav-item d-flex align-items-center'>
+                  <UserDropDown history={this.props.history} />
+                </li>
+
                 <li className="separator d-lg-none" />
+
               </Nav>
             </Collapse>
           </Container>
         </Navbar>
+        
         <Modal
           modalClassName="modal-search"
           isOpen={this.state.modalSearch}
@@ -238,4 +220,5 @@ class AdminNavbar extends React.Component {
   }
 }
 
-export default AdminNavbar;
+export default AdminNavbar
+

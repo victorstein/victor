@@ -1,8 +1,14 @@
-import { app, BrowserWindow } from "electron";
+import { app, BrowserWindow } from "electron"
 import * as path from 'path'
 import Jimp from 'jimp/es'
 const { ipcMain } = require('electron');
 var fs = require('fs')
+import os from 'os'
+import dotenv from 'dotenv'
+
+dotenv.config()
+
+const NODE_ENV = process.env.NODE_ENV
 
 declare global {
   const MAIN_WINDOW_WEBPACK_ENTRY: string;
@@ -25,7 +31,10 @@ if (require("electron-squirrel-startup")) {
 let mainWindow: null | BrowserWindow;
 let splashWindow: null | BrowserWindow;
 
+
+
 const createWindow = () => {
+
   // Create the browser window.
   mainWindow = new BrowserWindow({
     width: 1250,
@@ -37,6 +46,17 @@ const createWindow = () => {
       nodeIntegration: true,
     },
   });
+
+  if(NODE_ENV === 'development' ) {
+    if(process.env.DEV_TOOLS){
+      BrowserWindow.addDevToolsExtension(
+        // windows: %LOCALAPPDATA%\Google\Chrome\User Data\Default\Extensions
+        // extensionName: fmkadmapgofadopljbjfkapdkoienihi
+        path.join(os.homedir(), '/AppData/Local/Google/Chrome/User Data/Default/Extensions/fmkadmapgofadopljbjfkapdkoienihi/4.4.0_0')
+      )
+    } 
+  }
+  
   mainWindow.once('ready-to-show', () => {
     setTimeout(_ => {
       splashWindow.close();

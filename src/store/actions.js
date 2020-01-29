@@ -1,1 +1,2 @@
 export const SET_USER = 'SETUSER'
+export const SET_INITIAL_STATE = 'SETINITIALSTATE'
