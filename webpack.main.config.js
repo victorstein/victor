@@ -1,5 +1,6 @@
 const path = require('path')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
+const webpack = require('webpack')
 
 module.exports = {
   /**
@@ -15,7 +16,10 @@ module.exports = {
           to: path.resolve(__dirname, '.webpack/renderer/splash')
         }
       ]
-    )
+    ),
+    new webpack.DefinePlugin({
+      'process.browser': 'true'
+    })
   ],
   // Put your normal webpack config below here
   module: {

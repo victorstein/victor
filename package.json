@@ -85,6 +85,7 @@
     "graphql": "^14.5.8",
     "history": "4.7.2",
     "image-size": "^0.8.3",
+    "jimp": "^0.9.3",
     "js-beautify": "^1.10.3",
     "moment": "2.23.0",
     "monaco-editor": "^0.19.1",
@@ -117,6 +118,7 @@
     "url-loader": "^3.0.0"
   },
   "devDependencies": {
+    "electron-prebuilt-compile": "1.7.9",
     "@babel/plugin-proposal-class-properties": "^7.7.4",
     "@babel/plugin-proposal-object-rest-spread": "^7.7.7",
     "@babel/preset-env": "^7.7.7",

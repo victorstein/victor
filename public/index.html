@@ -16,13 +16,23 @@
       body {
           padding: 0px;
           margin: 0px;
-          overflow: hidden;
       }
 
+      body::-webkit-scrollbar {
+        display: none;
+      }
+
+      .footer {
+        padding-bottom: 50px;
+      }
+      
       .fadeIn {
         animation: fadein 2s;
       }
 
+      .table-responsive {
+          overflow: hidden !important;
+      }
       .fadeOut {
         opacity: 0;
       }

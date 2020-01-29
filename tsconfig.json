@@ -4,9 +4,9 @@
     "jsx": "react",
     "module": "es6",
     "moduleResolution": "node",
-    "noImplicitAny": true,
-    "noImplicitThis": true,
-    "strictNullChecks": true,
+    "noImplicitAny": false,
+    "noImplicitThis": false,
+    "strictNullChecks": false,
     "sourceMap": true,
     "target": "es5"
   },
