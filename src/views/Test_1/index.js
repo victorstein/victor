@@ -9,20 +9,38 @@ import {
   Label,
   Input
 } from 'reactstrap'
-
+import gql from 'graphql-tag'
+import { useLazyQuery } from '@apollo/react-hooks'
 import CodeEditor from '../../components/CodeEditor'
+import EasyBlock from '../../components/BlockScreen/EasyBlock'
+
+const GET_DOG_PHOTO = gql`
+  query permissions{
+    permissions{
+      total
+    }
+  }
+`
 
 const Test1 = () => {
+  const [getDog, { loading, data }] = useLazyQuery(GET_DOG_PHOTO)
   const [typeEditor, setTypeEditor] = useState('raw')
   const [valueCode, setValueCode] = useState('')
+  const [isBlock, setIsBlock] = useState(false)
   const changeTypeRadio = value => {
     setTypeEditor(value)
+    getDog()
+    /*setIsBlock(true)
+    setTimeout( () => {
+      setIsBlock(false)
+    }, 7000)*/
   }
   const setNewValue = value => {
     setValueCode(value)
   }
   return (
     <Card className='card-stats'>
+     <EasyBlock isBlock={isBlock} />
       <CardBody>
         <Row>
           <Col xs='12'>

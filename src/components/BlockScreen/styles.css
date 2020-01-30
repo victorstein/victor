@@ -1,0 +1,24 @@
+.block-ui-container {
+    z-index: 100000;
+}
+
+.block-ui-container-login > .block-ui-container {
+    cursor: default !important;
+}
+
+.wTemporalLogin {
+    width: 30% !important;
+}
+
+
+@media only screen and (max-width: 600px) and (min-width: 400px)  {
+    .wTemporalLogin {
+        width: 60% !important;
+    }
+}
+
+@media only screen and (max-width: 1200px) and (min-width: 601px)  {
+    .wTemporalLogin {
+        width: 30% !important;
+    }
+}

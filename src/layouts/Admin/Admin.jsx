@@ -32,6 +32,8 @@ import routes from '../../routes.js'
 
 import logo from 'assets/img/react-logo.png'
 
+import './styles.css'
+
 var ps
 
 class Admin extends React.Component {
@@ -42,9 +44,24 @@ class Admin extends React.Component {
       sidebarMini: true,
       opacity: 0,
       sidebarOpened: false,
+      fullContent: false,
+    }
+  }
+
+  sideBarFullContent = fullContent => {
+    let findSidebar = document.querySelectorAll('.sidebarToggle')
+    if (fullContent) {
+      if (findSidebar) {
+        findSidebar[0].classList.add('sidebar-full-content')
+      }
+    } else {
+      if (findSidebar) {
+        findSidebar[0].classList.remove('sidebar-full-content')
+      }
     }
   }
   componentDidMount () {
+    this.sideBarFullContent(this.props.fullContent)
     if (navigator.platform.indexOf('Win') > -1) {
       document.documentElement.className += ' perfect-scrollbar-on'
       document.documentElement.classList.remove('perfect-scrollbar-off')
@@ -58,7 +75,7 @@ class Admin extends React.Component {
   }
   componentWillUnmount () {
     if (navigator.platform.indexOf('Win') > -1) {
-      if(ps.destroy) {
+      if (ps.destroy) {
         ps.destroy()
       }
       document.documentElement.className += ' perfect-scrollbar-off'
@@ -67,7 +84,20 @@ class Admin extends React.Component {
     window.removeEventListener('scroll', this.showNavbarButton)
   }
   componentDidUpdate (e) {
-    if (e.routerProps.location.pathname !== e.routerProps.history.location.pathname) {
+    if (
+      e.routerProps.location.pathname !==
+      e.routerProps.history.location.pathname
+    ) {
+      let fullContent = false
+      routes.forEach((value, index) => {
+        if (
+          value.fullContent &&
+          e.routerProps.history.location.pathname === value.layout + value.path
+        ) {
+          fullContent = true
+        }
+      })
+      this.sideBarFullContent(fullContent)
       if (navigator.platform.indexOf('Win') > -1) {
         let tables = document.querySelectorAll('.table-responsive')
         for (let i = 0; i < tables.length; i++) {
@@ -116,6 +146,12 @@ class Admin extends React.Component {
     this.setState({ activeColor: color })
   }
   handleMiniClick = () => {
+    if (this.props.fullContent) {
+      let findSidebar = document.querySelectorAll('.sidebarToggle')
+      if (findSidebar) {
+        findSidebar[0].classList.toggle('sidebar-full-content')
+      }
+    }
     if (document.body.classList.contains('sidebar-mini')) {
       this.setState({ sidebarMini: false })
     } else {
@@ -138,9 +174,6 @@ class Admin extends React.Component {
   render () {
     return (
       <div className='wrapper'>
-        <div className='rna-container'>
-          <NotificationAlert ref='notificationAlert' />
-        </div>
         <div
           className='navbar-minimize-fixed'
           style={{ opacity: this.state.opacity }}
@@ -153,6 +186,7 @@ class Admin extends React.Component {
             <i className='tim-icons icon-bullet-list-67 visible-on-sidebar-mini text-muted' />
           </button>
         </div>
+
         <Sidebar
           {...this.props.routerProps}
           routes={routes}
@@ -164,6 +198,7 @@ class Admin extends React.Component {
           }}
           closeSidebar={this.closeSidebar}
         />
+
         <div
           className='main-panel'
           ref='mainPanel'
@@ -175,7 +210,9 @@ class Admin extends React.Component {
             sidebarOpened={this.state.sidebarOpened}
             toggleSidebar={this.toggleSidebar}
           />
-          <div className='content'>
+          <div
+            className={this.props.fullContent ? 'contentFull px-3' : 'content'}
+          >
             <Row>
               <Col xs='12'>
                 <Switch>{this.getRoutes(routes)}</Switch>
@@ -190,4 +227,3 @@ class Admin extends React.Component {
 }
 
 export default Admin
-

@@ -25,6 +25,7 @@ import AdminLayout from 'layouts/Admin/index.js'
 //import AdminLayout from 'layouts/Admin/Admin.jsx'
 import RTLLayout from 'layouts/RTL/RTL.jsx'
 
+import BlockScreen from './components/BlockScreen'
 import initialState from './store/initialState'
 import reducer from './store/reducer'
 import client from './apolloClient'
@@ -37,11 +38,13 @@ import 'react-notification-alert/dist/animate.css'
 export const GlobalContext = createContext()
 
 const Main = () => {
+  
   const [state, dispatch] = useReducer(reducer, initialState)
 
   return (
+    <GlobalContext.Provider value={{ state: state, dispatch: dispatch }}>
     <ApolloProvider client={client}>
-      <GlobalContext.Provider value={{ state: state, dispatch: dispatch }}>
+      <BlockScreen>
         <Router>
           <Switch>
             <Route path='/auth' render={props => <AuthLayout {...props} />} />
@@ -50,8 +53,9 @@ const Main = () => {
             <Redirect from='/' to='/admin/dashboard' />
           </Switch>
         </Router>
-      </GlobalContext.Provider>
+      </BlockScreen>
     </ApolloProvider>
+    </GlobalContext.Provider>
   )
 }
 

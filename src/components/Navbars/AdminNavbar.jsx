@@ -39,6 +39,8 @@ import {
 
 import UserDropDown from './UserDropDown'
 
+import './styles.css'
+
 class AdminNavbar extends React.Component {
   constructor(props) {
     super(props);
@@ -57,7 +59,7 @@ class AdminNavbar extends React.Component {
   updateColor = () => {
     if (window.innerWidth < 993 && this.state.collapseOpen) {
       this.setState({
-        color: "bg-white"
+        color: "bg-NavBar"
       });
     } else {
       this.setState({
@@ -146,7 +148,7 @@ class AdminNavbar extends React.Component {
             <Collapse navbar isOpen={this.state.collapseOpen}>
               <Nav className="ml-auto" navbar>
                 
-                <UncontrolledDropdown nav className='text-center d-flex align-items-center justify-content-center'>
+                <UncontrolledDropdown nav className='text-center d-flex align-items-center justify-content-center mr-3'>
                   <DropdownToggle
                     caret
                     color="default"
@@ -186,13 +188,14 @@ class AdminNavbar extends React.Component {
                   </DropdownMenu>
                 </UncontrolledDropdown>
 
-                <li className='dropdown nav-item d-flex align-items-center'>
-                  <UserDropDown history={this.props.history} />
-                </li>
+                {/*<li className='dropdown nav-item d-flex align-items-center justify-content-center'>
+                 
+              </li>*/}
+
+                <UserDropDown history={this.props.history} />
 
                 <li className="separator d-lg-none" />
 
-                
               </Nav>
             </Collapse>
           </Container>
