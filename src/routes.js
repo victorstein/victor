@@ -3,7 +3,7 @@ import ImageEditor from 'views/pages/ImageEditor.jsx'
 
 import Test1 from './views/Test_1'
 import Login from './views/login'
-import Templates from './views/Templates'
+import Projets from './views/Projets'
 
 const routes = [
   {
@@ -47,10 +47,10 @@ const routes = [
     layout: '/admin'
   },
   {
-    path: '/templates',
-    name: 'Templates',
+    path: '/Projets',
+    name: 'Projets',
     icon: 'tim-icons icon-palette',
-    component: Templates,
+    component: Projets,
     layout: '/admin',
     role: []
   }

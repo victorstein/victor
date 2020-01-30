@@ -1,21 +1,22 @@
 import React, { useState } from 'react'
 import { Row, Col } from 'reactstrap'
-import TableTemplates from './TableTemplates'
-import ModalAddTemplates from './ModalAddTemplates'
+import TableProjects from './TableProjects'
+import Modal from './ModalWizard'
+import './stylesTemplates.scss'
 
 const TemplatesIndex = (props) => {
   const [openModal, setOpenModal] = useState(false)
 
   return (
     <div className='content'>
-      <ModalAddTemplates openModal={openModal} setOpenModal={setOpenModal} />
+      <Modal openModal={openModal} setOpenModal={setOpenModal} />
       <Row>
         <Col xs='12'>
-          <h1 className='mb-0'>Templates</h1>
+          <h1 className='mb-0'>Projects</h1>
         </Col>
       </Row>
       <div className='container p-2 m-2'>
-        <TableTemplates setOpenModal={setOpenModal} />
+        <TableProjects setOpenModal={setOpenModal} />
       </div>
     </div>
   )

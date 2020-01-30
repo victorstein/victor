@@ -24,7 +24,7 @@ import {
 import classnames from 'classnames'
 import Select from 'react-select'
 
-const TableTemplates = (props) => {
+const TableProyects = (props) => {
   const [focusInput, setFocusInput] = useState({
     inputName: {
       focus: false
@@ -79,14 +79,14 @@ const TableTemplates = (props) => {
               </DropdownMenu>
             </UncontrolledDropdown>
           </div>
-          <CardTitle tag='h4'>Templates list</CardTitle>
+          <CardTitle tag='h4'>Proyect list</CardTitle>
           <Button
             onClick={(e) => props.setOpenModal(true)}
             className='btn-simple'
             color='success'
           >
             <i className='fas fa-plus-circle mr-2' />
-           Add Template
+           Add Project
           </Button>
         </CardHeader>
         <CardBody>
@@ -257,4 +257,4 @@ const TableTemplates = (props) => {
   )
 }
 
-export default TableTemplates
+export default TableProyects
