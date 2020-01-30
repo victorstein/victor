@@ -1,0 +1,90 @@
+$blueColor: #27293d;
+
+.iccon {
+    .has-label:after {
+        top: 44px !important;
+    }
+}
+
+.wizardProyect {
+    align-items: center !important;
+    display: flex !important;
+    justify-content: center !important;
+
+    div {
+        flex: 1 !important;
+        max-width: none !important;
+    }
+
+    .wizard-container {
+        .card-wizard {
+            .card-footer {
+                div:first-child{
+                    padding-right: 0 !important;
+                };
+                div:nth-child(2){
+                    padding-left: 0 !important;
+                }
+            }
+
+            .tab-pane {
+                // overflow: auto;
+            }
+
+            p {
+                color: black;
+            }
+        }
+
+    }
+}
+
+.modal-header {
+    button {
+        padding: 8px !important;
+    }
+
+    .close {
+        i {
+            color: #ffff;
+        }
+    }
+}
+
+.modal-content {
+    background: #222a42 !important;
+
+    .modal-title {
+        color: white !important;
+    }
+}
+
+.form-group {
+    label {
+        color: $blueColor;
+    }
+
+    &.has-danger {
+        .form-control {
+            margin-bottom: 5px;
+        }
+
+        label {
+            &.error {
+                color: red;
+            }
+        }
+    }
+
+    &.has-success {
+        input {
+            color: white;
+        }
+    }
+}
+
+
+// max-height: 230px;
+//     height: 230px;
+//     overflow: auto;
+// }
