@@ -82,6 +82,25 @@ class PageTwo extends React.Component {
       switch (nameInput) {
         case 'userName' :
           if (!value) {
+            if (value !== this.state.confirmPasswordInput.value) {
+              this.setState({
+                confirmPasswordInput: {
+                  labelError: 'Passwords do not match',
+                  error: true,
+                  value: this.state.confirmPasswordInput.value,
+                  className: 'has-danger'
+                }
+              })
+            } else {
+              this.setState({
+                confirmPasswordInput: {
+                  labelError: '',
+                  error: false,
+                  value: this.state.confirmPasswordInput.value,
+                  className: 'has-success'
+                }
+              })
+            }
             this.setState({
               userNameInput: {
                 labelError: 'User Name is required',
@@ -126,6 +145,7 @@ class PageTwo extends React.Component {
                 confirmPasswordInput: {
                   labelError: '',
                   error: false,
+                  value: this.state.confirmPasswordInput.value,
                   className: 'has-success'
                 }
               })
@@ -156,7 +176,7 @@ class PageTwo extends React.Component {
           if (!value) {
             this.setState({
               confirmPasswordInput: {
-                labelError: 'Confirm Password is required',
+                labelError: 'Confirm password is required',
                 error: true,
                 value: value,
                 className: 'has-danger'
