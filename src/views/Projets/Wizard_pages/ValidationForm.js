@@ -1,37 +1,27 @@
 
-export const ValidatorFormChange = (value, state, setState, type) => {
-  switch (type) {
-    case 'nameTemplate' :
+export const ValidatorFormChange = (event, nameInput) => {
+  const { value } = event.target
+  switch (nameInput) {
+    case 'userName':
       if (!value) {
-        return setState({
-          labelError: 'Name is required',
-          error: true,
-          value: value,
-          className: 'has-danger'
+        return ({
+          userNameInput: {
+            labelError: 'User Name is required',
+            error: true,
+            value: value,
+            className: 'has-danger'
+          }
         })
       } else {
-        return setState({
-          labelError: '',
-          error: false,
-          value: value,
-          className: 'has-success'
-        })
-      }
-    case 'descriptionTemplate' :
-      if (!value) {
-        return setState({
-          labelError: 'Description is required',
-          error: true,
-          value: value,
-          className: 'has-danger'
-        })
-      } else {
-        return setState({
-          labelError: '',
-          error: false,
-          value: value,
-          className: 'has-success'
-        })
+        return (
+          {
+            userNameInput: {
+              labelError: '',
+              error: false,
+              value: value,
+              className: 'has-success'
+            }
+          })
       }
     default: break
   }
