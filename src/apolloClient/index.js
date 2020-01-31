@@ -85,12 +85,13 @@ const errorHandler = onError(({ graphQLErrors, operation, forward, response }) =
               forward(operation).subscribe(subscriber)
             })
             .catch(error => {
-              console.log(' operationName ', operationName)
               if(operationName && operationName !== 'me') {
+                observer.error(error)
                 mrEmitter.emit('refreshTokenExpired', 'El token Expiro - catch')
+              } else {
+                  // No refresh or client token available, we force user to login
+                  observer.error(error)
               }
-              // No refresh or client token available, we force user to login
-              observer.error(error)
             })
         })
       }

@@ -1,7 +1,10 @@
 const initialState = {
     darkMode: null,
     user: null,
-    blockScreen: false
+    blockScreen: {
+        active: true,
+        type: 'login'
+    }
 }
 
 export default initialState

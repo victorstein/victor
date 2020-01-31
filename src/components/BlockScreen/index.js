@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from 'react'
+import React, { useContext, useEffect, useRef } from 'react'
 import { GlobalContext } from '../../index'
 import {SET_BLOCK_SCREEN} from '../../store/actions'
 import mrEmitter from '../../utils/Emitter'
@@ -17,6 +17,7 @@ import {
   Alert
 } from 'reactstrap'
 import BlockUi from 'react-block-ui'
+import TemporalLogin from './TemporalLogin'
 import 'react-block-ui/style.css'
 import './styles.css'
 
@@ -36,15 +37,10 @@ const BlockScreen = props => {
 
   const listenerBlock = () => {
     Subscription = mrEmitter.addListener('refreshTokenExpired', (data) => {
-      /*dispatch({
-
-      })*/
-      
+      localStorage.clear()
       dispatch({
         type: SET_BLOCK_SCREEN, payload: { active: true, type: 'login' }
       })
-      
-      console.log(data)
     })
   }
 
@@ -55,59 +51,6 @@ const BlockScreen = props => {
       }>
         {props.children}
       </BlockUi>
-    </div>
-  )
-}
-
-const TemporalLogin = () => {
-
-  const submitFormLogin = e => {
-    e.preventDefault()
-  }
-
-  return (
-    <div class='wTemporalLogin bg-white mx-auto'>
-      <div className='loginForm'>
-        <Card>
-          <CardHeader>
-            <CardTitle tag='h4' className='text-center'>
-              Login
-            </CardTitle>
-          </CardHeader>
-          <CardBody>
-            <form onSubmit={submitFormLogin}>
-              <FormGroup className={'has-label'}>
-                <Label for='exampleEmail'>Email address</Label>
-                <Input
-                  type='email'
-                  name='email'
-                  id='exampleEmail'
-                  placeholder='Enter email'
-                />
-              </FormGroup>
-              <FormGroup className={'has-label'}>
-                <Label for='examplePassword'>Password</Label>
-                <Input
-                  type='password'
-                  name='password'
-                  id='examplePassword'
-                  placeholder='Password'
-                  autoComplete='off'
-                />
-              </FormGroup>
-              <CardFooter>
-                <Button
-                  className='w-100'
-                  color='success'
-                  type='submit'
-                >
-                    Login 
-                </Button>
-              </CardFooter>
-            </form>
-          </CardBody>
-        </Card>
-      </div>
     </div>
   )
 }
