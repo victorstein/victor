@@ -83,8 +83,17 @@ $blueColor: #27293d;
     }
 }
 
-
-// max-height: 230px;
-//     height: 230px;
-//     overflow: auto;
-// }
+.Tooltip_wizard{
+    div{
+        background-color: rgba(0, 0, 0, 0.75);
+        box-shadow : 0 2px 8px rgba(0, 0, 0, 15) ;
+        p{
+            color: white;
+        }
+        ul{
+            li{
+                color: white;
+            }
+        }
+    }
+}
