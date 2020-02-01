@@ -16,7 +16,7 @@ const AdminLayout = props => {
   const [verifyLogin, setVerifyLogin] = useState(false)
   const [isFullContent, setIsFullContent] = useState(false)
   const { loading, error, data } = useQuery(
-    ME('fullName verified firstName permissions { name } role { name }'),
+    ME('fullName verified email firstName permissions { name } role { name }'),
     { fetchPolicy: 'no-cache' }
   )
 

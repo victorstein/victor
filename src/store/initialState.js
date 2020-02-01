@@ -2,8 +2,8 @@ const initialState = {
     darkMode: null,
     user: null,
     blockScreen: {
-        active: true,
-        type: 'login'
+        active: false,
+        type: null
     }
 }
 

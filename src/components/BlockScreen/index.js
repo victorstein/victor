@@ -38,6 +38,7 @@ const BlockScreen = props => {
   const listenerBlock = () => {
     Subscription = mrEmitter.addListener('refreshTokenExpired', (data) => {
       localStorage.clear()
+      console.log('Subscription ')
       dispatch({
         type: SET_BLOCK_SCREEN, payload: { active: true, type: 'login' }
       })

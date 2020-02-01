@@ -23,12 +23,13 @@ const GET_DOG_PHOTO = gql`
 `
 
 const Test1 = () => {
-  const [getDog, { loading, data }] = useLazyQuery(GET_DOG_PHOTO)
+  const [getDog, { loading, data }] = useLazyQuery(GET_DOG_PHOTO, { fetchPolicy: 'no-cache' })
   const [typeEditor, setTypeEditor] = useState('raw')
   const [valueCode, setValueCode] = useState('')
   const [isBlock, setIsBlock] = useState(false)
   const changeTypeRadio = value => {
     setTypeEditor(value)
+    console.log('asdasdsadasdasdsadsadsadds')
     getDog()
     /*setIsBlock(true)
     setTimeout( () => {

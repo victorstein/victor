@@ -43,7 +43,7 @@ const LoginIndex = props => {
   const [isResendEmail, setIsResendEmail] = useState(false)
   const [alertResetPassword, setAlertResetPassword] = useState(false)
   const [fetchLogin, { loading, error, data }] = useLazyQuery(
-    loginGql('token refreshToken')
+    loginGql('token refreshToken'), { fetchPolicy: 'no-cache' }
   )
   const [
     fechresendVerificationEmail,

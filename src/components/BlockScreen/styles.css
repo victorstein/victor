@@ -1,5 +1,5 @@
 .block-ui-container {
-    z-index: 100000;
+    z-index: 9999;
 }
 
 .block-ui-container-login > .block-ui-container {
@@ -10,6 +10,13 @@
     width: 30% !important;
 }
 
+.block-ui > .wrapper {
+    z-index: 1;
+}
+
+.inputTemporalLogin > input:focus {
+    color: black;
+}
 
 @media only screen and (max-width: 600px) and (min-width: 400px)  {
     .wTemporalLogin {
