@@ -63,11 +63,11 @@ class PageThree extends React.Component {
     } = this.state
     if (
       userNameInput.className === 'has-success' &&
-      passwordInput.className === 'has-suceess' &&
-      confirmPasswordInput.className === 'has-suceess' &&
-      developerEmailInput.className === 'has-suceess' &&
-      languageInput.className === 'has-suceess' &&
-      topicInput.className === 'has-suceess'
+      passwordInput.className === 'has-success' &&
+      confirmPasswordInput.className === 'has-success' &&
+      developerEmailInput.className === 'has-success' &&
+      languageInput.className === 'has-success' &&
+      topicInput.className === 'has-success'
     ) {
       return alert('final validated')
     } else {
@@ -81,12 +81,52 @@ class PageThree extends React.Component {
           }
         })
       }
-      if (passwordInput.className !== 'has-suceess') {
+      if (passwordInput.className !== 'has-success') {
         this.setState({
           passwordInput: {
             labelError: 'User Name is required',
             error: true,
             value: passwordInput.value,
+            className: 'has-danger'
+          }
+        })
+      }
+      if (confirmPasswordInput.className !== 'has-success') {
+        this.setState({
+          confirmPasswordInput: {
+            labelError: 'Confirm password is required',
+            error: true,
+            value: confirmPasswordInput.value,
+            className: 'has-danger'
+          }
+        })
+      }
+      if (developerEmailInput.className !== 'has-succcess') {
+        this.setState({
+          developerEmailInput: {
+            labelError: 'Developer email is required',
+            error: true,
+            value: developerEmailInput.value,
+            className: 'has-danger'
+          }
+        })
+      }
+      if (languageInput.className !== 'has-success') {
+        this.setState({
+          languageInput: {
+            labelError: 'Language is required',
+            error: true,
+            value: languageInput.value,
+            className: 'has-danger'
+          }
+        })
+      }
+      if (topicInput.className !== 'has-success') {
+        this.setState({
+          topicInput: {
+            labelError: 'Topic is required',
+            error: true,
+            value: topicInput.value,
             className: 'has-danger'
           }
         })
