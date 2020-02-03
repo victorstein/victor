@@ -15,11 +15,9 @@ import {
   CardTitle,
   CardHeader,
   CardFooter,
-  Alert,
+  Alert
 } from 'reactstrap'
-import useAuth from '../../utils/Auth/index'
 import { ClipLoader } from 'react-spinners'
-import gql from 'graphql-tag'
 
 import './styles.css'
 
@@ -143,7 +141,6 @@ const TemporalLogin = props => {
             props.history.push('/admin/dashboard')
           }
         }
-
       }
     }
   )

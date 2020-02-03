@@ -55,7 +55,6 @@ const errorHandler = onError(({ graphQLErrors, operation, forward, response }) =
       operationName = operationName.toLowerCase()
     }
     if (WHITE_LINKS.indexOf(operationName) > -1) {
-      console.log('APOLLO CLIENT ---> ', operationName)
       return forward(operation)
     } else if (graphQLErrors) {
       const errorMessage = graphQLErrors[0].extensions.code
@@ -86,6 +85,7 @@ const errorHandler = onError(({ graphQLErrors, operation, forward, response }) =
             })
             .catch(error => {
               if(operationName && operationName !== 'me') {
+                observer.error(error)
                 mrEmitter.emit('refreshTokenExpired', 'El token Expiro - catch')
               } else {
                   // No refresh or client token available, we force user to login
@@ -99,7 +99,7 @@ const errorHandler = onError(({ graphQLErrors, operation, forward, response }) =
 
 const authLink = setContext(async (_, { headers }) => {
   // Get the token from LS
-  const token = localStorage.getItem('token')  
+  const token = localStorage.getItem('token')
   return {
     headers: {
       ...headers,

@@ -41,9 +41,13 @@ const Main = () => {
   
   const [state, dispatch] = useReducer(reducer, initialState)
 
+  const getClient = () => {
+    return client
+  }
+
   return (
     <GlobalContext.Provider value={{ state: state, dispatch: dispatch }}>
-    <ApolloProvider client={client}>
+    <ApolloProvider client={getClient()}>
       
         <Router>
         <BlockScreen>
