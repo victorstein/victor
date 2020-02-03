@@ -7,8 +7,10 @@ import {
   Col,
   UncontrolledTooltip
 } from 'reactstrap'
+import UserContext, { UserConsumer } from '../ModalWizardProvider'
 
 class PageTwo extends React.Component {
+  static contextType = UserContext
   constructor (props) {
     super(props)
     this.state = {
@@ -40,6 +42,17 @@ class PageTwo extends React.Component {
       passwordInput.className === 'has-success' &&
       confirmPasswordInput.className === 'has-success'
     ) {
+      const { setState } = this.context
+      const dataPage = {
+        userName : this.state.userNameInput.value,
+        password : this.state.passwordInput.value,
+      }
+      setState({
+        PageTwoData :{
+          data :  {...dataPage},
+          complete : true
+        }
+      })
       return true
     } else {
       if (userNameInput.className !== 'has-success') {
@@ -208,75 +221,84 @@ class PageTwo extends React.Component {
       }
     }
     return (
-      <div className='container'>
-        <form>
-          <Row>
-            <Col className='col-12'>
-              <FormGroup className={`has-label ${this.state.userNameInput.className}`}>
-                <Label for='userName'>User Name</Label>
-                <Input
-                  type='text'
-                  name='userName'
-                  id='userName'
-                  placeholder='User Name'
-                  onChange={e => ValidatorFormChange(e, 'userName')}
-                />
-                {this.state.userNameInput.error &&
-                  <label className='error'>
-                    {this.state.userNameInput.labelError}
-                  </label>}
-              </FormGroup>
-            </Col>
-          </Row>
-          <Row>
-            <Col className='col-6'>
-              <FormGroup className={`has-label ${this.state.passwordInput.className}`}>
-                <Label for='password'>Password</Label>
-                <UncontrolledTooltip className='Tooltip_wizard' placement='top' target='password' delay={0}>
-                  <div>
-                    <p className='pl-2'>Password required at leat:</p>
-                    <ul className='text-left pl-3 pt-0'>
-                      <li>One upper case letter</li>
-                      <li>One lower case letter</li>
-                      <li>Eight characters</li>
-                      <li>One special characters</li>
-                      <li>One Number</li>
-                    </ul>
-                  </div>
-                </UncontrolledTooltip>
-                <Input
-                  type='password'
-                  name='password'
-                  id='password'
-                  placeholder='password'
-                  onChange={e => ValidatorFormChange(e, 'password')}
-                />
+      <UserConsumer>
+        {
+          (contextValue) => {
+            // console.log(contextValue)
+            return (
+              <div className='container'>
+                <form>
+                  <Row>
+                    <Col className='col-12'>
+                      <FormGroup className={`has-label ${this.state.userNameInput.className}`}>
+                        <Label for='userName'>User Name</Label>
+                        <Input
+                          type='text'
+                          name='userName'
+                          id='userName'
+                          placeholder='User Name'
+                          onChange={e => ValidatorFormChange(e, 'userName')}
+                        />
+                        {this.state.userNameInput.error &&
+                          <label className='error'>
+                            {this.state.userNameInput.labelError}
+                          </label>}
+                      </FormGroup>
+                    </Col>
+                  </Row>
+                  <Row>
+                    <Col className='col-6'>
+                      <FormGroup className={`has-label ${this.state.passwordInput.className}`}>
+                        <Label for='password'>Password</Label>
+                        <UncontrolledTooltip className='Tooltip_wizard' placement='top' target='password' delay={0}>
+                          <div>
+                            <p className='pl-2'>Password required at leat:</p>
+                            <ul className='text-left pl-3 pt-0'>
+                              <li>One upper case letter</li>
+                              <li>One lower case letter</li>
+                              <li>Eight characters</li>
+                              <li>One special characters</li>
+                              <li>One Number</li>
+                            </ul>
+                          </div>
+                        </UncontrolledTooltip>
+                        <Input
+                          type='password'
+                          name='password'
+                          id='password'
+                          placeholder='password'
+                          onChange={e => ValidatorFormChange(e, 'password')}
+                        />
 
-                {this.state.passwordInput.error &&
-                  <label className='error'>
-                    {this.state.passwordInput.labelError}
-                  </label>}
-              </FormGroup>
-            </Col>
-            <Col className='col-6'>
-              <FormGroup className={`has-label ${this.state.confirmPasswordInput.className}`}>
-                <Label for='confirmPasswor'>Confirm Passwor</Label>
-                <Input
-                  type='password'
-                  name='confirmPasswor'
-                  id='confirmPasswor'
-                  placeholder='Confirm Password'
-                  onChange={e => ValidatorFormChange(e, 'confirmPasswor')}
-                />
-                {this.state.confirmPasswordInput.error &&
-                  <label className='error'>
-                    {this.state.confirmPasswordInput.labelError}
-                  </label>}
-              </FormGroup>
-            </Col>
-          </Row>
-        </form>
-      </div>
+                        {this.state.passwordInput.error &&
+                          <label className='error'>
+                            {this.state.passwordInput.labelError}
+                          </label>}
+                      </FormGroup>
+                    </Col>
+                    <Col className='col-6'>
+                      <FormGroup className={`has-label ${this.state.confirmPasswordInput.className}`}>
+                        <Label for='confirmPasswor'>Confirm Passwor</Label>
+                        <Input
+                          type='password'
+                          name='confirmPasswor'
+                          id='confirmPasswor'
+                          placeholder='Confirm Password'
+                          onChange={e => ValidatorFormChange(e, 'confirmPasswor')}
+                        />
+                        {this.state.confirmPasswordInput.error &&
+                          <label className='error'>
+                            {this.state.confirmPasswordInput.labelError}
+                          </label>}
+                      </FormGroup>
+                    </Col>
+                  </Row>
+                </form>
+              </div>
+            )
+          }
+        }
+      </UserConsumer>
     )
   }
 }

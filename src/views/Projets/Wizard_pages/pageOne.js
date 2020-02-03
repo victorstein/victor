@@ -6,8 +6,10 @@ import {
   Row,
   Col
 } from 'reactstrap'
+import UserContext, { UserConsumer } from '../ModalWizardProvider'
 
 class PageOne extends Component {
+  static contextType = UserContext
   constructor (props) {
     super(props)
     this.state = {
@@ -67,6 +69,21 @@ class PageOne extends Component {
       sellerInput.className === 'has-success' &&
       developerNameInput.className === 'has-success'
     ) {
+      const { setState } = this.context
+      const dataPage = {
+        nameAccount : this.state.nameAccountInput.value,
+        domainURL: this.state.domainURLInput.value,
+        projectsName : this.state.projectsNameInput.value,
+        projectOwner : this.state.projectOwnerInput.value,
+        seller : this.state.sellerInput.value,
+        developerName : this.state.developerNameInput.value
+      }
+      setState({
+        PageOneData :{
+          data :  {...dataPage},
+          complete : true
+        }
+      })
       return true
     } else {
       if (nameAccountInput.className !== 'has-success') {
@@ -268,110 +285,119 @@ class PageOne extends Component {
     }
 
     return (
-      <div className='container'>
-        <form>
-          <Row>
-            <Col className='col-4'>
-              <FormGroup className={`has-label ${this.state.nameAccountInput.className}`}>
-                <Label for='nameAccount'>Name Account</Label>
-                <Input
-                  type='text'
-                  name='nameAccount'
-                  id='nameAccount'
-                  placeholder='Name Account'
-                  onChange={e => ValidatorFormChange(e, 'nameAccount')}
-                />
-                {this.state.nameAccountInput.error &&
-                  <label className='error'>
-                    {this.state.nameAccountInput.labelError}
-                  </label>}
-              </FormGroup>
-            </Col>
-            <Col className='col-4'>
-              <FormGroup className={`has-label ${this.state.domainURLInput.className}`}>
-                <Label for='domainURL'>Domain url</Label>
-                <Input
-                  type='text'
-                  name='domainURL'
-                  id='domainURL'
-                  placeholder='Domain url'
-                  onChange={e => ValidatorFormChange(e, 'domainURL')}
-                />
-                {this.state.domainURLInput.error &&
-                  <label className='error'>
-                    {this.state.domainURLInput.labelError}
-                  </label>}
-              </FormGroup>
-            </Col>
-            <Col className='col-4'>
-              <FormGroup className={`has-label ${this.state.projectsNameInput.className}`}>
-                <Label for='projectsName'>Project's Name</Label>
-                <Input
-                  type='text'
-                  name='projectsName'
-                  id='projectsName'
-                  placeholder={'Projec\'ts Name'}
-                  onChange={e => ValidatorFormChange(e, 'projectsName')}
-                />
-                {this.state.projectsNameInput.error &&
-                  <label className='error'>
-                    {this.state.projectsNameInput.labelError}
-                  </label>}
-              </FormGroup>
-            </Col>
-          </Row>
-          <Row>
-            <Col className='col-4'>
-              <FormGroup className={`has-label ${this.state.projectOwnerInput.className}`}>
-                <Label for='projectOwner'>Project Owner</Label>
-                <Input
-                  type='text'
-                  name='projectOwner'
-                  id='projectOwner'
-                  placeholder='Project Owner'
-                  onChange={e => ValidatorFormChange(e, 'projectOwner')}
-                />
-                {this.state.projectOwnerInput.error &&
-                  <label className='error'>
-                    {this.state.projectOwnerInput.labelError}
-                  </label>}
-              </FormGroup>
-            </Col>
-            <Col className='col-4'>
-              <FormGroup className={`has-label ${this.state.sellerInput.className}`}>
-                <Label for='projectOwner'>Seller</Label>
-                <Input
-                  type='text'
-                  name='seller'
-                  id='seller'
-                  placeholder='Seller'
-                  onChange={e => ValidatorFormChange(e, 'seller')}
-                />
-                {this.state.sellerInput.error &&
-                  <label className='error'>
-                    {this.state.sellerInput.labelError}
-                  </label>}
-              </FormGroup>
-            </Col>
-            <Col className='col-4'>
-              <FormGroup className={`has-label ${this.state.developerNameInput.className}`}>
-                <Label for='developerName'>Seller</Label>
-                <Input
-                  type='text'
-                  name='developerName'
-                  id='developerName'
-                  placeholder='Developer Name'
-                  onChange={e => ValidatorFormChange(e, 'developerName')}
-                />
-                {this.state.developerNameInput.error &&
-                  <label className='error'>
-                    {this.state.developerNameInput.labelError}
-                  </label>}
-              </FormGroup>
-            </Col>
-          </Row>
-        </form>
-      </div>
+      <UserConsumer>
+        {
+          (contextValue) => {
+            return (
+              <div className='container'>
+                <form>
+                  <Row>
+                    <Col className='col-4'>
+                      <FormGroup className={`has-label ${this.state.nameAccountInput.className}`}>
+                        <Label for='nameAccount'>Name Account</Label>
+                        <Input
+                          type='text'
+                          name='nameAccount'
+                          id='nameAccount'
+                          placeholder='Name Account'
+                          onChange={e => ValidatorFormChange(e, 'nameAccount')}
+                        />
+                        {this.state.nameAccountInput.error &&
+                          <label className='error'>
+                            {this.state.nameAccountInput.labelError}
+                          </label>}
+                      </FormGroup>
+                    </Col>
+                    <Col className='col-4'>
+                      <FormGroup className={`has-label ${this.state.domainURLInput.className}`}>
+                        <Label for='domainURL'>Domain url</Label>
+                        <Input
+                          type='text'
+                          name='domainURL'
+                          id='domainURL'
+                          placeholder='Domain url'
+                          onChange={e => ValidatorFormChange(e, 'domainURL')}
+                        />
+                        {this.state.domainURLInput.error &&
+                          <label className='error'>
+                            {this.state.domainURLInput.labelError}
+                          </label>}
+                      </FormGroup>
+                    </Col>
+                    <Col className='col-4'>
+                      <FormGroup className={`has-label ${this.state.projectsNameInput.className}`}>
+                        <Label for='projectsName'>Project's Name</Label>
+                        <Input
+                          type='text'
+                          name='projectsName'
+                          id='projectsName'
+                          placeholder={'Projec\'ts Name'}
+                          onChange={e => ValidatorFormChange(e, 'projectsName')}
+                        />
+                        {this.state.projectsNameInput.error &&
+                          <label className='error'>
+                            {this.state.projectsNameInput.labelError}
+                          </label>}
+                      </FormGroup>
+                    </Col>
+                  </Row>
+                  <Row>
+                    <Col className='col-4'>
+                      <FormGroup className={`has-label ${this.state.projectOwnerInput.className}`}>
+                        <Label for='projectOwner'>Project Owner</Label>
+                        <Input
+                          type='text'
+                          name='projectOwner'
+                          id='projectOwner'
+                          placeholder='Project Owner'
+                          onChange={e => ValidatorFormChange(e, 'projectOwner')}
+                        />
+                        {this.state.projectOwnerInput.error &&
+                          <label className='error'>
+                            {this.state.projectOwnerInput.labelError}
+                          </label>}
+                      </FormGroup>
+                    </Col>
+                    <Col className='col-4'>
+                      <FormGroup className={`has-label ${this.state.sellerInput.className}`}>
+                        <Label for='projectOwner'>Seller</Label>
+                        <Input
+                          type='text'
+                          name='seller'
+                          id='seller'
+                          placeholder='Seller'
+                          onChange={e => ValidatorFormChange(e, 'seller')}
+                        />
+                        {this.state.sellerInput.error &&
+                          <label className='error'>
+                            {this.state.sellerInput.labelError}
+                          </label>}
+                      </FormGroup>
+                    </Col>
+                    <Col className='col-4'>
+                      <FormGroup className={`has-label ${this.state.developerNameInput.className}`}>
+                        <Label for='developerName'>Dveloper Name</Label>
+                        <Input
+                          type='text'
+                          name='developerName'
+                          id='developerName'
+                          placeholder='Developer Name'
+                          onChange={e => ValidatorFormChange(e, 'developerName')}
+                        />
+                        {this.state.developerNameInput.error &&
+                          <label className='error'>
+                            {this.state.developerNameInput.labelError}
+                          </label>}
+                      </FormGroup>
+                    </Col>
+                  </Row>
+                </form>
+              </div>
+            )
+          }
+        }
+      </UserConsumer>
+
     )
   }
 }

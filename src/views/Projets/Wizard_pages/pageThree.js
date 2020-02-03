@@ -8,8 +8,10 @@ import {
   UncontrolledTooltip
 } from 'reactstrap'
 import { ValidatorFormChange } from './ValidationForm'
+import UserContext, { UserConsumer } from '../ModalWizardProvider'
 
 class PageThree extends React.Component {
+  static contextType = UserContext
   constructor (props) {
     super(props)
     this.state = {
@@ -69,7 +71,21 @@ class PageThree extends React.Component {
       languageInput.className === 'has-success' &&
       topicInput.className === 'has-success'
     ) {
-      return alert('final validated')
+      const { setState, state } = this.context
+      const dataPage = {
+        userName : this.state.userNameInput.value,
+        developerEmail : this.state.developerEmailInput.value,
+        password : this.state.passwordInput.value,
+        language : this.state.languageInput.value,
+        topic : this.state.topicInput.value
+      }
+      setState({
+        PageThereeData :{
+          data :  {...dataPage},
+          complete : true
+        }
+      })
+      return console.log({ ...state , dataPage })
     } else {
       if (userNameInput.className !== 'has-success') {
         this.setState({
@@ -101,7 +117,7 @@ class PageThree extends React.Component {
           }
         })
       }
-      if (developerEmailInput.className !== 'has-succcess') {
+      if (developerEmailInput.className !== 'has-success') {
         this.setState({
           developerEmailInput: {
             labelError: 'Developer email is required',
@@ -137,124 +153,132 @@ class PageThree extends React.Component {
 
   render () {
     return (
-      <div className='container'>
-        <form>
-          <Row>
-            <Col className='col-4'>
-              <FormGroup className={`has-label ${this.state.userNameInput.className}`}>
-                <Label for='userName'>User Name</Label>
-                <Input
-                  type='text'
-                  name='userName'
-                  id='userName'
-                  placeholder='User Name'
-                  onChange={(e) => this.setState(ValidatorFormChange(e, 'userName'))}
-                />
-                {this.state.userNameInput.error &&
-                  <label className='error'>
-                    {this.state.userNameInput.labelError}
-                  </label>}
-              </FormGroup>
-            </Col>
-            <Col className='col-4'>
-              <FormGroup className={`has-label ${this.state.developerEmailInput.className}`}>
-                <Label for='developerEmail'>Developer Email</Label>
-                <Input
-                  type='email'
-                  name='developerEmail'
-                  id='developerEmail'
-                  placeholder='User Name'
-                  onChange={(e) => this.setState(ValidatorFormChange(e, 'developerEmail'))}
-                />
-                {this.state.developerEmailInput.error &&
-                  <label className='error'>
-                    {this.state.developerEmailInput.labelError}
-                  </label>}
-              </FormGroup>
-            </Col>
-            <Col className='col-4'>
-              <FormGroup className={`has-label ${this.state.topicInput.className}`}>
-                <Label for='topic'>Topic</Label>
-                <Input
-                  type='text'
-                  name='topic'
-                  id='topic'
-                  placeholder='topic'
-                  onChange={(e) => this.setState(ValidatorFormChange(e, 'topic'))}
-                />
-                {this.state.topicInput.error &&
-                  <label className='error'>
-                    {this.state.topicInput.labelError}
-                  </label>}
-              </FormGroup>
-            </Col>
-          </Row>
-          <Row>
-            <Col className='col-4'>
-              <FormGroup className={`has-label ${this.state.passwordInput.className}`}>
-                <Label for='password'>Password</Label>
-                <UncontrolledTooltip className='Tooltip_wizard' placement='top' target='passwordThree' delay={0}>
-                  <div>
-                    <p className='pl-2'>Password required at leat:</p>
-                    <ul className='text-left pl-3 pt-0'>
-                      <li>One upper case letter</li>
-                      <li>One lower case letter</li>
-                      <li>Eight characters</li>
-                      <li>One special characters</li>
-                      <li>One Number</li>
-                    </ul>
-                  </div>
-                </UncontrolledTooltip>
-                <Input
-                  type='password'
-                  name='password'
-                  id='passwordThree'
-                  placeholder='password'
-                  onChange={e =>
-                    this.setState(ValidatorFormChange(e, 'password', this.state.confirmPasswordInput.value))}
-                />
+      <UserConsumer>
+        {
+          (contextValue) => {
+            return (
+              <div className='container'>
+                <form>
+                  <Row>
+                    <Col className='col-4'>
+                      <FormGroup className={`has-label ${this.state.userNameInput.className}`}>
+                        <Label for='userName'>User Name</Label>
+                        <Input
+                          type='text'
+                          name='userName'
+                          id='userName'
+                          placeholder='User Name'
+                          onChange={(e) => this.setState(ValidatorFormChange(e, 'userName'))}
+                        />
+                        {this.state.userNameInput.error &&
+                          <label className='error'>
+                            {this.state.userNameInput.labelError}
+                          </label>}
+                      </FormGroup>
+                    </Col>
+                    <Col className='col-4'>
+                      <FormGroup className={`has-label ${this.state.developerEmailInput.className}`}>
+                        <Label for='developerEmail'>Developer Email</Label>
+                        <Input
+                          type='email'
+                          name='developerEmail'
+                          id='developerEmail'
+                          placeholder='User Name'
+                          onChange={(e) => this.setState(ValidatorFormChange(e, 'developerEmail'))}
+                        />
+                        {this.state.developerEmailInput.error &&
+                          <label className='error'>
+                            {this.state.developerEmailInput.labelError}
+                          </label>}
+                      </FormGroup>
+                    </Col>
+                    <Col className='col-4'>
+                      <FormGroup className={`has-label ${this.state.topicInput.className}`}>
+                        <Label for='topic'>Topic</Label>
+                        <Input
+                          type='text'
+                          name='topic'
+                          id='topic'
+                          placeholder='topic'
+                          onChange={(e) => this.setState(ValidatorFormChange(e, 'topic'))}
+                        />
+                        {this.state.topicInput.error &&
+                          <label className='error'>
+                            {this.state.topicInput.labelError}
+                          </label>}
+                      </FormGroup>
+                    </Col>
+                  </Row>
+                  <Row>
+                    <Col className='col-4'>
+                      <FormGroup className={`has-label ${this.state.passwordInput.className}`}>
+                        <Label for='password'>Password</Label>
+                        <UncontrolledTooltip className='Tooltip_wizard' placement='top' target='passwordThree' delay={0}>
+                          <div>
+                            <p className='pl-2'>Password required at leat:</p>
+                            <ul className='text-left pl-3 pt-0'>
+                              <li>One upper case letter</li>
+                              <li>One lower case letter</li>
+                              <li>Eight characters</li>
+                              <li>One special characters</li>
+                              <li>One Number</li>
+                            </ul>
+                          </div>
+                        </UncontrolledTooltip>
+                        <Input
+                          type='password'
+                          name='password'
+                          id='passwordThree'
+                          placeholder='password'
+                          onChange={e =>
+                            this.setState(ValidatorFormChange(e, 'password', this.state.confirmPasswordInput.value))}
+                        />
 
-                {this.state.passwordInput.error &&
-                  <label className='error'>
-                    {this.state.passwordInput.labelError}
-                  </label>}
-              </FormGroup>
-            </Col>
-            <Col className='col-4'>
-              <FormGroup className={`has-label ${this.state.confirmPasswordInput.className}`}>
-                <Label for='confirmPasswor'>Confirm Passwor</Label>
-                <Input
-                  type='password'
-                  name='confirmPasswor'
-                  id='confirmPasswor'
-                  placeholder='Confirm Password'
-                  onChange={e => this.setState(ValidatorFormChange(e, 'confirmPasswor', this.state.passwordInput.value))}
-                />
-                {this.state.confirmPasswordInput.error &&
-                  <label className='error'>
-                    {this.state.confirmPasswordInput.labelError}
-                  </label>}
-              </FormGroup>
-            </Col>
-            <Col className='ccol-4'>
-              <FormGroup className={`has-label ${this.state.languageInput.className}`}>
-                <Label for='language'>Language</Label>
-                <Input
-                  type='text'
-                  name='language'
-                  id='language'
-                  placeholder='Language'
-                  onChange={(e) => this.setState(ValidatorFormChange(e, 'language'))}
-                />
-                {this.state.languageInput.error &&
-                  <label className='error'>
-                    {this.state.languageInput.labelError}
-                  </label>}
-              </FormGroup>
-            </Col>
-          </Row>
-        </form>
-      </div>
+                        {this.state.passwordInput.error &&
+                          <label className='error'>
+                            {this.state.passwordInput.labelError}
+                          </label>}
+                      </FormGroup>
+                    </Col>
+                    <Col className='col-4'>
+                      <FormGroup className={`has-label ${this.state.confirmPasswordInput.className}`}>
+                        <Label for='confirmPasswor'>Confirm Passwor</Label>
+                        <Input
+                          type='password'
+                          name='confirmPasswor'
+                          id='confirmPasswor'
+                          placeholder='Confirm Password'
+                          onChange={e => this.setState(ValidatorFormChange(e, 'confirmPasswor', this.state.passwordInput.value))}
+                        />
+                        {this.state.confirmPasswordInput.error &&
+                          <label className='error'>
+                            {this.state.confirmPasswordInput.labelError}
+                          </label>}
+                      </FormGroup>
+                    </Col>
+                    <Col className='ccol-4'>
+                      <FormGroup className={`has-label ${this.state.languageInput.className}`}>
+                        <Label for='language'>Language</Label>
+                        <Input
+                          type='text'
+                          name='language'
+                          id='language'
+                          placeholder='Language'
+                          onChange={(e) => this.setState(ValidatorFormChange(e, 'language'))}
+                        />
+                        {this.state.languageInput.error &&
+                          <label className='error'>
+                            {this.state.languageInput.labelError}
+                          </label>}
+                      </FormGroup>
+                    </Col>
+                  </Row>
+                </form>
+              </div>
+            )
+          }
+        }
+      </UserConsumer>
     )
   }
 }
