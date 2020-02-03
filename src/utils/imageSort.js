@@ -14,7 +14,7 @@ export default async (files, path) => {
       for await (let x of files) {
         let filePath = `${path}\\original\\${x.deflated}`
         let imageDimensions = sizeOf(filePath)
-        initialArray.push({ fileName: x.deflated, filepath: filePath, width: imageDimensions.width, height: imageDimensions.height })
+        initialArray.push({ fileName: x.deflated, filepath: filePath, rootPath: path, width: imageDimensions.width, height: imageDimensions.height })
       }
 
       let filteredSlider = initialArray.filter((x) => {

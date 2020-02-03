@@ -65,6 +65,7 @@ function ImageEditor () {
   const unZip = async () => {
     let extracted = await uncompress(zipPath, finalPath)
     setFiles(extracted)
+    console.log(extracted)
   }
 
   return (
