@@ -5,13 +5,18 @@ import {
   Input,
   Row,
   Col,
-  UncontrolledTooltip
+  InputGroup,
+  UncontrolledTooltip,
+  InputGroupAddon,
+  InputGroupText
 } from 'reactstrap'
+import classnames from 'classnames'
 import UserContext, { UserConsumer } from '../ModalWizardProvider'
+import { passwordGenerator } from '../../../utils/PasswordGenerator'
 
 class PageTwo extends React.Component {
   static contextType = UserContext
-  constructor (props) {
+  constructor(props) {
     super(props)
     this.state = {
       userNameInput: {
@@ -31,12 +36,16 @@ class PageTwo extends React.Component {
         value: '',
         error: false,
         labelError: ''
-      }
+      },
+      passwordInputFocus: false
     }
   }
 
-  isValidated () {
+  isValidated() {
     const { userNameInput, passwordInput, confirmPasswordInput } = this.state
+    // console.log('userNameInput', userNameInput.className === 'has-success' )
+    // console.log('passwordInput', passwordInput.className === 'has-success' )
+    // console.log('confirmPasswordInput', confirmPasswordInput.className === 'has-success' )
     if (
       userNameInput.className === 'has-success' &&
       passwordInput.className === 'has-success' &&
@@ -44,13 +53,13 @@ class PageTwo extends React.Component {
     ) {
       const { setState } = this.context
       const dataPage = {
-        userName : this.state.userNameInput.value,
-        password : this.state.passwordInput.value,
+        userName: this.state.userNameInput.value,
+        password: this.state.passwordInput.value
       }
       setState({
-        PageTwoData :{
-          data :  {...dataPage},
-          complete : true
+        PageTwoData: {
+          data: { ...dataPage },
+          complete: true
         }
       })
       return true
@@ -75,7 +84,7 @@ class PageTwo extends React.Component {
           }
         })
       }
-      if (confirmPasswordInput.value !== 'has-sucess') {
+      if (confirmPasswordInput.className !== 'has-success') {
         this.setState({
           confirmPasswordInput: {
             labelError: 'Confirm Password is required',
@@ -89,31 +98,12 @@ class PageTwo extends React.Component {
     }
   }
 
-  render () {
+  render() {
     const ValidatorFormChange = (event, nameInput) => {
       const { value } = event.target
       switch (nameInput) {
-        case 'userName' :
+        case 'userName':
           if (!value) {
-            if (value !== this.state.confirmPasswordInput.value) {
-              this.setState({
-                confirmPasswordInput: {
-                  labelError: 'Passwords do not match',
-                  error: true,
-                  value: this.state.confirmPasswordInput.value,
-                  className: 'has-danger'
-                }
-              })
-            } else {
-              this.setState({
-                confirmPasswordInput: {
-                  labelError: '',
-                  error: false,
-                  value: this.state.confirmPasswordInput.value,
-                  className: 'has-success'
-                }
-              })
-            }
             this.setState({
               userNameInput: {
                 labelError: 'User Name is required',
@@ -133,7 +123,7 @@ class PageTwo extends React.Component {
             })
           }
           break
-        case 'password' :
+        case 'password':
           if (!value) {
             this.setState({
               passwordInput: {
@@ -185,7 +175,7 @@ class PageTwo extends React.Component {
             }
           }
           break
-        case 'confirmPasswor' :
+        case 'confirmPassword':
           if (!value) {
             this.setState({
               confirmPasswordInput: {
@@ -217,7 +207,7 @@ class PageTwo extends React.Component {
             }
           }
           break
-        default :break
+        default: break
       }
     }
     return (
@@ -248,43 +238,88 @@ class PageTwo extends React.Component {
                   </Row>
                   <Row>
                     <Col className='col-6'>
-                      <FormGroup className={`has-label ${this.state.passwordInput.className}`}>
-                        <Label for='password'>Password</Label>
-                        <UncontrolledTooltip className='Tooltip_wizard' placement='top' target='password' delay={0}>
-                          <div>
-                            <p className='pl-2'>Password required at leat:</p>
-                            <ul className='text-left pl-3 pt-0'>
-                              <li>One upper case letter</li>
-                              <li>One lower case letter</li>
-                              <li>Eight characters</li>
-                              <li>One special characters</li>
-                              <li>One Number</li>
-                            </ul>
-                          </div>
-                        </UncontrolledTooltip>
-                        <Input
-                          type='password'
-                          name='password'
-                          id='password'
-                          placeholder='password'
-                          onChange={e => ValidatorFormChange(e, 'password')}
-                        />
-
-                        {this.state.passwordInput.error &&
-                          <label className='error'>
-                            {this.state.passwordInput.labelError}
-                          </label>}
-                      </FormGroup>
+                      <UncontrolledTooltip className='Tooltip_wizard' placement='top' target='password' delay={0}>
+                        <div>
+                          <p className='pl-2'>Password required at leat:</p>
+                          <ul className='text-left pl-3 pt-0'>
+                            <li>One upper case letter</li>
+                            <li>One lower case letter</li>
+                            <li>Eight characters</li>
+                            <li>One special characters</li>
+                            <li>One Number</li>
+                          </ul>
+                        </div>
+                      </UncontrolledTooltip>
+                      <UncontrolledTooltip className='Tooltip_wizard' placement='top' target='exclamation-circle' delay={0}>
+                        <div>
+                          <p className='pl-2'>click to generate password automatically.</p>
+                        </div>
+                      </UncontrolledTooltip>
+                      <Label for='password'>Password</Label>
+                      <div className='InputGroupVictor'>
+                        <InputGroup
+                          className={`has-label ${this.state.passwordInput.className} ${classnames({
+                            'input-group-focus': this.state.passwordInputFocus
+                          })}`}
+                        >
+                          <InputGroupAddon style={{ display: 'contents' }} addonType='prepend'>
+                            <InputGroupText id='exclamation-circle'>
+                              <i
+                                onClick={async (e) => {
+                                  const newPassword = await passwordGenerator()
+                                  this.setState(
+                                    {
+                                      passwordInput: {
+                                        labelError: '',
+                                        error: false,
+                                        value: newPassword,
+                                        className: 'has-success'
+                                      },
+                                      confirmPasswordInput: {
+                                        labelError: '',
+                                        error: false,
+                                        value: newPassword,
+                                        className: 'has-success'
+                                      }
+                                    })
+                                }}
+                                className='fas fa-exclamation-circle'
+                              />
+                            </InputGroupText>
+                          </InputGroupAddon>
+                          <Input
+                            value={this.state.passwordInput.value}
+                            type='password'
+                            name='password'
+                            id='password'
+                            placeholder='password'
+                            onChange={e => ValidatorFormChange(e, 'password')}
+                            onFocus={(e) =>
+                              this.setState({
+                                passwordInputFocus: true
+                              })}
+                            onBlur={(e) =>
+                              this.setState({
+                                passwordInputFocus: false
+                              })}
+                          />
+                          {this.state.passwordInput.error &&
+                            <label className='error'>
+                              {this.state.passwordInput.labelError}
+                            </label>}
+                        </InputGroup>
+                      </div>
                     </Col>
                     <Col className='col-6'>
                       <FormGroup className={`has-label ${this.state.confirmPasswordInput.className}`}>
-                        <Label for='confirmPasswor'>Confirm Passwor</Label>
+                        <Label for='confirmPassword'>Confirm Passwor</Label>
                         <Input
+                          value={this.state.confirmPasswordInput.value}
                           type='password'
-                          name='confirmPasswor'
-                          id='confirmPasswor'
+                          name='confirmPassword'
+                          id='confirmPassword'
                           placeholder='Confirm Password'
-                          onChange={e => ValidatorFormChange(e, 'confirmPasswor')}
+                          onChange={e => ValidatorFormChange(e, 'confirmPassword')}
                         />
                         {this.state.confirmPasswordInput.error &&
                           <label className='error'>
