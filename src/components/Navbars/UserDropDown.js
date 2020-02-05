@@ -12,6 +12,8 @@ import {
   Col
 } from 'reactstrap'
 
+import './styles.css'
+
 const UserDropDown = props => {
   const { state } = useContext(GlobalContext)
 
@@ -24,15 +26,15 @@ const UserDropDown = props => {
     userName = state.user.firstName
   }
   return (
-    <Row className='d-flex align-items-center'>
+    <Row className='d-flex align-items-center dropdown nav-item d-flex align-items-center justify-content-center'>
       <Col xs='8' md='6' className='p-0 d-flex justify-content-end'><p className='m-0'>{userName}</p></Col>
-      <Col xs='4' md='6'>
-        <UncontrolledDropdown nav className='userDropDown'>
+      <Col xs='4' md='6' className='p-0'>
+        <UncontrolledDropdown nav className='userDropDown p-0 ml-1'>
           <DropdownToggle
             color='default'
             data-toggle='dropdown'
             nav
-            className='p-0'
+            className='p-0 d-flex justify-content-center ml-auto'
             onClick={e => e.preventDefault()}
           >
             <div className='photo p-0'>

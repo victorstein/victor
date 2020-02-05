@@ -1,0 +1,16 @@
+.contentFull {
+    padding: 0 !important;
+    padding-top: 80px !important;
+    padding-left: 1.3rem !important;
+    padding-right: 1.3rem !important;
+}
+
+.sidebar-full-content {
+    display: none !important;
+}
+
+@media screen and (max-width: 993px) { 
+    .sidebar-full-content {
+        display: block !important;
+    }
+}

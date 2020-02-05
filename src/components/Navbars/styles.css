@@ -3,5 +3,22 @@ li.userDropDown > a > div > b.caret{
 }
 
 .bg-NavBar {
-    background: linear-gradient(90deg, rgba(26,29,51,1) 20%, rgba(2,3,13,1) 65%, rgba(25,27,51,1) 100%);
+    background: linear-gradient(90deg, rgba(26,29,51,1) 20%, rgba(2,3,13,1) 65%, rgba(25,27,51,1) 100%)
+}
+
+.navbar-absolute {
+    background: linear-gradient(90deg, rgba(26,29,51,1) 20%, rgba(2,3,13,1) 65%, rgba(25,27,51,1) 100%)
+}
+
+/*.photo {
+    width: 70px !important;   
+}*/
+
+@media screen and (max-width: 993px) {
+    
+.photo {
+    width: 30px !important;   
+    height: 30px !important; 
+}
+
 }

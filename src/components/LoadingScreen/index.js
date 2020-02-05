@@ -18,8 +18,8 @@ const LoadingScreen = (props) => {
             <Lottie
               isClickToPauseDisabled
               options={defaultOptions}
-              height='50%'
-              width='50%'
+              height='60%'
+              width='60%'
             />
         </div>
     )

@@ -14,16 +14,18 @@ const DEFAULT_ROUTE_ADMIN = '/admin/dashboard'
 const AdminLayout = props => {
   const { state, dispatch } = useContext(GlobalContext)
   const [verifyLogin, setVerifyLogin] = useState(false)
+  const [isFullContent, setIsFullContent] = useState(false)
   const { loading, error, data } = useQuery(
-    ME('fullName verified firstName permissions { name } role { name }'),
+    ME('fullName verified email firstName permissions { name } role { name }'),
     { fetchPolicy: 'no-cache' }
   )
 
   useEffect(() => {
     if (data && !loading) {
       if (data.me) {
-        setVerifyLogin(true)
-        dispatch({ type: SET_USER, payload: { ...data.me } })
+          verifyFullContent()
+          setVerifyLogin(true)
+          dispatch({ type: SET_USER, payload: { ...data.me } })
       } else {
         logout(props.history)
       }
@@ -49,20 +51,31 @@ const AdminLayout = props => {
       if (!isValidRoute) {
         switch (userRol) {
           case 'User':
-            props.history(DEFAULT_ROUTE_USER)
+            props.history.push(DEFAULT_ROUTE_USER)
             break
           case 'Admin':
-            props.history(DEFAULT_ROUTE_ADMIN)
+            props.history.push(DEFAULT_ROUTE_ADMIN)
             break
           default:
             logout(props.history)
         }
-        props.history()
+      } else {
+        verifyFullContent()
       }
     }
   }, [props.location])
 
-  return verifyLogin ? <AdminContent routerProps={props} /> : <LoadingScreen />
+  const verifyFullContent = () => {
+    let fullContent = false
+    routes.forEach((value, index) => {
+      if (value.fullContent && (props.location.pathname === value.layout + value.path)) {
+        fullContent = true
+      }
+    })
+    setIsFullContent(fullContent)
+  }
+
+  return verifyLogin ? <AdminContent routerProps={props} fullContent={isFullContent} /> : <LoadingScreen />
 }
 
 export default AdminLayout

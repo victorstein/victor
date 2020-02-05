@@ -19,6 +19,5 @@ export default () => {
     setRefreshToken(refreshToken)
     navigation.push('/admin/dashboard')
   }
-
   return { login }
 }
