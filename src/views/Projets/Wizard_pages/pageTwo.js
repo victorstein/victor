@@ -13,10 +13,11 @@ import {
 import classnames from 'classnames'
 import UserContext, { UserConsumer } from '../ModalWizardProvider'
 import { passwordGenerator } from '../../../utils/PasswordGenerator'
+import { nameGenerator } from '../../../utils/nameGenerator'
 
 class PageTwo extends React.Component {
   static contextType = UserContext
-  constructor(props) {
+  constructor (props) {
     super(props)
     this.state = {
       userNameInput: {
@@ -37,11 +38,12 @@ class PageTwo extends React.Component {
         error: false,
         labelError: ''
       },
-      passwordInputFocus: false
+      passwordInputFocus: false,
+      userNameInputFocus: false
     }
   }
 
-  isValidated() {
+  isValidated () {
     const { userNameInput, passwordInput, confirmPasswordInput } = this.state
     // console.log('userNameInput', userNameInput.className === 'has-success' )
     // console.log('passwordInput', passwordInput.className === 'has-success' )
@@ -98,7 +100,7 @@ class PageTwo extends React.Component {
     }
   }
 
-  render() {
+  render () {
     const ValidatorFormChange = (event, nameInput) => {
       const { value } = event.target
       switch (nameInput) {
@@ -214,26 +216,65 @@ class PageTwo extends React.Component {
       <UserConsumer>
         {
           (contextValue) => {
-            // console.log(contextValue)
+            //console.log(contextValue.state)
             return (
               <div className='container'>
                 <form>
                   <Row>
                     <Col className='col-12'>
-                      <FormGroup className={`has-label ${this.state.userNameInput.className}`}>
-                        <Label for='userName'>User Name</Label>
-                        <Input
-                          type='text'
-                          name='userName'
-                          id='userName'
-                          placeholder='User Name'
-                          onChange={e => ValidatorFormChange(e, 'userName')}
-                        />
-                        {this.state.userNameInput.error &&
-                          <label className='error'>
-                            {this.state.userNameInput.labelError}
-                          </label>}
-                      </FormGroup>
+                      <UncontrolledTooltip className='Tooltip_wizard' placement='top' target='exclamationName' delay={0}>
+                        <div>
+                          <p className='pl-2'>Click to generate the username automatically.</p>
+                        </div>
+                      </UncontrolledTooltip>
+                      <Label for='userName'>User Name</Label>
+                      <div className='InputGroupVictor'>
+                        <InputGroup className={`has-label ${this.state.userNameInput.className} ${classnames({
+                          'input-group-focus': this.state.userNameInputFocus
+                        })}`}
+                        >
+                          <InputGroupAddon style={{ display: 'contents' }} addonType='prepend'>
+                            <InputGroupText id='exclamationName'>
+                              <i
+                                onClick={async (e) => {
+                                  const { PageOneData } = this.context.state
+                                  const newName = await nameGenerator(PageOneData.data.domainURL)
+                                  this.setState({
+                                    userNameInput: {
+                                      labelError: '',
+                                      error: false,
+                                      value: newName,
+                                      className: 'has-success'
+                                    }
+                                  })
+                                  // console.log(newName)
+                                }}
+                                className='fas fa-exclamation-circle'
+                              />
+                            </InputGroupText>
+                          </InputGroupAddon>
+                          <Input
+                            value={this.state.userNameInput.value}
+                            type='text'
+                            name='userName'
+                            id='userName'
+                            placeholder='User Name'
+                            onChange={e => ValidatorFormChange(e, 'userName')}
+                            onFocus={(e) =>
+                              this.setState({
+                                userNameInputFocus: true
+                              })}
+                            onBlur={(e) =>
+                              this.setState({
+                                userNameInputFocus: false
+                              })}
+                          />
+                          {this.state.userNameInput.error &&
+                            <label className='error'>
+                              {this.state.userNameInput.labelError}
+                            </label>}
+                        </InputGroup>
+                      </div>
                     </Col>
                   </Row>
                   <Row>
