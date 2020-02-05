@@ -10,7 +10,7 @@ import UserContext, { UserConsumer } from '../ModalWizardProvider'
 
 class PageOne extends Component {
   static contextType = UserContext
-  constructor (props) {
+  constructor(props) {
     super(props)
     this.state = {
       nameAccountInput: {
@@ -52,7 +52,7 @@ class PageOne extends Component {
     }
   }
 
-  isValidated () {
+  isValidated() {
     const {
       nameAccountInput,
       domainURLInput,
@@ -71,17 +71,17 @@ class PageOne extends Component {
     ) {
       const { setState } = this.context
       const dataPage = {
-        nameAccount : this.state.nameAccountInput.value,
+        nameAccount: this.state.nameAccountInput.value,
         domainURL: this.state.domainURLInput.value,
-        projectsName : this.state.projectsNameInput.value,
-        projectOwner : this.state.projectOwnerInput.value,
-        seller : this.state.sellerInput.value,
-        developerName : this.state.developerNameInput.value
+        projectsName: this.state.projectsNameInput.value,
+        projectOwner: this.state.projectOwnerInput.value,
+        seller: this.state.sellerInput.value,
+        developerName: this.state.developerNameInput.value
       }
       setState({
-        PageOneData :{
-          data :  {...dataPage},
-          complete : true
+        PageOneData: {
+          data: { ...dataPage },
+          complete: true
         }
       })
       return true
@@ -150,7 +150,7 @@ class PageOne extends Component {
     }
   }
 
-  render () {
+  render() {
     const ValidatorFormChange = (event, nameInput) => {
       const { value } = event.target
       switch (nameInput) {
@@ -207,14 +207,26 @@ class PageOne extends Component {
               }
             })
           } else {
-            this.setState({
-              domainURLInput: {
-                labelError: '',
-                error: false,
-                value: value,
-                className: 'has-success'
-              }
-            })
+            if (value.includes(' ')) {
+              this.setState({
+                domainURLInput: {
+                  labelError: 'Domain Url cannot contain space',
+                  error: true,
+                  value: value,
+                  className: 'has-danger'
+                }
+              })
+            } else {
+              this.setState({
+                domainURLInput: {
+                  labelError: '',
+                  error: false,
+                  value: value,
+                  className: 'has-success'
+                }
+              })
+            }
+
           }
           break
         case 'projectsName':
@@ -316,7 +328,10 @@ class PageOne extends Component {
                           name='domainURL'
                           id='domainURL'
                           placeholder='Domain url'
-                          onChange={e => ValidatorFormChange(e, 'domainURL')}
+                          onChange={e => {
+                            //console.log(e.target.value.includes(' '))
+                            ValidatorFormChange(e, 'domainURL')
+                          }}
                         />
                         {this.state.domainURLInput.error &&
                           <label className='error'>
