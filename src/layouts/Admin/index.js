@@ -51,10 +51,10 @@ const AdminLayout = props => {
       if (!isValidRoute) {
         switch (userRol) {
           case 'User':
-            props.history(DEFAULT_ROUTE_USER)
+            props.history.push(DEFAULT_ROUTE_USER)
             break
           case 'Admin':
-            props.history(DEFAULT_ROUTE_ADMIN)
+            props.history.push(DEFAULT_ROUTE_ADMIN)
             break
           default:
             logout(props.history)
