@@ -1,0 +1,31 @@
+$blueColor: #27293d;
+
+
+
+.form-group {
+    label {
+        color: rgba(255, 255, 255, 0.6);
+    }
+    
+    input {
+        color: white;
+    }
+
+    &.has-danger {
+        .form-control {
+            margin-bottom: 5px;
+        }
+
+        label {
+            &.error {
+                color: red;
+            }
+        }
+    }
+
+    &.has-success {
+        input {
+            color: white;
+        }
+    }
+}
