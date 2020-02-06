@@ -10,6 +10,10 @@ const reducer = (state = initialState, action) => {
       case actionName.SET_INITIAL_STATE: return {
         ...initialState
       }
+      case actionName.SET_BLOCK_SCREEN:
+      return {
+        ...state, blockScreen: action.payload
+      }
       default : return { ...state }
     }
 }

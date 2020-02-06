@@ -1,2 +1,3 @@
 export const SET_USER = 'SETUSER'
+export const SET_BLOCK_SCREEN = 'SETBLOCKSCREEN'
 export const SET_INITIAL_STATE = 'SETINITIALSTATE'

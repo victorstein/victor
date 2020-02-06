@@ -3,8 +3,6 @@
     top: 0;
     height: 100vh !important;
     z-index: 1000;
-    width: 60%;
-    margin-left: 20%;
 }
  
 #loader-wrapper .loader-section.section-left {
