@@ -4,6 +4,7 @@ import ImageEditor from 'views/pages/ImageEditor.jsx'
 import Test1 from './views/Test_1'
 import Login from './views/login'
 import Projets from './views/Projets'
+import CreateUser from './views/admin/createUser'
 
 const routes = [
   {
@@ -47,12 +48,20 @@ const routes = [
     layout: '/admin'
   },
   {
-    path: '/Projets',
+    path: '/projets',
     name: 'Projets',
     icon: 'tim-icons icon-palette',
     component: Projets,
     layout: '/admin',
     role: []
+  },
+  {
+    path: '/createUser',
+    name: 'Create User',
+    icon: 'tim-icons icon-single-02',
+    component: CreateUser,
+    layout: '/admin',
+    role: ['Admin']
   }
 ]
 
