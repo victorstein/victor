@@ -5,10 +5,6 @@ import {
   CardHeader,
   CardBody,
   CardTitle,
-  DropdownToggle,
-  DropdownMenu,
-  DropdownItem,
-  UncontrolledDropdown,
   Label,
   FormGroup,
   Input,
@@ -19,12 +15,13 @@ import {
   InputGroup,
   InputGroupAddon,
   InputGroupText,
+  Badge,
   Pagination, PaginationItem, PaginationLink, CardFooter
 } from 'reactstrap'
 import classnames from 'classnames'
 import Select from 'react-select'
 
-const TableProyects = (props) => {
+const TableUser = (props) => {
   const [focusInput, setFocusInput] = useState({
     inputName: {
       focus: false
@@ -34,59 +31,18 @@ const TableProyects = (props) => {
     label: '5',
     value: '5'
   })
-
   return (
     <div>
       <Card>
         <CardHeader>
-          <div className='tools float-right'>
-            <UncontrolledDropdown>
-              <DropdownToggle
-                caret
-                className='btn-link btn-icon'
-                color='default'
-                data-toggle='dropdown'
-                type='button'
-              >
-                <i className='tim-icons icon-settings-gear-63' />
-              </DropdownToggle>
-              <DropdownMenu right>
-                <DropdownItem
-                  href='#pablo'
-                  // onClick={e => e.preventDefault()}
-                >
-              Action
-                </DropdownItem>
-                <DropdownItem
-                  href='#pablo'
-                  // onClick={e => e.preventDefault()}
-                >
-              Another action
-                </DropdownItem>
-                <DropdownItem
-                  href='#pablo'
-                  // onClick={e => e.preventDefault()}
-                >
-              Something else here
-                </DropdownItem>
-                <DropdownItem
-                  className='text-danger'
-                  href='#pablo'
-                  // onClick={e => e.preventDefault()}
-                >
-              Remove Data
-                </DropdownItem>
-              </DropdownMenu>
-            </UncontrolledDropdown>
-          </div>
-          <CardTitle tag='h4'>Proyect list</CardTitle>
+          <CardTitle tag='h4'>User list</CardTitle>
           <Button
             onClick={(e) => props.setOpenModal(true)}
             className='btn-simple'
             color='success'
           >
             <i className='fas fa-plus-circle mr-2' />
-           Add Project
+                Add User
           </Button>
         </CardHeader>
         <CardBody>
@@ -96,14 +52,12 @@ const TableProyects = (props) => {
                 <th scope='col' style={{ maxWidth: '275px', width: '275px' }}>
                   <Row>
                     <Col style={{ paddingTop: '0.6rem' }} className='text-center col-4'>
-                       Name
+                        Name
                     </Col>
                     <Col className='col-8'>
                       <InputGroup
                         size='sm'
-                        className={`text-left ${classnames({
-                      'input-group-focus': focusInput.inputName.focus
-                    })}`}
+                        className={`text-left ${classnames({ 'input-group-focus': focusInput.inputName.focus })}`}
                       >
                         <InputGroupAddon addonType='prepend'>
                           <InputGroupText><i className='fas fa-search' /></InputGroupText>
@@ -129,16 +83,20 @@ const TableProyects = (props) => {
                     </Col>
                   </Row>
                 </th>
-                <th scope='col'>Description</th>
-                <th scope='col' className='text-center'>Page</th>
+                <th scope='col'>Email</th>
+                <th scope='col' className='text-center'>Role</th>
+                <th scope='col' className='text-center'>verified</th>
                 <th scope='col' className='text-center'>Actions</th>
               </tr>
             </thead>
             <tbody>
               <tr>
-                <td className='text-left'>Andrew Mike</td>
-                <td>Develop</td>
-                <td className='text-center'>2013</td>
+                <td className='text-left'>Miguel Espinales</td>
+                <td>mee@topfloormarketing.net</td>
+                <td className='text-center'>Admin</td>
+                <td className='text-center'>
+                  <Badge color='success'>true</Badge>
+                </td>
                 <td className='text-center'>
                   <Button
                     className='btn-link btn-icon'
@@ -151,7 +109,7 @@ const TableProyects = (props) => {
                     delay={0}
                     target='ViewButton'
                   >
-                  View
+                        View
                   </UncontrolledTooltip>
                   <Button
                     className='btn-link btn-icon'
@@ -164,7 +122,7 @@ const TableProyects = (props) => {
                     delay={0}
                     target='tooltip324367706'
                   >
-                    Edit
+                        Edit
                   </UncontrolledTooltip>
                   <Button
                     className='btn-link btn-icon'
@@ -178,7 +136,7 @@ const TableProyects = (props) => {
                     delay={0}
                     target='tooltip974171201'
                   >
-                    Delete
+                        Delete
                   </UncontrolledTooltip>
                 </td>
               </tr>
@@ -224,22 +182,22 @@ const TableProyects = (props) => {
                   disabled={false}
                 >
                   <PaginationLink href='#'>
-                     Previous
+                        Previous
                   </PaginationLink>
                 </PaginationItem>
                 <PaginationItem>
                   <PaginationLink href='#'>
-                      1
+                        1
                   </PaginationLink>
                 </PaginationItem>
                 <PaginationItem active>
                   <PaginationLink href='#'>
-                     2
+                        2
                   </PaginationLink>
                 </PaginationItem>
                 <PaginationItem>
                   <PaginationLink href='#'>
-                     3
+                        3
                   </PaginationLink>
                 </PaginationItem>
                 <PaginationItem>
@@ -256,4 +214,4 @@ const TableProyects = (props) => {
   )
 }
 
-export default TableProyects
+export default TableUser
