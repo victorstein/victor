@@ -1,6 +1,19 @@
 $blueColor: #27293d;
 
+.iccon {
+    .has-label:after {
+        top: 44px !important;
+    }
+}
 
+.InputGroupVictor {
+    .has-danger.has-label:after {
+        top: 44px !important;
+    }
+    .has-success.has-label:after{
+        top: 44px !important;
+    }
+}
 
 .form-group {
     label {
