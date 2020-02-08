@@ -64,6 +64,9 @@ class Sidebar extends React.Component {
   createLinks = routes => {
     const { rtlActive } = this.props;
     return routes.map((prop, key) => {
+      if(prop.layout !== '/admin') {
+        return null;
+      }
       if (prop.redirect) {
         return null;
       }

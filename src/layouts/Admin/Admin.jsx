@@ -130,6 +130,7 @@ class Admin extends React.Component {
         return this.getRoutes(prop.views)
       }
       if (prop.layout === '/admin') {
+        console.log(prop)
         return (
           <Route
             path={prop.layout + prop.path}

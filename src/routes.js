@@ -2,7 +2,8 @@ import Dashboard from 'views/Dashboard.jsx'
 import ImageEditor from 'views/pages/ImageEditor.jsx'
 
 import Test1 from './views/Test_1'
-import Login from './views/login'
+import Login from './views/Login'
+import LandingCreator from './views/landingCreator'
 import Projets from './views/Projets'
 
 const routes = [
@@ -14,6 +15,14 @@ const routes = [
     role: [],
     layout: '/admin',
     fullContent: true
+  },
+  {
+    path: '/login',
+    name: 'Login',
+    icon: 'tim-icons icon-single-02',
+    component: Login,
+    role: [],
+    layout: '/auth'
   },
   {
     path: '/imageEditor',
@@ -32,19 +41,12 @@ const routes = [
     layout: '/admin'
   },
   {
-    path: '/login',
-    name: 'Login',
-    icon: 'tim-icons icon-single-02',
-    component: Login,
-    role: [],
-    layout: '/auth'
-  },
-  {
-    path: '/test3',
-    name: 'Test3',
+    path: '/landing',
+    name: 'Landing',
     icon: 'tim-icons icon-controller',
-    component: Test1,
+    component: LandingCreator,
     role: [],
+    fullContent: true,
     layout: '/admin'
   },
   {
