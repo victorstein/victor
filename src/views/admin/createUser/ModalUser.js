@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import {
   Button,
   Modal,
@@ -12,8 +12,37 @@ import {
   Input,
   ModalFooter
 } from 'reactstrap'
+import { Schema } from './ValidationForm'
+import Joi from 'joi-browser'
 
 const ModalUser = (props) => {
+  const [emailInput, setEmailInput] = useState({
+    className: '',
+    value: '',
+    error: false,
+    labelError: ''
+  })
+
+  const ValidatorFormChange = (value, typeInput) => {
+    const result = Joi.validate({ email: value }, Schema)
+    if (result.error) {
+      setEmailInput({
+        className: 'has-danger',
+        value: result.error.details[0].context.value,
+        error: true,
+        labelError: result.error.details[0].message
+      })
+      // console.log(result.error.details[0].message)
+    } else {
+      setEmailInput({
+        className: 'has-success',
+        value: result.email,
+        error: false,
+        labelError: ''
+      })
+    }
+  }
+
   return (
     <div className='templateForm'>
       <Modal style={{ marginTop: '64px' }} isOpen={props.openModal} size='lg'>
@@ -23,7 +52,7 @@ const ModalUser = (props) => {
           </div>
         </ModalHeader>
         <ModalBody>
-          <div className='container'>
+          <div className='container InputGroupVictor'>
             <Form>
               <Row>
                 <Col className='col-6'>
@@ -57,15 +86,19 @@ const ModalUser = (props) => {
                   </FormGroup>
                 </Col>
                 <Col className='col-12'>
-                  <FormGroup className='has-label'>
+                  <FormGroup className={`has-label ${emailInput.className}`}>
                     <Label for='email'>Email</Label>
                     <Input
                       type='email'
                       name='email'
                       id='email'
                       placeholder='Email'
-                      // onChange={e => ValidatorFormChange(e, 'nameAccount')}
+                      onChange={e => ValidatorFormChange(e.target.value, 'email')}
                     />
+                    {emailInput.error &&
+                      <label className='error'>
+                        {emailInput.labelError}
+                      </label>}
                   </FormGroup>
                 </Col>
               </Row>
