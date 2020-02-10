@@ -12,7 +12,7 @@ import {
   Input,
   ModalFooter
 } from 'reactstrap'
-import { Schema } from './ValidationForm'
+import { Schemas } from './ValidationForm'
 import Joi from 'joi-browser'
 
 const ModalUser = (props) => {
@@ -22,24 +22,74 @@ const ModalUser = (props) => {
     error: false,
     labelError: ''
   })
+  const [nameInput, setNameInput] = useState({
+    className: '',
+    value: '',
+    error: false,
+    labelError: ''
+  })
+  const [lastNameInput, setLastNameInput] = useState({
+    className: '',
+    value: '',
+    error: false,
+    labelError: ''
+  })
 
-  const ValidatorFormChange = (value, typeInput) => {
-    const result = Joi.validate({ email: value }, Schema)
+  const ValidatorFormChange = (valueInput, setState, nameInput) => {
+    const result = Joi.validate({ ...valueInput }, Schemas(nameInput))
     if (result.error) {
-      setEmailInput({
+      setState({
         className: 'has-danger',
         value: result.error.details[0].context.value,
         error: true,
         labelError: result.error.details[0].message
       })
-      // console.log(result.error.details[0].message)
     } else {
-      setEmailInput({
+      const { value } = result
+      setState({
         className: 'has-success',
-        value: result.email,
+        value: value[nameInput],
         error: false,
         labelError: ''
       })
+    }
+  }
+
+  const submitForm = (event) => {
+    event.preventDefault()
+    if (
+      emailInput.className === 'has-success' &&
+      nameInput.className === 'has-success' &&
+      lastNameInput.className === 'has-success'
+    ) {
+      console.log('emailInput', emailInput.value)
+      console.log('nameInput', nameInput.value)
+      console.log('lastNameInput', lastNameInput.value)
+    } else {
+      if (emailInput.className !== 'has-success') {
+        setEmailInput({
+          ...emailInput,
+          className: 'has-danger',
+          error: true,
+          labelError: 'Email is required'
+        })
+      }
+      if (nameInput.className !== 'has-success') {
+        setNameInput({
+          ...nameInput,
+          className: 'has-danger',
+          error: true,
+          labelError: 'Name is required'
+        })
+      }
+      if (nameInput.className !== 'has-success') {
+        setLastNameInput({
+          ...lastNameInput,
+          className: 'has-danger',
+          error: true,
+          labelError: 'Last Name is required'
+        })
+      }
     }
   }
 
@@ -51,38 +101,44 @@ const ModalUser = (props) => {
             <h3>Create New User</h3>
           </div>
         </ModalHeader>
-        <ModalBody>
-          <div className='container InputGroupVictor'>
-            <Form>
+        <Form onSubmit={submitForm}>
+          <ModalBody>
+            <div className='container InputGroupVictor2'>
               <Row>
                 <Col className='col-6'>
-                  <FormGroup className='has-label'>
+                  <FormGroup className={`has-label ${nameInput.className}`}>
                     <Label for='name'>Name</Label>
                     <Input
                       type='text'
                       name='name'
                       id='name'
                       placeholder='Name'
-                      // onChange={e => ValidatorFormChange(e, 'nameAccount')}
+                      onChange={e => ValidatorFormChange({ name: e.target.value }, setNameInput, 'name')}
                     />
                     {
-                    //     this.state.nameAccountInput.error &&
-                    //   <label className='error'>
-                    //     {this.state.nameAccountInput.labelError}
-                    //   </label>
+                      nameInput.error &&
+                        <label className='error'>
+                          {nameInput.labelError}
+                        </label>
                     }
                   </FormGroup>
                 </Col>
                 <Col className='col-6'>
-                  <FormGroup className='has-label'>
+                  <FormGroup className={`has-label ${lastNameInput.className}`}>
                     <Label for='lastname'>Last name</Label>
                     <Input
                       type='text'
                       name='lastname'
                       id='lastname'
                       placeholder='Last name'
-                      // onChange={e => ValidatorFormChange(e, 'nameAccount')}
+                      onChange={e => ValidatorFormChange({ lastname: e.target.value }, setLastNameInput, 'lastname')}
                     />
+                    {
+                      lastNameInput.error &&
+                        <label className='error'>
+                          {lastNameInput.labelError}
+                        </label>
+                    }
                   </FormGroup>
                 </Col>
                 <Col className='col-12'>
@@ -93,7 +149,7 @@ const ModalUser = (props) => {
                       name='email'
                       id='email'
                       placeholder='Email'
-                      onChange={e => ValidatorFormChange(e.target.value, 'email')}
+                      onChange={e => ValidatorFormChange({ email: e.target.value }, setEmailInput, 'email')}
                     />
                     {emailInput.error &&
                       <label className='error'>
@@ -102,27 +158,36 @@ const ModalUser = (props) => {
                   </FormGroup>
                 </Col>
               </Row>
-            </Form>
-          </div>
-        </ModalBody>
-        <ModalFooter>
-          <Row className='w-100'>
-            <Col className='col-6 pt-2'>
-              <Button
-                className='w-100'
-                color='danger'
-                onClick={(e) => props.setOpenModal(false)}
-              >
+
+            </div>
+          </ModalBody>
+          <ModalFooter>
+            <Row className='w-100'>
+              <Col className='col-6 pt-2'>
+                <Button
+                  className='w-100'
+                  color='danger'
+                  onClick={(e) => props.setOpenModal(false)}
+                >
                 Cancel
-              </Button>
-            </Col>
-            <Col className='col-6 pt-2'>
-              <Button className='w-100' color='info'>
-                Agregate
-              </Button>
-            </Col>
-          </Row>
-        </ModalFooter>
+                </Button>
+              </Col>
+              <Col className='col-6 pt-2'>
+                <Button
+                  className='w-100'
+                  color='info'
+                  type='submit'
+                  disabled={
+                    emailInput.error ||
+                    nameInput.error
+                  }
+                >
+              Agregate
+                </Button>
+              </Col>
+            </Row>
+          </ModalFooter>
+        </Form>
       </Modal>
     </div>
   )
