@@ -7,7 +7,9 @@ const CreateUserIndex = () => {
   const [openModal, setOpenModal] = useState(false)
   return (
     <div className='content'>
-      <ModalUser openModal={openModal} setOpenModal={setOpenModal} />
+      {
+        openModal && <ModalUser openModal={openModal} setOpenModal={setOpenModal} />
+      }
       <h1 className='mb-0'>Create User</h1>
       <div className='container p-2 m-2'>
         <TableUser setOpenModal={setOpenModal} />
