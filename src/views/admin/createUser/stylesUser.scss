@@ -1,8 +1,36 @@
 $blueColor: #27293d;
 
+table {
+    border-collapse: inherit !important;
+}
+
+.react-select .react-select__control,
+.react-select .react-select__control:hover {
+    background-color: #f9f9f90d !important;
+}
+
+
+
+
 .iccon {
     .has-label:after {
         top: 44px !important;
+    }
+}
+
+.maxPaginatio {
+    overflow: auto;
+    display: flex;
+    justify-content: flex-end;
+
+    nav {
+        width: 100%;
+        display: flex;
+        justify-content: flex-end;
+    }
+
+    .pagination {
+        max-width: 100%;
     }
 }
 
@@ -10,7 +38,8 @@ $blueColor: #27293d;
     .has-danger.has-label:after {
         top: 44px !important;
     }
-    .has-success.has-label:after{
+
+    .has-success.has-label:after {
         top: 44px !important;
     }
 }
@@ -19,7 +48,7 @@ $blueColor: #27293d;
     label {
         color: rgba(255, 255, 255, 0.6);
     }
-    
+
     input {
         color: white;
     }
