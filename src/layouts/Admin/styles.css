@@ -1,6 +1,6 @@
 .contentFull {
     padding: 0 !important;
-    padding-top: 80px !important;
+    padding-top: 60px !important;
     padding-left: 1.3rem !important;
     padding-right: 1.3rem !important;
 }
@@ -14,3 +14,7 @@
         display: block !important;
     }
 }
+
+/*.scrollContent {
+    overflow: auto !important;
+}*/

@@ -1,0 +1,14 @@
+#landingCreatorBlock > .block-ui-container:hover {
+    cursor: not-allowed !important;
+}
+
+#landingCreatorBlock > .block-ui-container > .block-ui-overlay {
+    background-color: transparent !important;
+}
+
+#normalLanding > .block-ui-container {
+    z-index: 2;
+}
+#landingCreatorBlock > .block-ui-container {
+    z-index: 1;
+}

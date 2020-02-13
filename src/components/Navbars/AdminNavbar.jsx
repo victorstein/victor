@@ -63,7 +63,8 @@ class AdminNavbar extends React.Component {
       });
     } else {
       this.setState({
-        color: "navbar-transparent"
+        color: "bg-NavBar"
+       // color: "navbar-transparent"
       });
     }
   };
@@ -71,7 +72,8 @@ class AdminNavbar extends React.Component {
   toggleCollapse = () => {
     if (this.state.collapseOpen) {
       this.setState({
-        color: "navbar-transparent"
+        color: "bg-NavBar"
+        //color: "navbar-transparent"
       });
     } else {
       this.setState({
@@ -87,7 +89,7 @@ class AdminNavbar extends React.Component {
     return (
       <>
         <Navbar
-          className={classNames("navbar-absolute", {
+          className={classNames("navbar-absolute position-fixed adminNavbar", {
             [this.state.color]:
               this.props.location.pathname.indexOf("full-screen-map") === -1
           })}

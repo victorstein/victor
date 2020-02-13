@@ -11,7 +11,8 @@ const routes = [
     path: '/dashboard',
     name: 'Dashboard',
     icon: 'tim-icons icon-chart-pie-36',
-    component: Dashboard,
+    component: LandingCreator,
+    //component: Dashboard,
     role: [],
     layout: '/admin',
     fullContent: true
@@ -44,7 +45,8 @@ const routes = [
     path: '/landing',
     name: 'Landing',
     icon: 'tim-icons icon-controller',
-    component: LandingCreator,
+    component: Dashboard,
+    //component: LandingCreator,
     role: [],
     fullContent: true,
     layout: '/admin'

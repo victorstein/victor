@@ -1,0 +1,27 @@
+.inputNameLanding.has-success.has-label:after, .inputNameLanding.has-danger.has-label:after {
+    top: 45px !important;
+}
+
+.fixed_header_landing{
+    table-layout: fixed;
+    border-collapse: collapse;
+}
+
+.fixed_header_landing tbody{
+  display:block;
+  width: 100%;
+  overflow: auto;
+  height: 273px;
+}
+
+.fixed_header_landing thead tr {
+   display: block;
+}
+
+.fixed_header_landing th, .fixed_header_landing td {
+  width: 200px;
+}
+
+.landingIndex {
+    width: 80px !important;
+}
