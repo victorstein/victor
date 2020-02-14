@@ -36,6 +36,7 @@ const LandingCreator = props => {
             <LandingContext.Provider
               value={{
                 dragListObject: dragListObject, // Objeto con la configuracion necesaria para el Drag an Drop de las columnas Sectios y Landing Selected
+                setDragListObject: (newValue) => { setDragListObject(newValue) }, // nuevo objecto actualizado desde SectionsSelector, se actualiza por peticiones de la query "component" y sus filtros
                 id: idSite, // la id del proyecto
                 listLanding: listLanding, // el array de landings
                 idLandingSelected: idLandingSelected, // la id del landing seleccionado
@@ -55,7 +56,7 @@ const LandingCreator = props => {
                   const filtered = newLandingList.filter((value, index, arr) => {
                     return index !== indexDelete
                   })
-                  // reordenar las ids
+                  // reordenar las ids/index
                   filtered.forEach((value, index) => {
                     filtered[index].id = index
                   })

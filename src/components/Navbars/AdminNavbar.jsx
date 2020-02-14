@@ -46,8 +46,8 @@ class AdminNavbar extends React.Component {
     super(props);
     this.state = {
       collapseOpen: false,
-      color: "navbar-transparent"
-    };
+      color:  "bg-NavBar"// "navbar-transparent"
+    }
   }
   componentDidMount() {
     window.addEventListener("resize", this.updateColor);

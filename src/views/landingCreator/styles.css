@@ -12,3 +12,15 @@
 #landingCreatorBlock > .block-ui-container {
     z-index: 1;
 }
+
+#normalLandingChildren > .block-ui-container > .block-ui-overlay {
+    background-color: #525f7f !important;
+}
+
+#normalLandingChildren > .block-ui-container:hover {
+    cursor: default !important;
+}
+
+.rowDraggable:hover {
+    background-color: #344675 !important
+}

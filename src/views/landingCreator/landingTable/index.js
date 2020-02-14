@@ -44,7 +44,7 @@ const LandingTable = () => {
         <h3 className='text-left mb-0'>Landings</h3>
         <h3 className='ml-auto mb-0'>
           <Button
-            className='btn-round'
+            className='btn-round animation-on-hover'
             color='info'
             size='sm'
             onClick={() => setOpenModal({ open: true, type: 'add' })}
@@ -93,7 +93,7 @@ const RenderBodyTable = ({ data, indexSelected, setIndexSelected, erase, setLand
         <td className='text-center landingIndex'>{index + 1}</td>
         <td className='text-white'>{value.name}</td>
         <td className='text-right'>
-          <Button className='btn-icon btn-simple' color='info' size='sm' id={'tdbtnselect' + index} 
+          <Button className='btn-icon btn-simple animation-on-hover' color='info' size='sm' id={'tdbtnselect' + index} 
             onClick = { () => {
               setIndexSelected(index) // el index del row seleccionado
               setSelectLanding(value.id) // la id del landing seleccionado
@@ -105,7 +105,7 @@ const RenderBodyTable = ({ data, indexSelected, setIndexSelected, erase, setLand
             Select Landing
           </UncontrolledTooltip>
           {` `}
-          <Button className='btn-icon btn-simple' id={'tdbtnedit'+index} color='success' size='sm' onClick={ ()=> {
+          <Button className='btn-icon btn-simple animation-on-hover' id={'tdbtnedit'+index} color='success' size='sm' onClick={ ()=> {
             setLandingEditing({
               index: index,
               value: value
@@ -118,7 +118,7 @@ const RenderBodyTable = ({ data, indexSelected, setIndexSelected, erase, setLand
             Edit Landing Name
           </UncontrolledTooltip>
           {` `}
-          <Button className='btn-icon btn-simple' id={'tdbtnerase'+index} color='danger' size='sm' onClick={ () => {
+          <Button className='btn-icon btn-simple animation-on-hover' id={'tdbtnerase'+index} color='danger' size='sm' onClick={ () => {
             if(index === indexSelected) {
               setIndexSelected(null)
               setSelectLanding(null)

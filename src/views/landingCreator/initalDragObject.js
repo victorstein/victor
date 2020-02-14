@@ -37,18 +37,12 @@ const iniatialDataExample = {
 // the real Object
 const iniatialData = {
     tasks: {
-        '1a': { id: '1a', content: '1' },
-        '2a': { id: '2a', content: '2' },
-        '3a': { id: '3a', content: '3' },
-        '4a': { id: '4a', content: '3' },
-        '5a': { id: '5a', content: '3' },
-        '6a': { id: '6a', content: '3' }
     },
     columns: {
         'column-section': {
             id: 'column-section',
             title: 'Sections',
-            taskIds: ['1a','2a','3a', '4a', '5a', '6a']
+            taskIds: []
         },
         'column-landing': {
             id: 'column-landing',
