@@ -351,7 +351,6 @@ const TableUser = (props) => {
                           isDisabled={(loading || data.users.docs.length === 0)}
                           value={singleSelect}
                           onChange={(value) => {
-                            console.log(parseInt(value.value))
                             setSingleSelect(value)
                             setVariables({
                               ...variables,
