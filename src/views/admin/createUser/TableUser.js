@@ -20,9 +20,12 @@ import {
 } from 'reactstrap'
 import classnames from 'classnames'
 import Select from 'react-select'
+// import AlertGlobal from '../../../components/AlertGlobal'
 import gql from 'graphql-tag'
 import { useQuery } from '@apollo/react-hooks'
 import { BeatLoader } from 'react-spinners'
+import ReactBSAlert from 'react-bootstrap-sweetalert'
+import BSAlertAddPermissions from './BSAlertAddPermissions'
 
 const allUsers = gql`
   query users(
@@ -56,14 +59,12 @@ const allUsers = gql`
   }
 }
 `
-
 const TableUser = (props) => {
   const [variables, setVariables] = useState({
     perPage: 5,
     page: 1,
     filters: ''
   })
-
   const [focusInput, setFocusInput] = useState({
     inputName: {
       focus: false
@@ -73,6 +74,15 @@ const TableUser = (props) => {
     label: '5',
     value: '5'
   })
+  const [alertDelete, setAlertDelete] = useState({
+    visible: false,
+    user: null
+  })
+
+  const [addPermissions, setAddPermissions] = useState({
+    visible: false,
+    user: {}
+  })
 
   const { loading, error, data } = useQuery(
     allUsers,
@@ -81,6 +91,20 @@ const TableUser = (props) => {
 
   const contendTable = () => {
     if (!loading) {
+      if (error) {
+        return (
+          <tbody>
+            <tr>
+              <td colSpan={5}>
+                <div className='d-flex justify-content-center p-2 m-2'>
+                  No Data
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        )
+      }
+
       if (data.users.docs.length === 0) {
         return (
           <tbody>
@@ -123,26 +147,34 @@ const TableUser = (props) => {
                   delay={0}
                   target='ViewButton'
                 >
-                View
+                  View
                 </UncontrolledTooltip>
                 <Button
                   className='btn-link btn-icon'
                   color='warning'
                   id='tooltip324367706'
+                  onClick={(e) => setAddPermissions({
+                    visible: true,
+                    user: value
+                  })}
                 >
-                  <i className='fas fa-edit' />
+                  <i className='tim-icons icon-badge' />
                 </Button>
                 <UncontrolledTooltip
                   delay={0}
                   target='tooltip324367706'
                 >
-                Edit
+                add permissions
                 </UncontrolledTooltip>
                 <Button
                   className='btn-link btn-icon'
                   color='danger'
                   id='tooltip974171201'
                   size='sm'
+                  onClick={(e) => setAlertDelete({
+                    visible: true,
+                    user: value
+                  })}
                 >
                   <i className='tim-icons icon-simple-remove' />
                 </Button>
@@ -150,7 +182,7 @@ const TableUser = (props) => {
                   delay={0}
                   target='tooltip974171201'
                 >
-                Delete
+                  Delete
                 </UncontrolledTooltip>
               </td>
             </tr>
@@ -174,12 +206,65 @@ const TableUser = (props) => {
       )
     }
   }
-  if (data) {
-    console.log(data)
-  }
+
+  // useEffect(() => {
+  //   if (error) {
+  //     if (error.networkError) {
+  //       if (error.networkError.toString().includes('400')) {
+  //         if (errorMessage.message !== 'Network Error') {
+  //           console.log('sadasf')
+  //           setErrorMessage({
+  //             visible: true,
+  //             message: 'Network Error'
+  //           })
+  //         }
+  //       }
+  //     }
+  //   }
+  // }, [error])
 
   return (
     <div>
+      {
+        // (errorMessage.visible)
+        //   ? <AlertGlobal
+        //     type='danger'
+        //     icon='icon-alert-circle-exc'
+        //     message='Error : Error checking user list'
+        //     />
+        //   : null
+      }
+      {
+        (alertDelete.visible) &&
+          <ReactBSAlert
+            warning
+            showCancel
+            confirmBtnText='Yes, delete it!'
+            confirmBtnBsStyle='danger'
+            cancelBtnBsStyle='success'
+            title='Atention!'
+            // onConfirm={this.deleteFile}
+            onCancel={(e) => setAlertDelete({
+              visible: false,
+              user: null
+            })}
+            focusCancelBtn
+          >
+            <p style={{ color: 'black' }}>
+              <span>Are you sure you want to delete the user :</span>
+            </p>
+            <strong> {alertDelete.user.fullName}</strong>
+          </ReactBSAlert>
+      }
+
+      {
+        (addPermissions.visible) &&
+          <BSAlertAddPermissions
+            User={addPermissions.user}
+            setAddPermissions={setAddPermissions}
+          />
+      }
+
       <Card>
         <CardHeader>
           <CardTitle tag='h4'>User list</CardTitle>
@@ -213,6 +298,7 @@ const TableUser = (props) => {
                           type='text'
                           placeholder='Filter by Name'
                           bsSize='sm'
+                          disabled={error}
                           onChange={(e) => {
                             // console.log(e.target.value)
                             setVariables({
@@ -251,98 +337,101 @@ const TableUser = (props) => {
           <Row>
             <Col className='col-4'>
               <FormGroup>
-                <Row>
-                  <Col className='col-4'>
-                    <Label for='inputState'>Per Page</Label>
-                  </Col>
-                  <Col>
-                    <Select
-                      className='react-select primary'
-                      classNamePrefix='react-select'
-                      name='singleSelect'
-                      isDisabled={(loading || data.users.docs.length === 0)}
-                      value={singleSelect}
-                      onChange={(value) => {
-                        console.log(parseInt(value.value))
-                        setSingleSelect(value)
-                        setVariables({
-                          ...variables,
-                          page: 1,
-                          perPage: parseInt(value.value)
-                        })
-                      }}
-                      options={[
-                        {
-                          value: '',
-                          label: 'Perpage',
-                          isDisabled: true
-                        },
-                        { value: '5', label: '5' },
-                        { value: '10', label: '10' },
-                        { value: '15', label: '15' }
-                      ]}
-                      placeholder='Perpage'
-                    />
-                  </Col>
-                </Row>
+                {
+                  data &&
+                    <Row>
+                      <Col className='col-4'>
+                        <Label for='inputState'>Per Page</Label>
+                      </Col>
+                      <Col>
+                        <Select
+                          className='react-select primary'
+                          classNamePrefix='react-select'
+                          name='singleSelect'
+                          isDisabled={(loading || data.users.docs.length === 0)}
+                          value={singleSelect}
+                          onChange={(value) => {
+                            console.log(parseInt(value.value))
+                            setSingleSelect(value)
+                            setVariables({
+                              ...variables,
+                              page: 1,
+                              perPage: parseInt(value.value)
+                            })
+                          }}
+                          options={[
+                            {
+                              value: '',
+                              label: 'Perpage',
+                              isDisabled: true
+                            },
+                            { value: '5', label: '5' },
+                            { value: '10', label: '10' },
+                            { value: '15', label: '15' }
+                          ]}
+                          placeholder='Perpage'
+                        />
+                      </Col>
+                    </Row>
+                }
               </FormGroup>
             </Col>
             <Col className='col-8'>
               {
-                (data && data.users.docs.length !== 0)
-                  ? <div className='maxPaginatio'>
-                    <Pagination>
-                      <PaginationItem
-                        disabled={!((loading || variables.page !== 1))}
-                      >
-                        <PaginationLink
-                          onClick={(e) => {
-                            setVariables({
-                              ...variables,
-                              page: variables.page + -1
-                            })
-                          }}
+                (error) ? null
+                  : (data && data.users.docs.length !== 0) &&
+                    <div className='maxPaginatio'>
+                      <Pagination>
+                        <PaginationItem
+                          disabled={!((loading || variables.page !== 1))}
                         >
-                        Previous
-                        </PaginationLink>
-                      </PaginationItem>
-                      {
-                        [...Array(data.users.pages)].map((pagina, index) => (
-                          <PaginationItem
-                            disabled={loading}
-                            key={index}
-                            active={variables.page === index + 1}
+                          <PaginationLink
+                            onClick={(e) => {
+                              setVariables({
+                                ...variables,
+                                page: variables.page + -1
+                              })
+                            }}
                           >
-                            <PaginationLink
-                              onClick={(e) => {
-                                setVariables({
-                                  ...variables,
-                                  page: index + 1
-                                })
-                              }}
+                          Previous
+                          </PaginationLink>
+                        </PaginationItem>
+                        {
+                          [...Array(data.users.pages)].map((pagina, index) => (
+                            <PaginationItem
+                              disabled={loading}
+                              key={index}
+                              active={variables.page === index + 1}
                             >
-                              {index + 1}
-                            </PaginationLink>
-                          </PaginationItem>
-                        ))
-                      }
-                      <PaginationItem
-                        disabled={!((loading) || data.users.pages !== variables.page)}
-                      >
-                        <PaginationLink
-                          onClick={(e) => {
-                            setVariables({
-                              ...variables,
-                              page: variables.page + 1
-                            })
-                          }}
+                              <PaginationLink
+                                onClick={(e) => {
+                                  setVariables({
+                                    ...variables,
+                                    page: index + 1
+                                  })
+                                }}
+                              >
+                                {index + 1}
+                              </PaginationLink>
+                            </PaginationItem>
+                          ))
+                        }
+                        <PaginationItem
+                          disabled={!((loading) || data.users.pages !== variables.page)}
                         >
-                        Next
-                        </PaginationLink>
-                      </PaginationItem>
-                    </Pagination>
-                  </div>
-                  : null
+                          <PaginationLink
+                            onClick={(e) => {
+                              setVariables({
+                                ...variables,
+                                page: variables.page + 1
+                              })
+                            }}
+                          >
+                          Next
+                          </PaginationLink>
+                        </PaginationItem>
+                      </Pagination>
+                    </div>
               }
             </Col>
           </Row>
