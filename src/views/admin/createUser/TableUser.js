@@ -262,6 +262,7 @@ const TableUser = (props) => {
           <BSAlertAddPermissions
             User={addPermissions.user}
             setAddPermissions={setAddPermissions}
+            addPermissions={addPermissions.visible}
           />
       }
 

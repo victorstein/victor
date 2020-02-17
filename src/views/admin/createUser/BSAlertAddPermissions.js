@@ -1,11 +1,21 @@
 import React, { useState, useEffect } from 'react'
-import ReactBSAlert from 'react-bootstrap-sweetalert'
 import Select from 'react-select'
 import { useQuery } from '@apollo/react-hooks'
 import gql from 'graphql-tag'
-import { Row, Col, UncontrolledCollapse, Button, CardBody, Card } from 'reactstrap'
+import {
+  Row, Col, Button,
+  Modal,
+  ModalHeader,
+  ModalBody,
+  ModalFooter
+} from 'reactstrap'
 import { ClipLoader } from 'react-spinners'
+import chroma from 'chroma-js'
 import './stylesUser.scss'
+
+// type State = {
+//   value: [{ [string]: string }],
+// };
 
 const userByid = gql`
 query userByid( $id : String!){
@@ -16,6 +26,10 @@ query userByid( $id : String!){
         role{
             id
             name
+            permissions{
+              id
+              name
+            }
         }
         permissions{
             id
@@ -25,21 +39,42 @@ query userByid( $id : String!){
 }
 `
 
-const allRoles = gql`
-query roles(
+const allpermissions = gql`
+  query permissions(
   $perPage : Float!
   $page : Float!
   $filters : IntOrStr!
 ){
-  roles(
-    perPage : $perPage ,
-    page :  $page,
+  permissions(
+     perPage: $perPage, 
+    page : $page,
     filters : [
       {
         field : NAME
         value : $filters
       }
     ]
+  ){
+    docs{
+      id
+      name
+    }
+    total
+    page
+    perPage
+    pages
+  }
+}
+`
+
+const allRoles = gql`
+query roles(
+  $perPage : Float!
+  $page : Float!
+){
+  roles(
+    perPage : $perPage ,
+    page :  $page
   ){
     docs{
       id
@@ -57,15 +92,19 @@ query roles(
 }
 `
 
+const rolesPagingParams = {
+  perPage: 25,
+  page: 1
+}
+
 const BSAlertAddPermissions = (props) => {
-  const [singleSelect, setSingleSelect] = useState({
-    label: '',
-    value: ''
-  })
+  // This handles the single select
+  const [singleSelect, setSingleSelect] = useState(null)
 
-  const [optionSelectRoles, setOptionSelectRoles] = useState([])
+  // This handles multi select
+  const [multiSelectValue, setMultiSelectValue] = useState(null)
 
-  const [stateReqRoles, setStateReqRoles] = useState({
+  const [stateReqpermissions, setStateReqpermissions] = useState({
     perPage: 25,
     page: 1,
     filters: ''
@@ -73,7 +112,9 @@ const BSAlertAddPermissions = (props) => {
 
   const { loading, error, data } = useQuery(userByid, { variables: { id: props.User.id } })
 
-  const reqRoles = useQuery(allRoles, { stateReqRoles, fetchPolicy: 'no-cache' })
+  const reqRoles = useQuery(allRoles, { variables: { ...rolesPagingParams }, fetchPolicy: 'no-cache' })
+
+  const reqPermissions = useQuery(allpermissions, { variables: { ...stateReqpermissions }, fetchPolicy: 'no-cache' })
 
   useEffect(() => {
     if (data) {
@@ -81,18 +122,14 @@ const BSAlertAddPermissions = (props) => {
         label: data.userById.role.name,
         value: data.userById.role.id
       })
+      const permissions = data.userById.role.permissions.map((u) => ({
+        label: u.name,
+        value: u.id,
+        isBase: true
+      }))
+      setMultiSelectValue(permissions)
     }
   }, [data])
-
-  if (reqRoles.data) {
-    console.log(reqRoles.data)
-  }
-
-  // console.log('User', props.User)
-
-  // if (data) {
-  //   console.log('data', data)
-  // }
 
   const conted = () => {
     if (loading || reqRoles.loading) {
@@ -106,34 +143,61 @@ const BSAlertAddPermissions = (props) => {
         </div>
       )
     } else {
-      if (data) {
+      if (singleSelect && multiSelectValue && reqRoles.data) {
+        const allRoles = reqRoles.data.roles.docs.map(u => ({
+          value: u.id,
+          label: u.name
+        }))
+
+        const allPermissions = reqPermissions.data.permissions.docs.map(u => ({
+          value: u.id,
+          label: u.name
+        }))
+
+        const styles = {
+          multiValue: (base, state) => {
+            return state.data.isBase ? { ...base, backgroundColor: 'gray !important', border: '1px solid beige !important' } : base
+          },
+          multiValueLabel: (base, state) => {
+            return state.data.isBase
+              ? { ...base, fontWeight: 'bold', color: 'beige !important', paddingRight: 6, cursor: 'not-allowed' }
+              : base
+          },
+          multiValueRemove: (base, state) => {
+            return state.data.isBase ? { ...base, display: 'none' } : base
+          },
+          input: (base, state) => {
+            return { ...base, color: 'beige !important' }
+          }
+        }
+
         return (
           <div>
             <Row>
               <Col className='col-4'>
-                <h4 className='text-left' style={{ color: 'black' }}>User Name :</h4>
+                <h4 className='text-left'>User Name :</h4>
               </Col>
               <Col className='col-8'>
-                <p className='text-left' style={{ color: 'black' }}>
+                <p className='text-left' style={{ color: 'rgba(255, 255, 255, 0.8)' }}>
                   {
                     data.userById.fullName
                   }
                 </p>
               </Col>
               <Col className='col-4'>
-                <h4 className='text-left' style={{ color: 'black' }}>Role :</h4>
+                <h4 className='text-left'>Role :</h4>
               </Col>
               <Col className='col-8'>
-                <p className='text-left' style={{ color: 'black' }}>
+                <p className='text-left' style={{ color: 'rgba(255, 255, 255, 0.8)' }}>
                   {
                     data.userById.role.name
                   }
                 </p>
               </Col>
-              <Col className='col-12'>
-                <h3 style={{ color: 'black' }}>Add</h3>
+              <Col className='col-12 text-center'>
+                <h3>Add</h3>
               </Col>
-              <Col className='col-12 text-left'>
+              <Col className='col-12 text-left pb-2'>
                 <label htmlFor='SelectRole'>Role</label>
                 <Select
                   className='react-select primary selectWhite'
@@ -144,57 +208,45 @@ const BSAlertAddPermissions = (props) => {
                   // menuIsOpen
                   value={singleSelect}
                   onChange={value => setSingleSelect(value)}
-                  options={[
-                    { value: '1', label: 'Foobar' },
-                    { value: '2', label: 'Foobar' },
-                    { value: '3', label: 'Is great' },
-                    { value: '4', label: 'Foobar' },
-                    { value: '5', label: 'Is great' },
-                    { value: '6', label: 'Foobar' },
-                    { value: '7', label: 'Is great' },
-                    { value: '8', label: 'Is great' }
-                  ]}
+                  options={allRoles}
                   placeholder='Single Select'
                 />
               </Col>
-              <Col className='col-12 text-left'>
+              <Col className='col-12 text-left pb-2 pt-2'>
                 <label htmlFor='SelectRole'>Permissions</label>
                 <Select
                   className='react-select info'
                   classNamePrefix='react-select'
                   placeholder='Choose City'
                   name='multipleSelect'
+                  isClearable={false}
                   closeMenuOnSelect={false}
                   isMulti
-                  // value={this.state.multipleSelect}
-                  // onChange={value =>
-                  //   this.setState({ multipleSelect: value })
-                  // }
-                  options={[
-                    {
-                      value: '',
-                      label: ' Multiple Options',
-                      isDisabled: true
-                    },
-                    { value: '2', label: 'Paris ' },
-                    { value: '3', label: 'Bucharest' },
-                    { value: '4', label: 'Rome' },
-                    { value: '5', label: 'New York' },
-                    { value: '6', label: 'Miami ' },
-                    { value: '7', label: 'Piatra Neamt' },
-                    { value: '8', label: 'Paris ' },
-                    { value: '9', label: 'Bucharest' },
-                    { value: '10', label: 'Rome' },
-                    { value: '11', label: 'New York' },
-                    { value: '12', label: 'Miami ' },
-                    { value: '13', label: 'Piatra Neamt' },
-                    { value: '14', label: 'Paris ' },
-                    { value: '15', label: 'Bucharest' },
-                    { value: '16', label: 'Rome' },
-                    { value: '17', label: 'New York' },
-                    { value: '18', label: 'Miami ' },
-                    { value: '19', label: 'Piatra Neamt' }
-                  ]}
+                  isDisabled={reqPermissions.loading}
+                  isLoading={reqPermissions.loading}
+                  onInputChange={(e) => {
+                    const inputValue = e.replace(/\W/g, '')
+                    // console.log(inputValue)
+                    setStateReqpermissions({
+                      ...stateReqpermissions,
+                      filters: inputValue
+                    })
+                  }}
+                  styles={styles}
+                  value={multiSelectValue}
+                  onChange={(value, { action, removedValue }) => {
+                    if (action === 'select-option') {
+                      setMultiSelectValue(value)
+                    } else if (action === 'remove-value') {
+                      if (!removedValue.isBase) {
+                        setMultiSelectValue(value)
+                      }
+                    } else {
+                      setMultiSelectValue(value)
+                    }
+                  }}
+                  // defaultValue={[{ value: '2', label: 'Paris ' }]}
+                  options={allPermissions}
                 />
               </Col>
             </Row>
@@ -204,25 +256,49 @@ const BSAlertAddPermissions = (props) => {
     }
   }
 
+  // if (data) {
+  //   console.log(data)
+  // }
+
   return (
     <div>
-      <ReactBSAlert
-        style={{ overflow: 'visible' }}
-        showCancel
-        confirmBtnText='Update'
-        confirmBtnBsStyle='success'
-        cancelBtnBsStyle='danger'
-        title='Permissions and Roles'
-        disabled={loading || error}
-        onConfirm={(e) => console.log('sadas')}
-        onCancel={(e) => props.setAddPermissions({
-          visible: false,
-          user: {}
-        })}
-        focusCancelBtn
-      >
-        {conted()}
-      </ReactBSAlert>
+      <Modal style={{ marginTop: '64px' }} isOpen={props.addPermissions} size='lg'>
+        <ModalHeader>
+          <div className='modal-header '>
+            <h3>Permissions and Roles</h3>
+          </div>
+        </ModalHeader>
+        <ModalBody>{conted()}</ModalBody>
+        <ModalFooter>
+          <Row className='w-100'>
+            <Col className='col-6 pt-2'>
+              <Button
+                className='w-100'
+                color='danger'
+                onClick={(e) => props.setAddPermissions({
+                  visible: false,
+                  user: {}
+                })}
+              >
+               Cancel
+              </Button>
+            </Col>
+            <Col className='col-6 pt-2'>
+              <Button
+                className='w-100'
+                color='info'
+                type='submit'
+                // disabled={
+                //   emailInput.error ||
+                // nameInput.error
+                // }
+              >
+              Update
+              </Button>
+            </Col>
+          </Row>
+        </ModalFooter>
+      </Modal>
     </div>
   )
 }
