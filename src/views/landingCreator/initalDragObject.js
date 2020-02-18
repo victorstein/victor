@@ -44,13 +44,13 @@ const iniatialData = {
             title: 'Sections',
             taskIds: []
         },
-        'column-landing': {
-            id: 'column-landing',
-            title: 'Landing Selected',
+        'column-landing-composer': {
+            id: 'column-landing-composer',
+            title: 'Landing Composer',
             taskIds: []
         }
     },
-    columnOrder: ['column-section', 'column-landing']
+    columnOrder: ['column-section', 'column-landing-composer']
 }
 
 export default iniatialData

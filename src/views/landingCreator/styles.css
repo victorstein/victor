@@ -24,3 +24,18 @@
 .rowDraggable:hover {
     background-color: #344675 !important
 }
+
+.landingComposerDragg {
+    background-color: #17a2b8 !important;
+    min-height: 25vh !important;
+}
+
+.landingComposerContainer {
+    background-color: white !important;
+    min-height: 25vh !important;
+    height: calc(100% + 100px);
+}
+
+[data-rbd-droppable-id="column-landing-composer"] {
+    height: 100% !important;
+}
