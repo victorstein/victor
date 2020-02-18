@@ -13,10 +13,6 @@ import {
 import { ClipLoader } from 'react-spinners'
 import './stylesUser.scss'
 
-// type State = {
-//   value: [{ [string]: string }],
-// };
-
 const userByid = gql`
 query userByid( $id : String!){
     userById(id :  $id ){
@@ -266,11 +262,8 @@ const BSAlertAddPermissions = (props) => {
                   isClearable={false}
                   closeMenuOnSelect={false}
                   isMulti
-                  // isDisabled={reqPermissions.loading}
-                  // isLoading={reqPermissions.loading}
                   onInputChange={(e) => {
                     const inputValue = e.replace(/\W/g, '')
-                    // console.log(inputValue)
                     setStateReqpermissions({
                       ...stateReqpermissions,
                       filters: inputValue
@@ -279,7 +272,6 @@ const BSAlertAddPermissions = (props) => {
                   styles={styles}
                   value={multiSelectValue}
                   onChange={(value, { action, removedValue }) => {
-                    console.log(action)
                     if (action !== 'pop-value') {
                       if (action === 'select-option') {
                         setMultiSelectValue(value)
