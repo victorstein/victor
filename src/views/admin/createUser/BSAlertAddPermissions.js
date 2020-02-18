@@ -1,16 +1,16 @@
 import React, { useState, useEffect } from 'react'
 import Select from 'react-select'
-import { useQuery } from '@apollo/react-hooks'
+import { useQuery, useMutation } from '@apollo/react-hooks'
 import gql from 'graphql-tag'
 import {
   Row, Col, Button,
   Modal,
   ModalHeader,
   ModalBody,
-  ModalFooter
+  ModalFooter,
+  Alert
 } from 'reactstrap'
 import { ClipLoader } from 'react-spinners'
-import chroma from 'chroma-js'
 import './stylesUser.scss'
 
 // type State = {
@@ -92,6 +92,35 @@ query roles(
 }
 `
 
+const updateUser = gql`
+mutation updateUser(
+  $id : String!
+  $role: String!
+  $newPermissions: [String!]
+){
+  updateUser(
+    id : $id
+    role : $role
+    newPermissions : $newPermissions
+  ){
+    id
+    fullName
+    role{
+      id
+      name
+      permissions{
+        id
+        name
+      }
+    }
+    permissions{
+      id
+      name
+    }
+  }
+}
+`
+
 const rolesPagingParams = {
   perPage: 25,
   page: 1
@@ -110,11 +139,15 @@ const BSAlertAddPermissions = (props) => {
     filters: ''
   })
 
-  const { loading, error, data } = useQuery(userByid, { variables: { id: props.User.id } })
+  const { loading, error, data } = useQuery(userByid, { variables: { id: props.User.id }, fetchPolicy: 'no-cache' })
 
   const reqRoles = useQuery(allRoles, { variables: { ...rolesPagingParams }, fetchPolicy: 'no-cache' })
 
   const reqPermissions = useQuery(allpermissions, { variables: { ...stateReqpermissions }, fetchPolicy: 'no-cache' })
+
+  const [updateUserMutation, reqUpdateUser] = useMutation(updateUser, {
+    refetchQueries: ['allUsers']
+  })
 
   useEffect(() => {
     if (data) {
@@ -122,11 +155,14 @@ const BSAlertAddPermissions = (props) => {
         label: data.userById.role.name,
         value: data.userById.role.id
       })
-      const permissions = data.userById.role.permissions.map((u) => ({
+      const permissions = data.userById.permissions.map((u) => ({
         label: u.name,
         value: u.id,
-        isBase: true
+        isBase: data.userById.role.permissions.some(x => u.name === x.name)
       }))
+      permissions.sort((a, d) => {
+        return a.isBase ? -1 : 1
+      })
       setMultiSelectValue(permissions)
     }
   }, [data])
@@ -143,6 +179,14 @@ const BSAlertAddPermissions = (props) => {
         </div>
       )
     } else {
+      if (error || reqRoles.error) {
+        return (
+          <div className='d-flex justify-content-center p-2 m-2'>
+            <Alert color='danger'>Error connecting to server</Alert>
+          </div>
+        )
+      }
+
       if (singleSelect && multiSelectValue && reqRoles.data) {
         const allRoles = reqRoles.data.roles.docs.map(u => ({
           value: u.id,
@@ -245,7 +289,6 @@ const BSAlertAddPermissions = (props) => {
                       setMultiSelectValue(value)
                     }
                   }}
-                  // defaultValue={[{ value: '2', label: 'Paris ' }]}
                   options={allPermissions}
                 />
               </Col>
@@ -256,9 +299,32 @@ const BSAlertAddPermissions = (props) => {
     }
   }
 
-  // if (data) {
-  //   console.log(data)
-  // }
+  const submitInputUpdate = async () => {
+    try {
+      const newPermissions = multiSelectValue.filter(u => !u.isBase === true).map(u => (
+        u.value
+      ))
+      const newRole = {
+        id: singleSelect.value,
+        name: singleSelect.label
+      }
+      const idUser = data.userById.id
+
+      const newUser = {
+        id: idUser,
+        role: newRole.id,
+        newPermissions: [...newPermissions]
+      }
+
+      await updateUserMutation({ variables: newUser })
+      props.setAddPermissions({
+        visible: false,
+        user: {}
+      })
+    } catch (e) {
+      console.log(e)
+    }
+  }
 
   return (
     <div>
@@ -275,6 +341,7 @@ const BSAlertAddPermissions = (props) => {
               <Button
                 className='w-100'
                 color='danger'
+                disabled={reqUpdateUser.loading}
                 onClick={(e) => props.setAddPermissions({
                   visible: false,
                   user: {}
@@ -288,12 +355,21 @@ const BSAlertAddPermissions = (props) => {
                 className='w-100'
                 color='info'
                 type='submit'
-                // disabled={
-                //   emailInput.error ||
-                // nameInput.error
-                // }
+                disabled={reqUpdateUser.loading || error}
+                onClick={(e) => submitInputUpdate()}
               >
-              Update
+                {
+                  (reqUpdateUser.loading)
+                    ? (
+                      <ClipLoader
+
+                        color='#4A90E2'
+                        size={20}
+                        loading
+                      />
+                    )
+                    : '  Update'
+                }
               </Button>
             </Col>
           </Row>
