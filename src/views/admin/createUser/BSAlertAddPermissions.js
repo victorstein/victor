@@ -266,8 +266,8 @@ const BSAlertAddPermissions = (props) => {
                   isClearable={false}
                   closeMenuOnSelect={false}
                   isMulti
-                  isDisabled={reqPermissions.loading}
-                  isLoading={reqPermissions.loading}
+                  // isDisabled={reqPermissions.loading}
+                  // isLoading={reqPermissions.loading}
                   onInputChange={(e) => {
                     const inputValue = e.replace(/\W/g, '')
                     // console.log(inputValue)
@@ -279,14 +279,17 @@ const BSAlertAddPermissions = (props) => {
                   styles={styles}
                   value={multiSelectValue}
                   onChange={(value, { action, removedValue }) => {
-                    if (action === 'select-option') {
-                      setMultiSelectValue(value)
-                    } else if (action === 'remove-value') {
-                      if (!removedValue.isBase) {
+                    console.log(action)
+                    if (action !== 'pop-value') {
+                      if (action === 'select-option') {
+                        setMultiSelectValue(value)
+                      } else if (action === 'remove-value') {
+                        if (!removedValue.isBase) {
+                          setMultiSelectValue(value)
+                        }
+                      } else {
                         setMultiSelectValue(value)
                       }
-                    } else {
-                      setMultiSelectValue(value)
                     }
                   }}
                   options={allPermissions}
