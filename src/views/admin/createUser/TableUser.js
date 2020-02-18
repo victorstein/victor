@@ -28,7 +28,7 @@ import ReactBSAlert from 'react-bootstrap-sweetalert'
 import BSAlertAddPermissions from './BSAlertAddPermissions'
 
 const allUsers = gql`
-  query users(
+  query allUsers(
   $perPage : Float!
   $page : Float!
   $filters : IntOrStr!
@@ -197,7 +197,7 @@ const TableUser = (props) => {
                 <BeatLoader
                   color='#4A90E2'
                   size={20}
-                  loading
+                  loading={loading}
                 />
               </div>
             </td>
@@ -206,22 +206,6 @@ const TableUser = (props) => {
       )
     }
   }
-
-  // useEffect(() => {
-  //   if (error) {
-  //     if (error.networkError) {
-  //       if (error.networkError.toString().includes('400')) {
-  //         if (errorMessage.message !== 'Network Error') {
-  //           console.log('sadasf')
-  //           setErrorMessage({
-  //             visible: true,
-  //             message: 'Network Error'
-  //           })
-  //         }
-  //       }
-  //     }
-  //   }
-  // }, [error])
 
   return (
     <div>
