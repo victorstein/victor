@@ -362,13 +362,12 @@ const BSAlertAddPermissions = (props) => {
                   (reqUpdateUser.loading)
                     ? (
                       <ClipLoader
-
                         color='#4A90E2'
                         size={20}
                         loading
                       />
                     )
-                    : '  Update'
+                    : 'Update'
                 }
               </Button>
             </Col>
