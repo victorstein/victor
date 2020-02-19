@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import TableUser from './TableUser'
-import ModalUser from './ModalUser'
+import ModalUser from './ModalCreateUser'
 import './stylesUser.scss'
 
 const CreateUserIndex = () => {
