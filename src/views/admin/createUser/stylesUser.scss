@@ -16,6 +16,12 @@ table {
 }
 
 
+.InputFormVictor{
+    .has-success:after, .has-danger:after{
+        top: 44px !important;
+    }
+}
+
 
 .iccon {
     .has-label:after {
