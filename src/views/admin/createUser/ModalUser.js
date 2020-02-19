@@ -35,6 +35,20 @@ const ModalUser = (props) => {
     labelError: ''
   })
 
+  const [passwordInput, setPasswordInput] = useState({
+    className: '',
+    value: '',
+    error: false,
+    labelError: ''
+  })
+
+  const [confirmPasswordInput, setConfirmPasswordInput] = useState({
+    className: '',
+    value: '',
+    error: false,
+    labelError: ''
+  })
+
   const ValidatorFormChange = (valueInput, setState, nameInput) => {
     const result = Joi.validate({ ...valueInput }, Schemas(nameInput))
     if (result.error) {
@@ -60,7 +74,9 @@ const ModalUser = (props) => {
     if (
       emailInput.className === 'has-success' &&
       nameInput.className === 'has-success' &&
-      lastNameInput.className === 'has-success'
+      lastNameInput.className === 'has-success' &&
+      passwordInput.className === 'has-success' &&
+      confirmPasswordInput.className === 'has-success'
     ) {
       console.log('emailInput', emailInput.value)
       console.log('nameInput', nameInput.value)
@@ -72,6 +88,22 @@ const ModalUser = (props) => {
           className: 'has-danger',
           error: true,
           labelError: 'Email is required'
+        })
+      }
+      if (passwordInput.className !== 'has-success') {
+        setPasswordInput({
+          ...passwordInput,
+          className: 'has-danger',
+          error: true,
+          labelError: 'Password is required'
+        })
+      }
+      if (confirmPasswordInput.className !== 'has-success') {
+        setConfirmPasswordInput({
+          ...confirmPasswordInput,
+          className: 'has-danger',
+          error: true,
+          labelError: 'Confirm Password is required'
         })
       }
       if (nameInput.className !== 'has-success') {
@@ -141,6 +173,46 @@ const ModalUser = (props) => {
                     }
                   </FormGroup>
                 </Col>
+                <Col className='col-6'>
+                  <FormGroup className={`has-label ${passwordInput.className}`}>
+                    <Label for='password'>Password</Label>
+                    <Input
+                      type='password'
+                      name='password'
+                      id='password'
+                      placeholder='Password'
+                      onChange={(e) => {
+                        ValidatorFormChange({ confirmPassword: confirmPasswordInput.value, password: e.target.value }, setConfirmPasswordInput, 'confirmPassword')
+                        ValidatorFormChange({ password: e.target.value }, setPasswordInput, 'password')
+                      }}
+                    />
+                    {
+                      passwordInput.error &&
+                        <label className='error'>
+                          {passwordInput.labelError}
+                        </label>
+                    }
+                  </FormGroup>
+                </Col>
+
+                <Col className='col-6'>
+                  <FormGroup className={`has-label ${confirmPasswordInput.className}`}>
+                    <Label for='confirmPassword'>Confirm Password</Label>
+                    <Input
+                      type='password'
+                      name='confirmPassword'
+                      id='confirmPassword'
+                      placeholder='Confirm Password'
+                      onChange={e => ValidatorFormChange({ confirmPassword: e.target.value, password: passwordInput.value }, setConfirmPasswordInput, 'confirmPassword')}
+                    />
+                    {
+                      confirmPasswordInput.error &&
+                        <label className='error'>
+                          {confirmPasswordInput.labelError}
+                        </label>
+                    }
+                  </FormGroup>
+                </Col>
                 <Col className='col-12'>
                   <FormGroup className={`has-label ${emailInput.className}`}>
                     <Label for='email'>Email</Label>
@@ -179,7 +251,10 @@ const ModalUser = (props) => {
                   type='submit'
                   disabled={
                     emailInput.error ||
-                    nameInput.error
+                    nameInput.error ||
+                    lastNameInput.error ||
+                    passwordInput.error ||
+                    confirmPasswordInput.error
                   }
                 >
               Agregate
