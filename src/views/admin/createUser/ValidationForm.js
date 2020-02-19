@@ -12,6 +12,8 @@ const errorCustom = (error) => {
         return { message: `Please enter a valid ${label} address.` }
       case 'any.empty':
         return { message: `${label} is required` }
+      case 'any.allowOnly':
+        return { message: 'password not match' }
       default:
         return error
     }
@@ -46,6 +48,32 @@ export const Schemas = (typeSchema) => {
           .label('Last Name')
           .error((e) => errorCustom(e))
       })
+
+    case 'password' :
+      return Joi.object().keys({
+        password: Joi
+          .string()
+          .required()
+          .regex(/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/)
+          .label('Password')
+          .error((e) => errorCustom(e))
+      })
+
+    case 'confirmPassword' :
+      return {
+        confirmPassword: Joi
+          .string()
+          .required()
+          .valid(Joi.ref('password'))
+          .label('Confirm password')
+          .error((e) => errorCustom(e)),
+        password: Joi
+          .string()
+          .regex(/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/)
+          .label('Password')
+          .error((e) => errorCustom(e))
+      }
+
     default: return null
   }
 }
