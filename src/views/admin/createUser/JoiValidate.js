@@ -1,9 +1,10 @@
-import Joi from 'joi-browser'
+import Joi from '@hapi/joi'
 
 const errorCustom = (error) => {
   return error.map((error) => {
-    const { type, flags: { label } } = error
-    switch (type) {
+    const { flags: { label }, code } = error
+    console.log(error)
+    switch (code) {
       case 'string.email' :
         return { message: `Please enter a valid ${label} address.` }
       case 'any.required':
@@ -20,43 +21,52 @@ const errorCustom = (error) => {
   })
 }
 
-const Schemas = Joi.object().keys({
+const Schemas = Joi.object({
   email: Joi
     .string()
-    .email({ minDomainSegments: 3 })
-    .regex(/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/)
+    .email({ minDomainSegments: 2, tlds: { allow: ['net'] } })
+    // .regex(/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/)
     .required()
     .label('Email')
-    .error((e) => errorCustom(e)),
+    .messages({
+      'string.email': 'Please enter a valid Email address.',
+      'any.required': 'Email is a required',
+      'string.empty': 'Email is a required'
+    }),
   name: Joi
     .string()
     .required()
     .label('Name')
-    .error((e) => errorCustom(e)),
+    .messages({
+      'any.required': 'Name is a required',
+      'string.empty': 'Name is a required'
+    }),
   lastname: Joi
     .string()
     .required()
     .label('Last Name')
-    .error((e) => errorCustom(e)),
+    .messages({
+      'any.required': 'Name is a required',
+      'string.empty': 'Name is a required'
+    }),
   password: Joi
     .string()
     .required()
     .regex(/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/)
+    // .pattern(new RegExp('/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/'))
+    .message('Please enter a valid password address.')
     .label('Password')
-    .error((e) => errorCustom(e)),
-  confirmPassword: Joi
-    .string()
-    .required()
-    .valid(Joi.ref('password'))
-    .label('Confirm password')
-    .error((e) => errorCustom(e))
+    .messages({
+      'any.required': 'Name is a required',
+      'string.empty': 'Name is a required'
+    }),
+  confirmPassword: Joi.ref('password')
 })
 
 const validationForm = (values) => {
   let errors = {}
   try {
-    const result = Joi.validate(values, Schemas, { abortEarly: false })
-    console.log(result.error)
+    const result = Schemas.validate(values, { abortEarly: false })
     result.error.details.map((inputError) => {
       errors = {
         ...errors,
