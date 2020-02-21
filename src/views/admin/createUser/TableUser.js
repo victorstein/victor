@@ -210,15 +210,6 @@ const TableUser = (props) => {
   return (
     <div>
       {
-        // (errorMessage.visible)
-        //   ? <AlertGlobal
-        //     type='danger'
-        //     icon='icon-alert-circle-exc'
-        //     message='Error : Error checking user list'
-        //     />
-        //   : null
-      }
-      {
         (alertDelete.visible) &&
           <ReactBSAlert
             warning
