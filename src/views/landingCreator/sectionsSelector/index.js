@@ -7,6 +7,7 @@ import { componentsSectionsGql as GET_COMPONENTS } from '../../../utils/Graphql/
 import { LandingContext } from '../index'
 import BlockUi from 'react-block-ui'
 import BeatLoader from 'react-spinners/BeatLoader'
+import CustomAlert from '../../../components/AlertGlobal'
 import '../styles.css'
 
 const ContainerDraggable = styled.div`
@@ -41,9 +42,9 @@ const componentsSelector = () => {
             minHeight: '350px',
             width: '100%',
             maxHeight: '600px',
-            overflow: 'auto',
+            overflow: 'auto'
           }}
-          className='pr-4'
+          className='scrollerLandingCreator'
         >
           {empty ? <WarningComponent /> : <MainComponent />}
         </div>
@@ -67,13 +68,22 @@ const MainComponent = () => {
     idLandingSelected,
     dragListObject,
     setDragListObject,
+    manageLandingContent
   } = useContext(LandingContext)
   const [loadComponents, { error, loading, data }] = useLazyQuery(
     GET_COMPONENTS('total pages docs { id title image }'),
-    { fetchPolicy: 'no-cache' },
+    { fetchPolicy: 'no-cache' }
   )
-  const tasks = dragListObject.columns['column-section'].taskIds.map(
-    taskId => dragListObject.tasks[taskId],
+
+  const tasks = dragListObject.columns['column-section'].taskIds.map( (taskId) => {
+      console.log(' dragListObject.tasks ', dragListObject.tasks)
+      console.log('taskId ', taskId)
+      console.log('dragListObject.tasks[taskId] ', dragListObject.tasks[taskId])
+      return dragListObject.tasks[taskId]
+  }
+  
+
+    //taskId => dragListObject.tasks[taskId]
   )
 
   const [filters, setFilters] = useState(null)
@@ -92,29 +102,33 @@ const MainComponent = () => {
         //console.log(`${key}: ${value}`)
         currentTask.push({
           id: value.id,
-          //content: value.content,
           image: value.image,
           title: value.title,
         })
       }
+      let queryIds = []
+      console.log(' currentTask ', currentTask)
+      console.log(' Query ',  data.components.docs)
       // si currentTask esta vacio
-      // agregar directamente tada la data que viene de la query "components"
+      // agregar directamente toda la data que viene de la query "components" a las task, tambien a la columna "Column-Section"
       if (currentTask.length < 1) {
-        data.components.docs.forEach(element => {
-          currentTask.push(element)
+        data.components.docs.forEach(valueDocs => {
+          currentTask.push(valueDocs)
+          queryIds.push(valueDocs.id)
         })
+        newDragObject.columns['column-section'].taskIds = [...queryIds]
       } else {
         // si actualmente ya hay tasks entonces comparar con las que vienen en la query "components"
         // solo agregar aquellas que no estan en las tasks actuales
         // esto se hace, porque la query component es paginada y filtrada, entonces puede venir data repetida
         const newData = []
-        currentTask.forEach(valueCurrent => {
-          data.components.docs.forEach(valueDocs => {
-            if (valueCurrent.id !== valueDocs.id) {
-              newData.push(valueDocs)
-            }
-          })
+        data.components.docs.forEach(valueDocs => {
+          if (!newDragObject.tasks[valueDocs.id]) {
+            newData.push(valueDocs)
+          }
+          queryIds.push(valueDocs.id)
         })
+        console.log(' new Data', newData)
         currentTask.concat(newData)
       }
 
@@ -127,39 +141,112 @@ const MainComponent = () => {
           '3a': { id: '3a', content: '3' }
         }
       */
+      
+      let idsCurrentTask = [] // para luego ver la diferencia con las ids de la query
       newDragObject.tasks = {}
       currentTask.forEach((value, index) => {
         newDragObject.tasks = {
           ...newDragObject.tasks,
-          [value.id]: value,
+          [value.id]: value
         }
+        idsCurrentTask.push(value.id)
       })
+
+      // Obtener las task que estan en LandingComposer
+      // Las ids que obtengamos, seran ids que no se van a agregar a column-section
+      // porque son ids que ya fueron Drag a la otra columna column-landing-composer
+      const tasksLandingComposer = dragListObject.columns['column-landing-composer'].taskIds.map(
+        taskId => dragListObject.tasks[taskId]
+      )
+      console.log(' tasksLandingComposer ', tasksLandingComposer)
       // Ahora hay que agregar la data que viene de la query "component" a la columna de sections
       // esta columna es la draggable, entonces siempre que no existan filtros hacer un push de la nueva data
       // si hay filtros sobrescribir con la data de la query
       if (filters) {
       } else {
-        const newIds = data.components.docs.map(value => {
-          return value.id
-        })
-        newDragObject.columns['column-section'].taskIds = [
-          ...newDragObject.columns['column-section'].taskIds,
-        ].concat(newIds)
+        
+          // Buscar las ids de la query que aun no estan en CurrentTask
+          const difference = queryIds.filter(x => !idsCurrentTask.includes(x))
+          if(difference.length>0){
+            newDragObject.columns['column-section'].taskIds = [
+              ...newDragObject.columns['column-section'].taskIds
+            ].concat(difference)
+          }
+
       }
+      console.log(' newDragObject ', newDragObject)
       setDragListObject(newDragObject)
     }
   }, [data])
 
+  const addToLandingComposer = (index, draggableId) => {
+
+    let currentLanding = null
+    const newListLanding = [...listLanding]
+    newListLanding.forEach((value, indexLanding) => {
+      if(value.id === indexLanding) {
+        currentLanding = value
+        //newListLanding[indexLanding] = 
+      }
+    })
+
+    // si no encuentra el landing no hacer nada mas
+    if(!currentLanding) {
+      return null
+    }
+
+    let draggingDiv = document.getElementById('draggingDiv_' + index)
+    draggingDiv.classList.add('animated')
+    draggingDiv.classList.add('fadeOut')
+
+    console.log('idLandingSelected ', idLandingSelected)
+    console.log('draggableId ', draggableId)
+    console.log('index ', index)
+    console.log('listLanding ', listLanding)
+
+    setTimeout(() => {
+      const start = dragListObject.columns['column-section']
+      const finish = dragListObject.columns['column-landing-composer']
+      const startTaskIds = Array.from(start.taskIds)
+        startTaskIds.splice(index, 1)
+        const newStart = {
+          ...start,
+          taskIds: startTaskIds
+        }
+        const finishTaskIds = Array.from(finish.taskIds)
+        finishTaskIds.push(draggableId)
+        const newFinish = {
+          ...finish,
+          taskIds: finishTaskIds
+        }
+        setDragListObject({
+          ...dragListObject,
+          columns: {
+            ...dragListObject.columns,
+            [newStart.id]: newStart,
+            [newFinish.id]: newFinish
+          }
+        })
+        
+        //newLisstLanding[]
+        currentLanding.listIdSections.push(draggableId)
+        //manageLandingContent([...])
+    }, 700)
+    
+    
+  }
+
   return (
     <BlockUi
       tag='div'
-      blocking={loading}
+      blocking={true || loading}
       id='normalLandingChildren'
       loader={<BeatLoader size={15} loading color='#00f2c3' />}
     >
+      <CustomAlert message={error} />
       <div
-        style={{ height: loading ? '350px' : 'auto', width: '100%' }}
-        className='d-flex align-items-center justify-content-center'
+        style={{ height: loading ? '350px' : 'auto', width: '100%', minHeight: '350px' }}
+        className='d-flex justify-content-center'
       >
         <Droppable droppableId={dragListObject.columns['column-section'].id}>
           {provided => (
@@ -172,19 +259,19 @@ const MainComponent = () => {
                       {...providedDraggable.dragHandleProps}
                       ref={providedDraggable.innerRef}
                       isDragging={snapshot.isDragging}
-                      className='mb-2'
-                      styled={{ backgroundColor: `${props => (props.isDragging ? 'red' : 'blue')}` }}
+                      className='mb-2 mr-1'
+                      style={{ backgroundColor: `${props => (props.isDragging ? 'red' : 'blue')}` }}
                     >
-                      <Row className='rowDraggable p-2 bg-default'>
+                      <Row className='rowDraggable p-2 bg-default' id={'draggingDiv_'+index}>
                         <Col
                           xs={12}
-                          md={8}
+                          md={7}
                           className='d-flex justify-content-center align-items-center'
                         >
                           <img src={task.image} style={{ maxHeight: '80px' }} />
                         </Col>
 
-                        <Col xs={12} md={4}>
+                        <Col xs={12} md={5}>
                           <Row>
                             <Col
                               xs={12}
@@ -208,6 +295,7 @@ const MainComponent = () => {
                                 id={'btnDragg_' + index}
                                 color='info'
                                 size='sm'
+                                onClick={() => addToLandingComposer(index, task.id)}
                               >
                                 <i className='fa fa-plus'></i>
                               </Button>
@@ -216,7 +304,7 @@ const MainComponent = () => {
                                 target={'btnDragg_' + index}
                                 delay={0}
                               >
-                                Add Section to Landing
+                                Add Section to Landing Composer
                               </UncontrolledTooltip>
                             </Col>
                           </Row>

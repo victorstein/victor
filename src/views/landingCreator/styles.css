@@ -29,13 +29,39 @@
     background-color: #17a2b8 !important;
     min-height: 25vh !important;
 }
-
+/* #1e1e24, #1e1e2f */
 .landingComposerContainer {
-    background-color: white !important;
+    background-color: #3f3f4c !important;
     min-height: 25vh !important;
-    height: calc(100% + 100px);
+    height: calc(100% + 150px);
 }
 
 [data-rbd-droppable-id="column-landing-composer"] {
     height: 100% !important;
+}
+
+[data-rbd-droppable-id="column-section"] {
+    width: 100% !important;
+}
+
+.scrollerLandingCreator::-webkit-scrollbar {
+    width: 10px;
+    background-color: #F5F5F5;
+} 
+
+.scrollerLandingCreator::-webkit-scrollbar-thumb {
+    background-color: #344675;
+    border-radius: 15px;
+}
+
+.scrollerLandingCreator::-webkit-scrollbar-track-piece  {
+    background-color: silver;
+}
+
+/* Turn on single button up on top, and down on bottom */
+.scrollerLandingCreator::-webkit-scrollbar-button:start:decrement,
+.scrollerLandingCreator::-webkit-scrollbar-button:end:increment {
+    display: block;
+    background-color: white;
+    border: 1px solid silver;
 }

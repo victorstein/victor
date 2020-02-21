@@ -205,7 +205,7 @@ const TemporalLogin = props => {
   }
 
   return (
-    <div class='wTemporalLogin bg-white mx-auto'>
+    <div className='wTemporalLogin bg-white mx-auto'>
       <div className='loginForm'>
         <Card>
           <CardHeader>
