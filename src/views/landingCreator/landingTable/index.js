@@ -5,6 +5,7 @@ import {
   UncontrolledTooltip
 } from 'reactstrap'
 import ModalLanding from './modalLanding'
+import ModalCode from './modalCode'
 import Lottie from 'react-lottie'
 import EmptyBox from '../../../assets/lottie/emptyBox.json'
 import { LandingContext } from '../index'
@@ -15,20 +16,26 @@ const LandingTable = () => {
   const {
     listLanding,
     selectLanding,
-    deleteLanding
+    deleteLanding,
+    idLandingSelected
   } = useContext(LandingContext)
   const [openModal, setOpenModal] = useState({
     open: false,
     type: 'add'
   })
+  const [openModalCode, setOpenModalCode] = useState(false)
   const [landingEditing, setLandingEditing] = useState(null)
-  const [indexSelected, setIndexSelected] = useState(null)
+  //const [indexSelected, setIndexSelected] = useState(null)
 
   //const empty = listLanding.length === 0 || idLandingSelected === null || idLandingSelected === undefined
 
   const closeModal = () => {
     setLandingEditing(null)
     setOpenModal({ open: false, type: 'add' })
+  }
+
+  const closeModalCode = () => {
+    setOpenModalCode(false)
   }
 
   return (
@@ -40,6 +47,13 @@ const LandingTable = () => {
           landingEditing={landingEditing}
         />
       )}
+      {
+        openModalCode && (
+          <ModalCode
+          closeModal={closeModalCode}
+        />
+        )
+      }
       <div className='d-flex flex-row'>
         <h3 className='text-left mb-0'>Landings</h3>
         <h3 className='ml-auto mb-0'>
@@ -50,6 +64,14 @@ const LandingTable = () => {
             onClick={() => setOpenModal({ open: true, type: 'add' })}
           >
             <i className='tim-icons icon-simple-add' /> Add
+          </Button>
+          <Button
+            className='btn-round animation-on-hover'
+            color='info'
+            size='sm'
+            onClick={() => setOpenModalCode(true)}
+          >
+            Code
           </Button>
         </h3>
       </div>
@@ -68,8 +90,7 @@ const LandingTable = () => {
           </thead>
           <tbody>
             <RenderBodyTable data={listLanding} // el array de landings
-            indexSelected={indexSelected} // el index de la tabla seleccionado
-            setIndexSelected={setIndexSelected} // seleccionar un index de la tabla
+            indexSelected={idLandingSelected} // el index de la tabla seleccionado
             erase={deleteLanding} // eliminar un landing , (context function)
             setSelectLanding={selectLanding} // seleccionar un landing, guardar el id, (context function)
             setLandingEditing={setLandingEditing} // editar un landing, (context function)
@@ -86,7 +107,7 @@ const LandingTable = () => {
   )
 }
 
-const RenderBodyTable = ({ data, indexSelected, setIndexSelected, erase, setLandingEditing, setSelectLanding, setOpenModal }) => {
+const RenderBodyTable = ({ data, indexSelected, erase, setLandingEditing, setSelectLanding, setOpenModal }) => {
   return data.map((value, index) => {
     return (
       <tr className={' animated fadeInDown ' + (index === indexSelected ? 'bg-default' : '')} key={index}>
@@ -95,7 +116,6 @@ const RenderBodyTable = ({ data, indexSelected, setIndexSelected, erase, setLand
         <td className='text-right'>
           <Button className='btn-icon btn-simple animation-on-hover' color='info' size='sm' id={'tdbtnselect' + index} 
             onClick = { () => {
-              setIndexSelected(index) // el index del row seleccionado
               setSelectLanding(value.id) // la id del landing seleccionado
             }}
           >
@@ -120,7 +140,6 @@ const RenderBodyTable = ({ data, indexSelected, setIndexSelected, erase, setLand
           {` `}
           <Button className='btn-icon btn-simple animation-on-hover' id={'tdbtnerase'+index} color='danger' size='sm' onClick={ () => {
             if(index === indexSelected) {
-              setIndexSelected(null)
               setSelectLanding(null)
             }
             erase(index)

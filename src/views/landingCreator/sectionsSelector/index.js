@@ -10,10 +10,6 @@ import BeatLoader from 'react-spinners/BeatLoader'
 import CustomAlert from '../../../components/AlertGlobal'
 import '../styles.css'
 
-const ContainerDraggable = styled.div`
-  background-color: ${props => (props.isDragging ? 'red' : 'blue')};
-`
-
 const componentsSelector = () => {
   const { listLanding, idLandingSelected } = useContext(
     LandingContext
@@ -68,7 +64,8 @@ const MainComponent = () => {
     idLandingSelected,
     dragListObject,
     setDragListObject,
-    manageLandingContent
+    manageLandingContent,
+    listFinalLandingCreator
   } = useContext(LandingContext)
   const [loadComponents, { error, loading, data }] = useLazyQuery(
     GET_COMPONENTS('total pages docs { id title image }'),
@@ -76,20 +73,15 @@ const MainComponent = () => {
   )
 
   const tasks = dragListObject.columns['column-section'].taskIds.map( (taskId) => {
-      console.log(' dragListObject.tasks ', dragListObject.tasks)
-      console.log('taskId ', taskId)
-      console.log('dragListObject.tasks[taskId] ', dragListObject.tasks[taskId])
       return dragListObject.tasks[taskId]
-  }
-  
-
-    //taskId => dragListObject.tasks[taskId]
+    }
   )
 
+  const [pagination, setPagination] = useState({ perPage: 10, page: 1 })
   const [filters, setFilters] = useState(null)
 
   useEffect(() => {
-    loadComponents({ variables: { perPage: 10, page: 1 } })
+    loadComponents({ variables: pagination })
   }, [])
 
   useEffect(() => {
@@ -155,23 +147,30 @@ const MainComponent = () => {
       // Obtener las task que estan en LandingComposer
       // Las ids que obtengamos, seran ids que no se van a agregar a column-section
       // porque son ids que ya fueron Drag a la otra columna column-landing-composer
-      const tasksLandingComposer = dragListObject.columns['column-landing-composer'].taskIds.map(
+      const listTasksLandingComposer = dragListObject.columns['column-landing-composer'].taskIds.map(
         taskId => dragListObject.tasks[taskId]
       )
-      console.log(' tasksLandingComposer ', tasksLandingComposer)
+
+      console.log(' tasksLandingComposer ', listTasksLandingComposer)
       // Ahora hay que agregar la data que viene de la query "component" a la columna de sections
       // esta columna es la draggable, entonces siempre que no existan filtros hacer un push de la nueva data
       // si hay filtros sobrescribir con la data de la query
       if (filters) {
       } else {
         
+          console.log(' idsCurrentTask ', idsCurrentTask)
           // Buscar las ids de la query que aun no estan en CurrentTask
-          const difference = queryIds.filter(x => !idsCurrentTask.includes(x))
-          if(difference.length>0){
-            newDragObject.columns['column-section'].taskIds = [
-              ...newDragObject.columns['column-section'].taskIds
-            ].concat(difference)
-          }
+          const difference_with_query = queryIds.filter(x => !idsCurrentTask.includes(x))
+          console.log(' difference_with_query ', difference_with_query)
+
+          idsCurrentTask.concat(difference_with_query)
+
+          // Buscar las ids actuales que no estan en la columna de "Landing-Composer"
+          const difference_with_column_composer = queryIds.filter(x => !listTasksLandingComposer.includes(x))
+
+          console.log('difference_with_column_composer ', difference_with_column_composer)
+
+          newDragObject.columns['column-section'].taskIds = difference_with_column_composer
 
       }
       console.log(' newDragObject ', newDragObject)
@@ -186,7 +185,6 @@ const MainComponent = () => {
     newListLanding.forEach((value, indexLanding) => {
       if(value.id === indexLanding) {
         currentLanding = value
-        //newListLanding[indexLanding] = 
       }
     })
 
@@ -228,9 +226,12 @@ const MainComponent = () => {
           }
         })
         
-        //newLisstLanding[]
-        currentLanding.listIdSections.push(draggableId)
-        //manageLandingContent([...])
+        let newListFinalLandingCreator = {...listFinalLandingCreator}
+        newListFinalLandingCreator[idLandingSelected] = {
+          ...currentLanding,
+          listIdSections: finishTaskIds
+        }
+        manageLandingContent(newListFinalLandingCreator)
     }, 700)
     
     
@@ -239,28 +240,28 @@ const MainComponent = () => {
   return (
     <BlockUi
       tag='div'
-      blocking={true || loading}
+      blocking={loading}
       id='normalLandingChildren'
       loader={<BeatLoader size={15} loading color='#00f2c3' />}
     >
-      <CustomAlert message={error} />
+      {/*<CustomAlert message={error} />*/}
       <div
         style={{ height: loading ? '350px' : 'auto', width: '100%', minHeight: '350px' }}
-        className='d-flex justify-content-center'
+        className='d-flex justify-content-center col-12'
       >
         <Droppable droppableId={dragListObject.columns['column-section'].id}>
           {provided => (
             <div {...provided.droppableProps} ref={provided.innerRef}>
               {tasks.map((task, index) => (
                 <Draggable key={task.id} draggableId={task.id} index={index}>
-                  {(providedDraggable, snapshot) => (
+                  {(providedDraggable) => (
                     <div
                       {...providedDraggable.draggableProps}
                       {...providedDraggable.dragHandleProps}
                       ref={providedDraggable.innerRef}
-                      isDragging={snapshot.isDragging}
+                      //isDragging={snapshot.isDragging}
                       className='mb-2 mr-1'
-                      style={{ backgroundColor: `${props => (props.isDragging ? 'red' : 'blue')}` }}
+                      //style={{ backgroundColor: `${props => (props.isDragging ? 'red' : 'blue')}` }}
                     >
                       <Row className='rowDraggable p-2 bg-default' id={'draggingDiv_'+index}>
                         <Col
