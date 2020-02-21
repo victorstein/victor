@@ -22,8 +22,8 @@ import classnames from 'classnames'
 import Select from 'react-select'
 // import AlertGlobal from '../../../components/AlertGlobal'
 import gql from 'graphql-tag'
-import { useQuery } from '@apollo/react-hooks'
-import { BeatLoader } from 'react-spinners'
+import { useQuery, useMutation } from '@apollo/react-hooks'
+import { BeatLoader, ClipLoader } from 'react-spinners'
 import ReactBSAlert from 'react-bootstrap-sweetalert'
 import BSAlertAddPermissions from './BSAlertAddPermissions'
 
@@ -59,6 +59,14 @@ const allUsers = gql`
   }
 }
 `
+const deleteUserById = gql`
+  mutation deleteUserById(
+  $id: String!
+){
+  deleteUserById(id : $id)
+}
+`
+
 const TableUser = (props) => {
   const [variables, setVariables] = useState({
     perPage: 5,
@@ -89,8 +97,12 @@ const TableUser = (props) => {
     { variables, fetchPolicy: 'no-cache' }
   )
 
+  const [deleteUserMutation, reqDeleteUser] = useMutation(deleteUserById, {
+    refetchQueries: ['allUsers']
+  })
+
   const contendTable = () => {
-    if (!loading) {
+    if (!loading && data) {
       if (error) {
         return (
           <tbody>
@@ -207,6 +219,19 @@ const TableUser = (props) => {
     }
   }
 
+  const deleteUser = async () => {
+    console.log(alertDelete.user.id)
+    await deleteUserMutation({ variables: { id: alertDelete.user.id } })
+    setAlertDelete({
+      visible: false,
+      user: null
+    })
+    setVariables({
+      ...variables,
+      page: 1
+    })
+  }
+
   return (
     <div>
       {
@@ -214,15 +239,36 @@ const TableUser = (props) => {
           <ReactBSAlert
             warning
             showCancel
+            loading
             confirmBtnText='Yes, delete it!'
             confirmBtnBsStyle='danger'
             cancelBtnBsStyle='success'
             title='Atention!'
-            // onConfirm={this.deleteFile}
+            onConfirm={(e) => deleteUser()}
             onCancel={(e) => setAlertDelete({
               visible: false,
               user: null
             })}
+            customButtons={
+              <div>
+                <Button>Cancel</Button>
+                <Button
+                  disabled={reqDeleteUser.loading}
+                >
+                  {
+                    (reqDeleteUser.loading)
+                      ? (
+                        <ClipLoader
+                          size={20}
+                          color='#FFFFFF'
+                          loading
+                        />
+                      )
+                      : ' Yes, delete it!'
+                  }
+                </Button>
+              </div>
+            }
             focusCancelBtn
           >
             <p style={{ color: 'black' }}>
