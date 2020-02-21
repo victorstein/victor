@@ -15,6 +15,9 @@ import {
 import useForm from './UseInputUser'
 import validationForm from './JoiValidate'
 import './stylesUser.scss'
+import { useMutation } from '@apollo/react-hooks'
+import gql from 'graphql-tag'
+import AlertGlobal from '../../../components/AlertGlobal'
 
 const DEFAULT_VALUES = {
   name: '',
@@ -24,9 +27,58 @@ const DEFAULT_VALUES = {
   email: ''
 }
 
+const createUser = gql`
+  mutation createUser(
+  $email: String!
+  $password: String!
+  $confirmPassword: String!
+  $firstName: String!
+  $lastName: String!
+){
+  createUser(
+    email : $email
+    password : $password
+    confirmPassword : $confirmPassword
+    firstName : $firstName
+    lastName : $lastName
+  ){
+    id
+    email
+    fullName
+    role{
+      id
+      name
+    }
+   permissions{
+    id
+    name
+    }
+  }
+}
+`
+
 const ModalCreateUser = (props) => {
-  const submitForm = () => {
-    console.log(values)
+  const [createUserMutation, { data, error, loading }] = useMutation(createUser, {
+    refetchQueries: ['allUsers']
+  })
+
+  const submitForm = async () => {
+    // alert('se diparo sin darle submit')
+    const { email, password, confirmPassword } = values
+    try {
+      const newUser = {
+        email,
+        password,
+        confirmPassword,
+        firstName: values.name,
+        lastName: values.lastname
+      }
+      await createUserMutation({ variables: newUser })
+      props.setOpenModal(false)
+    } catch (e) {
+      props.setOpenModal(false)
+      console.log(e)
+    }
   }
 
   const {
@@ -49,8 +101,34 @@ const ModalCreateUser = (props) => {
     }
   }
 
+  if (error) {
+    try {
+      if (props.errorAlert.error !== error.graphQLErrors) {
+        props.setErrorAlert({
+          visible: true,
+          error: error.graphQLErrors
+        })
+      }
+    } catch (e) {
+      console.log(e)
+    }
+    // console.log('error', error.graphQLErrors)
+  }
+
+  if (data) { console.log('data', data) }
+
   return (
     <div className='templateForm'>
+
+      {
+        // (error)
+        //   ? <AlertGlobal
+        //     type='danger'
+        //     icon='icon-alert-circle-exc'
+        //     message='Error : Error checking user list'
+        //   />
+        //   : null
+      }
       <Modal style={{ marginTop: '64px' }} isOpen={props.openModal} size='lg'>
         <ModalHeader>
           <div className='modal-header '>
@@ -145,7 +223,7 @@ const ModalCreateUser = (props) => {
                       (errors.confirmPassword && onBlurState.confirmPassword) &&
                         (
                           <label className='error'>
-                            {errors.confirmPassword}
+                            pasword not mach
                           </label>
                         )
                     }
@@ -192,6 +270,7 @@ const ModalCreateUser = (props) => {
                   className='w-100'
                   color='info'
                   type='submit'
+                  disabled={!!(loading || (error))}
                 >
                   Agregate
                 </Button>
