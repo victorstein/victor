@@ -5,6 +5,7 @@ import Test1 from './views/Test_1'
 import Login from './views/login'
 import Projets from './views/Projets'
 import CreateUser from './views/admin/createUser'
+import DetailUser from './views/admin/DetailedUser'
 
 const routes = [
   {
@@ -63,6 +64,15 @@ const routes = [
     component: CreateUser,
     layout: '/admin',
     role: ['Admin']
+  },
+  {
+    path: '/detailUser',
+    name: 'Detail User',
+    icon: 'tim-icons icon-single-02',
+    component: DetailUser,
+    layout: '/admin',
+    role: ['Admin'],
+    fullContent: true
   }
 ]
 
