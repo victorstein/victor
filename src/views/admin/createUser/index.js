@@ -11,7 +11,7 @@ const CreateUserIndex = () => {
     error: null
   })
 
-  console.log(errorAlert)
+  // console.log(errorAlert)
   return (
     <div className='content'>
       {

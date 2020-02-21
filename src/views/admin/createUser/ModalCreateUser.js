@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import {
   Button,
   Modal,
@@ -17,7 +17,7 @@ import validationForm from './JoiValidate'
 import './stylesUser.scss'
 import { useMutation } from '@apollo/react-hooks'
 import gql from 'graphql-tag'
-import AlertGlobal from '../../../components/AlertGlobal'
+import { ClipLoader } from 'react-spinners'
 
 const DEFAULT_VALUES = {
   name: '',
@@ -61,23 +61,25 @@ const ModalCreateUser = (props) => {
   const [createUserMutation, { data, error, loading }] = useMutation(createUser, {
     refetchQueries: ['allUsers']
   })
+  const [isSubmit, setIsSubmit] = useState(false)
 
   const submitForm = async () => {
-    // alert('se diparo sin darle submit')
-    const { email, password, confirmPassword } = values
-    try {
-      const newUser = {
-        email,
-        password,
-        confirmPassword,
-        firstName: values.name,
-        lastName: values.lastname
+    if (isSubmit) {
+      const { email, password, confirmPassword } = values
+      try {
+        const newUser = {
+          email,
+          password,
+          confirmPassword,
+          firstName: values.name,
+          lastName: values.lastname
+        }
+        await createUserMutation({ variables: newUser })
+        props.setOpenModal(false)
+      } catch (e) {
+        props.setOpenModal(false)
+        console.log(e)
       }
-      await createUserMutation({ variables: newUser })
-      props.setOpenModal(false)
-    } catch (e) {
-      props.setOpenModal(false)
-      console.log(e)
     }
   }
 
@@ -112,7 +114,6 @@ const ModalCreateUser = (props) => {
     } catch (e) {
       console.log(e)
     }
-    // console.log('error', error.graphQLErrors)
   }
 
   if (data) { console.log('data', data) }
@@ -261,6 +262,7 @@ const ModalCreateUser = (props) => {
                   className='w-100'
                   color='danger'
                   onClick={(e) => props.setOpenModal(false)}
+                  disabled={loading}
                 >
                   Cancel
                 </Button>
@@ -270,9 +272,19 @@ const ModalCreateUser = (props) => {
                   className='w-100'
                   color='info'
                   type='submit'
+                  onClick={(e) => setIsSubmit(true)}
                   disabled={!!(loading || (error))}
                 >
-                  Agregate
+                  {
+                    (loading)
+                      ? (
+                        <ClipLoader
+                          size={20}
+                          color='#FFFFFF'
+                          loading
+                        />)
+                      : 'Agregate'
+                  }
                 </Button>
               </Col>
             </Row>

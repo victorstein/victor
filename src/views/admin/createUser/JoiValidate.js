@@ -1,26 +1,5 @@
 import Joi from '@hapi/joi'
 
-const errorCustom = (error) => {
-  return error.map((error) => {
-    const { flags: { label }, code } = error
-    console.log(error)
-    switch (code) {
-      case 'string.email' :
-        return { message: `Please enter a valid ${label} address.` }
-      case 'any.required':
-        return { message: `${label} is required` }
-      case 'string.regex.base':
-        return { message: `Please enter a valid ${label} address.` }
-      case 'any.empty':
-        return { message: `${label} is required` }
-      case 'any.allowOnly':
-        return { message: 'password not match' }
-      default:
-        return error
-    }
-  })
-}
-
 const Schemas = Joi.object({
   email: Joi
     .string()
