@@ -8,7 +8,7 @@ const Empty = (props) => {
     LandingContext
   )
   const empty =
-  listLanding.length === 0 ||
+  (Object.keys(listLanding).length < 1) ||
   idLandingSelected === null ||
   idLandingSelected === undefined
 
@@ -21,9 +21,7 @@ const Empty = (props) => {
   } else if(tasks.length < 1 && !empty){
     border = ' border border-warning '
   }
-  /*if (tasks.length < 1 && !empty) {
-    border = ' border border-warning '
-  }*/
+
   const Loader = empty ? <div></div> : <div>Loader</div>
 
   return (

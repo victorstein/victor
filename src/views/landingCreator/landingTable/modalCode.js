@@ -19,7 +19,7 @@ import './styles.css'
 const ModalLanding = ({ closeModal }) => {
     const {
         dragListObject,
-        listFinalLandingCreator
+        listLanding
       } = useContext(LandingContext)
       const [activeTab, setActiveTab] = useState('1')
 
@@ -34,7 +34,7 @@ const ModalLanding = ({ closeModal }) => {
             (activeTab === '1') ?
             <CodeEditor  height='600' showFormat={false} code={JSON.stringify(dragListObject)} lenguaje='json' />
             :
-            <CodeEditor  height='600' showFormat={false} code={JSON.stringify(listFinalLandingCreator)} lenguaje='json' />
+            <CodeEditor  height='600' showFormat={false} code={JSON.stringify(listLanding)} lenguaje='json' />
         }
     </Modal>
   )

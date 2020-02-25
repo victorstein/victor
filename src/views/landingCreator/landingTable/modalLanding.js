@@ -9,6 +9,7 @@ import {
   Input
 } from 'reactstrap'
 import { LandingContext } from '../index'
+import { randomId } from '../utils'
 
 import './styles.css'
 
@@ -66,7 +67,7 @@ const ModalLanding = ({ closeModal, isNewLanding, landingEditing = null }) => {
   const modalIcon = isNewLanding
     ? 'tim-icons icon-simple-add'
     : 'tim-icons icon-pencil'
-  const name = (isNewLanding || landingEditing === null) ? '' : landingEditing.value.name
+  const name = (isNewLanding || landingEditing === null) ? '' : landingEditing.title
 
   const {
     value: valueLanding,
@@ -76,10 +77,18 @@ const ModalLanding = ({ closeModal, isNewLanding, landingEditing = null }) => {
 
   const submitForm = (e) => {
     e.preventDefault()
-    if(isNewLanding) {
-        addNewLanding(valueLanding)
+    if(isNewLanding) {  
+        addNewLanding({
+          id: randomId(),
+          title: valueLanding,
+          composer: []
+        })
     } else {
-        editLanding(landingEditing.index, valueLanding)
+        editLanding(landingEditing.id, {
+          id: landingEditing.id,
+          title: valueLanding,
+          composer: (landingEditing.composer) ? landingEditing.composer : []
+        })
     }
     closeModal()
   }

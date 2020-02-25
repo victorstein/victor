@@ -5,6 +5,7 @@ import LandingTable from './landingTable'
 import Sections from './sectionsSelector'
 import LandingComposer from './landingComposer'
 import initialDragObject from './initalDragObject'
+import { randomId } from './utils'
 import './styles.css'
 import 'animate.css'
 import 'react-block-ui/style.css'
@@ -12,32 +13,15 @@ import 'react-block-ui/style.css'
 export const LandingContext = createContext()
 
 const LandingCreator = props => {
-  const [idSite, setIdSite] = useState(null)
   const [dragListObject, setDragListObject] = useState(initialDragObject)
-  const [listLanding, setListLanding] = useState([]) 
-  const [listFinalLandingCreator, setListFinalLandingCreator] = useState({})
+  const [listLanding, setListLanding] = useState({})
   const [isDraggingActive, setIsDraggingActive] = useState(false)
   const [idLandingSelected, setIdLandingSelected] = useState(null)
 
-  useEffect(() => {
-    setIdSite(props.id)
-  }, [])
-  useEffect(() => {
-    setIdSite(props.id)
-  }, [props.id])
-
   const dragEnd = result => {
 
-    let currentLanding = null
-    const newListLanding = [...listLanding]
-    newListLanding.forEach((value, indexLanding) => {
-      if(value.id === indexLanding) {
-        currentLanding = value
-      }
-    })
-
     // si no encuentra el landing no hacer nada mas
-    if(!currentLanding) {
+    if (!listLanding[idLandingSelected]) {
       return null
     }
 
@@ -72,7 +56,7 @@ const LandingCreator = props => {
       column.taskIds = newTaskIds
       setDragListObject({
         ...dragListObject,
-        columns: { ...dragListObject.columns, [source.droppableId]: column },
+        columns: { ...dragListObject.columns, [source.droppableId]: column }
       })
     } else {
       const startTaskIds = Array.from(start.taskIds)
@@ -98,21 +82,16 @@ const LandingCreator = props => {
         }
       })
 
-      let newListFinalLandingCreator = {...listFinalLandingCreator}
-      if(source.droppableId === 'column-landing-composer') {
-        newListFinalLandingCreator[idLandingSelected] = {
-          ...currentLanding,
-          listIdSections: startTaskIds
+      // setListLanding
+      // 'column-landing-composer'
+      // dragListObject, setDragListObject]
+      setListLanding({
+        ...listLanding,
+        [idLandingSelected]: {
+          ...listLanding[idLandingSelected],
+          composer: (source.droppableId === 'column-landing-composer') ? startTaskIds : finishTaskIds
         }
-      } else {
-        newListFinalLandingCreator[idLandingSelected] = {
-          ...currentLanding,
-          listIdSections: finishTaskIds
-        }
-      }
-        
-      setListFinalLandingCreator(newListFinalLandingCreator)
-
+      })
     }
     setIsDraggingActive(false)
   }
@@ -132,83 +111,43 @@ const LandingCreator = props => {
                 setDragListObject: newValue => {
                   setDragListObject(newValue) // nuevo objecto actualizado desde SectionsSelector, se actualiza por peticiones de la query "component" y sus filtros
                 },
-                listFinalLandingCreator: listFinalLandingCreator,
-                setListFinalLandingCreator: value => {
-                  setListFinalLandingCreator(value)
-                },
                 isDraggingActive: isDraggingActive, // el estado del DragDropContext
-                id: idSite, // la id del proyecto
                 listLanding: listLanding, // el array de landings
                 idLandingSelected: idLandingSelected, // la id del landing seleccionado
                 selectLanding: id => {
-                  // guardar el id de un landing a seleccionar
-                  if(id !== idLandingSelected) {
-                    console.log(' selectLanding ', id)
-                    setIdLandingSelected(id)
-                    const newDragListObject = {...dragListObject}
-                    newDragListObject.columns['column-landing-composer'].taskIds = []
-                    const taskIdsSelectLanding = listFinalLandingCreator[id]
-                    console.log('taskIdsSelectLanding ', taskIdsSelectLanding)
-                    if(taskIdsSelectLanding) {
-                      console.log(' taskIdsSelectLanding.taskIds ', taskIdsSelectLanding.listIdSections)
-                      newDragListObject.columns['column-landing-composer'].taskIds = taskIdsSelectLanding.listIdSections
+                  // dragListObject, setDragListObject
+                  setDragListObject({
+                    ...dragListObject,
+                    columns: {
+                      ...dragListObject.columns,
+                      'column-landing-composer': {
+                        ...dragListObject.columns['column-landing-composer'],
+                        taskIds: (listLanding[id]) ? listLanding[id].composer : []
+                      }
                     }
-                    setDragListObject(newDragListObject)
-                  }    
+                  })
+                  setIdLandingSelected(id)
                 },
                 addNewLanding: newLanding => {
-                  // agregar al final un nuevo landing
-                  const newList = [...listLanding]
-                  newList.push({ name: newLanding, id: newList.length, title: '', listIdSections: [] })
-                  setListLanding(newList)
-                },
-                deleteLanding: indexDelete => {
-                  // eliminar un landing del array, segun el index
-                  const newLandingList = [...listLanding]
-                  const filtered = newLandingList.filter(
-                    (value, index, arr) => {
-                      return index !== indexDelete
-                    }
-                  )
-                  // reordenar las ids/index
-                  filtered.forEach((value, index) => {
-                    filtered[index].id = index
+                  // setListLanding
+                  console.log(' newLanding ', newLanding)
+                  setListLanding({
+                    ...listLanding,
+                    [newLanding.id]: newLanding
                   })
-                  // si el Landing a eliminar es el que ya esta seleccionado en la tabla
-                  // set null la IdLandingSelect
-                  // eliminar las taskIds del landingComposer
-                  console.log(' indexDelete ', indexDelete)
-                  console.log(' idLandingSelected ', idLandingSelected)
-                  if(indexDelete === idLandingSelected) {
-                    const newDragListObject = {...dragListObject}
-                    newDragListObject.columns['column-landing-composer'].taskIds = []
-                    setDragListObject(newDragListObject)
-                    setIdLandingSelected(null)
-                  } 
-                  if(indexDelete < idLandingSelected) {
-                    setIdLandingSelected(idLandingSelected - 1)
-                  }
-                  const newListFinalLandingCreator = {...listFinalLandingCreator}
-                  newListFinalLandingCreator[indexDelete] = undefined
-                  setListFinalLandingCreator(newListFinalLandingCreator)
-                  setListLanding(filtered)
                 },
-                editLanding: (index, newValue) => {
-                  // desde la modal de agregar/editar
-                  // editar el name de un landing
-                  let landingEdit = listLanding[index]
-                  if (landingEdit) {
-                    landingEdit = {
-                      ...landingEdit,
-                      name: newValue
-                    }
-                    const newListLanding = [...listLanding]
-                    newListLanding[index] = landingEdit
-                    setListLanding(newListLanding)
-                  }
+                deleteLanding: idDelete => {
+                  let copyLandings = {...listLanding}
+                  delete copyLandings[idDelete]
+                  setListLanding({
+                    ...copyLandings
+                  })
                 },
-                manageLandingContent: (newValue) => {
-                  setListFinalLandingCreator(newValue)
+                editLanding: (id, newValue) => {
+                  setListLanding({
+                    ...listLanding,
+                    [id]: newValue
+                  })
                 }
               }}
             >
@@ -226,19 +165,25 @@ const LandingCreator = props => {
                         <Col xs={12} className=''>
                           <LandingTable />
                         </Col>
-                        <Col xs={12}>
-                          <Sections />
-                        </Col>
+                        <Col xs={12}><Sections /></Col>
                       </Row>
                     </div>
                   </Col>
-                  <Col xs={12} md={7} lg={7} className='scrollerLandingCreator' style={{ maxHeight: '1500px', overflowY: 'auto', overflowX: 'hidden' }}>
+                  <Col
+                    xs={12}
+                    md={7}
+                    lg={7}
+                    className='scrollerLandingCreator'
+                    style={{
+                      maxHeight: '1500px',
+                      overflowY: 'auto',
+                      overflowX: 'hidden',
+                    }}
+                  >
                     <div className='d-flex flex-row mt-3 mb-3'>
                       <h3 className='text-left mb-0'>Landing Composer</h3>
                     </div>
-                    <div
-                      className='w-100'
-                    >
+                    <div className='w-100'>
                       <div
                         className={
                           isDraggingActive ? ' landingComposerContainer ' : '  '

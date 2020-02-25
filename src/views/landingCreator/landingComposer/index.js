@@ -9,16 +9,15 @@ const LandingComposer = props => {
     dragListObject,
     idLandingSelected,
     setDragListObject,
-    listLanding,
-    isDraggingActive,
+    listLanding
   } = useContext(LandingContext)
 
   const tasks = dragListObject.columns['column-landing-composer'].taskIds.map(
-    taskId => dragListObject.tasks[taskId],
+    taskId => dragListObject.tasks[taskId]
   )
 
   const showEmpty =
-    listLanding.length === 0 ||
+    (Object.keys(listLanding).length < 1) ||
     idLandingSelected === null ||
     idLandingSelected === undefined ||
     tasks.length < 1
@@ -47,7 +46,6 @@ const LandingComposer = props => {
                         {...providedDraggable.draggableProps}
                         {...providedDraggable.dragHandleProps}
                         ref={providedDraggable.innerRef}
-                        //isDragging={snapshot.isDragging}
                         className='mb-2'
                       >
                         <div className=' p-2 bg-default animated fadeInDown'>
