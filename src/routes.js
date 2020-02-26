@@ -73,7 +73,7 @@ const routes = [
     component: CreateUser,
     layout: '/admin',
     role: ['Admin'],
-    visible: false
+    visible: true
   },
   {
     path: '/user/detailUser',
