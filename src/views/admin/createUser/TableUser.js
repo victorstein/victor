@@ -26,6 +26,7 @@ import { useQuery, useMutation } from '@apollo/react-hooks'
 import { BeatLoader, ClipLoader } from 'react-spinners'
 import ReactBSAlert from 'react-bootstrap-sweetalert'
 import BSAlertAddPermissions from './BSAlertAddPermissions'
+import { Link } from 'react-router-dom'
 
 const allUsers = gql`
   query allUsers(
@@ -147,19 +148,28 @@ const TableUser = (props) => {
                 </Badge>
               </td>
               <td className='text-center'>
-                <Button
-                  className='btn-link btn-icon'
-                  color='primary'
-                  id='ViewButton'
-                  onClick={(e) => alert('id: ' + value.id)}
+                <Link
+                  // to='/admin/user/detailUser'
+                  to={{
+                    pathname: '/admin/user/detailUser',
+                    state: {
+                      idUser: value.id
+                    }
+                  }}
                 >
-                  <i className='fas fa-eye' />
-                </Button>
+                  <Button
+                    className='btn-link btn-icon'
+                    color='primary'
+                    id='ViewButton'
+                  >
+                    <i className='fas fa-eye' />
+                  </Button>
+                </Link>
                 <UncontrolledTooltip
                   delay={0}
                   target='ViewButton'
                 >
-                  View
+                 View
                 </UncontrolledTooltip>
                 <Button
                   className='btn-link btn-icon'

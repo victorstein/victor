@@ -6,6 +6,7 @@ import Login from './views/Login'
 import LandingCreator from './views/landingCreator'
 import Projets from './views/Projets'
 import CreateUser from './views/admin/createUser'
+import DetailUser from './views/admin/DetailedUser'
 
 const routes = [
   {
@@ -61,12 +62,21 @@ const routes = [
     role: []
   },
   {
-    path: '/createUser',
+    path: '/user/createUser',
     name: 'Create User',
     icon: 'tim-icons icon-single-02',
     component: CreateUser,
     layout: '/admin',
     role: ['Admin']
+  },
+  {
+    path: '/user/detailUser',
+    name: 'Detail User',
+    icon: 'tim-icons icon-single-02',
+    component: DetailUser,
+    layout: '/admin',
+    role: ['Admin'],
+    fullContent: true
   }
 ]
 
