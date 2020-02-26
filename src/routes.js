@@ -58,7 +58,7 @@ const routes = [
     role: []
   },
   {
-    path: '/createUser',
+    path: '/user/createUser',
     name: 'Create User',
     icon: 'tim-icons icon-single-02',
     component: CreateUser,
@@ -66,7 +66,7 @@ const routes = [
     role: ['Admin']
   },
   {
-    path: '/detailUser',
+    path: '/user/detailUser',
     name: 'Detail User',
     icon: 'tim-icons icon-single-02',
     component: DetailUser,
