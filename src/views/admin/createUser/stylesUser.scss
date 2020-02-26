@@ -1,0 +1,84 @@
+$blueColor: #27293d;
+
+table {
+    border-collapse: inherit !important;
+}
+
+.react-select .react-select__control,
+.react-select .react-select__control:hover {
+    background-color: #f9f9f90d !important;
+}
+
+.selectWhite {
+    .css-15k3avv .react-select__menu  {
+        box-shadow: 1px 2px 7px 1px rgba(0, 0, 0, 0.98) !important;
+    }
+}
+
+
+.InputFormVictor{
+    .has-success:after, .has-danger:after{
+        top: 44px !important;
+    }
+}
+
+
+.iccon {
+    .has-label:after {
+        top: 44px !important;
+    }
+}
+
+.maxPaginatio {
+    overflow: auto;
+    display: flex;
+    justify-content: flex-end;
+
+    nav {
+        width: 100%;
+        display: flex;
+        justify-content: flex-end;
+    }
+
+    .pagination {
+        max-width: 100%;
+    }
+}
+
+.InputGroupVictor2 {
+    .has-danger.has-label:after {
+        top: 44px !important;
+    }
+
+    .has-success.has-label:after {
+        top: 44px !important;
+    }
+}
+
+.form-group {
+    label {
+        color: rgba(255, 255, 255, 0.6);
+    }
+
+    input {
+        color: white;
+    }
+
+    &.has-danger {
+        .form-control {
+            margin-bottom: 5px;
+        }
+
+        label {
+            &.error {
+                color: red;
+            }
+        }
+    }
+
+    &.has-success {
+        input {
+            color: white;
+        }
+    }
+}

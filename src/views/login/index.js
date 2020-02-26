@@ -90,7 +90,7 @@ const LoginIndex = props => {
       if (!emailInput.error || !passwordInput.error) {
         setIsResendEmail(false)
         return fetchLogin({
-          variables: { email: emailInput.value, password: passwordInput.value },
+          variables: { email: emailInput.value, password: passwordInput.value }
         })
       }
     } catch (e) {
@@ -213,19 +213,19 @@ const LoginIndex = props => {
           {((error && !isResendEmail) ||
             (reqFechResendVerificationEmail.loading &&
               !reqFechResendVerificationEmail.error)) && (
-            <Alert className='mt-2' color={`${classAlert}`}>
+                <Alert className='mt-2' color={`${classAlert}`}>
               <Row>
-                <Col className='col-1'>
+                    <Col className='col-1'>
                   <i className='tim-icons icon-alert-circle-exc' />
                 </Col>
-                <Col className='col-10 text-left'>
+                    <Col className='col-10 text-left'>
                   <h4 className='alert-heading'>Error!</h4>
                 </Col>
-                <Col className='col-12 text-sm-left'>
+                    <Col className='col-12 text-sm-left'>
                   <p className='alertText'>{getStringError()}</p>
                   <div className='text-center'>{resendEmailButton()}</div>
                 </Col>
-              </Row>
+                  </Row>
             </Alert>
           )}
           {reqFechResendVerificationEmail.error && isResendEmail && (
@@ -242,7 +242,7 @@ const LoginIndex = props => {
                     {reqFechResendVerificationEmail.graphQLErrors.map(
                       ({ message }) => {
                         return message.split(':')[1]
-                      },
+                      }
                     )}
                   </p>
                 </Col>
@@ -258,8 +258,7 @@ const LoginIndex = props => {
                 id='exampleEmail'
                 placeholder='Enter email'
                 onChange={e =>
-                  ValidatorFormChange(e, setemailInput, emailInput, 'email')
-                }
+                  ValidatorFormChange(e, setemailInput, emailInput, 'email')}
               />
               {emailInput.error && (
                 <label className='error'>{emailInput.labelError}</label>
@@ -279,8 +278,7 @@ const LoginIndex = props => {
                     setpasswordInput,
                     passwordInput,
                     'password'
-                  )
-                }
+                )}
               />
               {passwordInput.error && (
                 <label className='error'>{passwordInput.labelError}</label>

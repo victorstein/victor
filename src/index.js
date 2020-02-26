@@ -6,7 +6,7 @@
 
 */
 
-import { hot } from 'react-hot-loader/root'
+// import { hot } from 'react-hot-loader/root'
 import 'core-js/stable'
 import 'regenerator-runtime/runtime'
 import React, { createContext, useReducer } from 'react'
@@ -22,7 +22,7 @@ import {
 import AuthLayout from 'layouts/Auth/Auth.jsx'
 
 import AdminLayout from 'layouts/Admin/index.js'
-//import AdminLayout from 'layouts/Admin/Admin.jsx'
+// import AdminLayout from 'layouts/Admin/Admin.jsx'
 import RTLLayout from 'layouts/RTL/RTL.jsx'
 
 import BlockScreen from './components/BlockScreen'
@@ -39,7 +39,6 @@ import './globalcss.css'
 export const GlobalContext = createContext()
 
 const Main = () => {
-  
   const [state, dispatch] = useReducer(reducer, initialState)
 
   const getClient = () => {
@@ -48,21 +47,21 @@ const Main = () => {
 
   return (
     <GlobalContext.Provider value={{ state: state, dispatch: dispatch }}>
-    <ApolloProvider client={getClient()}>
-      
+      <ApolloProvider client={getClient()}>
+
         <Router>
         <BlockScreen>
-          <Switch>
-            <Route path='/auth' render={props => <AuthLayout {...props} />} />
-            <Route path='/admin' render={props => <AdminLayout {...props} />} />
-            <Route path='/rtl' render={props => <RTLLayout {...props} />} />
-            <Redirect from='/' to='/admin/dashboard' />
-          </Switch>
+            <Switch>
+              <Route path='/auth' render={props => <AuthLayout {...props} />} />
+              <Route path='/admin' render={props => <AdminLayout {...props} />} />
+              <Route path='/rtl' render={props => <RTLLayout {...props} />} />
+              <Redirect from='/' to='/admin/dashboard' />
+            </Switch>
           </BlockScreen>
-        </Router>
-    </ApolloProvider>
+      </Router>
+      </ApolloProvider>
     </GlobalContext.Provider>
   )
 }
 
-export default hot(Main)
+export default Main

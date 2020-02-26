@@ -250,7 +250,6 @@ const TableProyects = (props) => {
               </Pagination>
             </Col>
           </Row>
-
         </CardFooter>
       </Card>
     </div>
