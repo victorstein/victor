@@ -1,0 +1,49 @@
+.inputNameLanding.has-success.has-label:after, .inputNameLanding.has-danger.has-label:after {
+    top: 45px !important;
+}
+
+.fixed_header_landing{
+    table-layout: fixed;
+    border-collapse: collapse;
+}
+
+.fixed_header_landing tbody{
+  display:block;
+  width: 100%;
+  overflow: auto;
+  height: 273px;
+}
+
+.fixed_header_landing thead tr {
+   display: block;
+}
+
+.fixed_header_landing th, .fixed_header_landing td {
+  width: 200px;
+}
+
+.landingIndex {
+    width: 80px !important;
+}
+
+.tBodyLandings::-webkit-scrollbar {
+  width: 10px;
+  background-color: #F5F5F5;
+} 
+
+.tBodyLandings::-webkit-scrollbar-thumb {
+  background-color: #344675;
+  border-radius: 15px;
+}
+
+.tBodyLandings::-webkit-scrollbar-track-piece  {
+  background-color: silver;
+}
+
+/* Turn on single button up on top, and down on bottom */
+.tBodyLandings::-webkit-scrollbar-button:start:decrement,
+.tBodyLandings::-webkit-scrollbar-button:end:increment {
+  display: block;
+  background-color: white;
+  border: 1px solid silver;
+}

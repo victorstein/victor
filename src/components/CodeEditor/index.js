@@ -19,7 +19,9 @@ const CodeEditor = props => {
     //beautifyCss(newValue, { indent_size: 2, space_in_empty_paren: true })
     //console.log("onChange", newValue, e);
     //myRef.current.getAction('editor.action.formatDocument').run()
-    props.setChange(newValue)
+    if(props.setChange) {
+      props.setChange(newValue)
+    }
   }
   const getValue = () => {
    myRef.current.setValue(formatCode(myRef.current.getValue()))
@@ -40,6 +42,7 @@ const CodeEditor = props => {
     formatOnPaste: true
   }
 
+
   return (
     <div>
       <MonacoEditor
@@ -52,6 +55,9 @@ const CodeEditor = props => {
         onChange={onChange}
         editorDidMount={editorDidMount}
       />
+      {
+        (props.showFormat)
+      }
       <div className='d-flex justify-content-center my-3'>
         <Button color="info" onClick={() => getValue()}><i className="tim-icons icon-html5"/> Format Code</Button>
       </div>
@@ -62,14 +68,16 @@ const CodeEditor = props => {
 CodeEditor.propTypes = {
   lenguaje: PropTypes.string,
   height: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
-  code: PropTypes.string
+  code: PropTypes.string,
+  showFormat: PropTypes.bool
 }
 
 // Specifies the default values for props:
 CodeEditor.defaultProps = {
   lenguaje: 'xml',
   height: 400,
-  code: ''
+  code: '',
+  showFormat: true
 }
 
 export default CodeEditor

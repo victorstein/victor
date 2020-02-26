@@ -130,6 +130,7 @@ class Admin extends React.Component {
         return this.getRoutes(prop.views)
       }
       if (prop.layout === '/admin') {
+        console.log(prop)
         return (
           <Route
             path={prop.layout + prop.path}
@@ -213,13 +214,15 @@ class Admin extends React.Component {
           <div
             className={this.props.fullContent ? 'contentFull px-3' : 'content'}
           >
-            <Row>
+            <Row className='scrollContent'>
               <Col xs='12'>
                 <Switch>{this.getRoutes(routes)}</Switch>
               </Col>
             </Row>
           </div>
-          <Footer fluid />
+          <div className='mt-3 mb-5'>
+            <Footer fluid />
+          </div>
         </div>
       </div>
     )
