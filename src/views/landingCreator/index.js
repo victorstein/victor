@@ -1,11 +1,10 @@
-import React, { useEffect, createContext, useState } from 'react'
+import React, { createContext, useState } from 'react'
 import { Row, Col } from 'reactstrap'
 import { DragDropContext } from 'react-beautiful-dnd'
 import LandingTable from './landingTable'
 import Sections from './sectionsSelector'
 import LandingComposer from './landingComposer'
 import initialDragObject from './initalDragObject'
-import { randomId } from './utils'
 import './styles.css'
 import 'animate.css'
 import 'react-block-ui/style.css'
@@ -113,6 +112,9 @@ const LandingCreator = props => {
                 },
                 isDraggingActive: isDraggingActive, // el estado del DragDropContext
                 listLanding: listLanding, // el array de landings
+                setListLanding: newValue => {
+                  setListLanding(newValue)
+                },
                 idLandingSelected: idLandingSelected, // la id del landing seleccionado
                 selectLanding: id => {
                   // dragListObject, setDragListObject
@@ -162,7 +164,7 @@ const LandingCreator = props => {
                   >
                     <div className='p-3'>
                       <Row>
-                        <Col xs={12} className=''>
+                        <Col xs={12}>
                           <LandingTable />
                         </Col>
                         <Col xs={12}><Sections /></Col>
@@ -177,7 +179,7 @@ const LandingCreator = props => {
                     style={{
                       maxHeight: '1500px',
                       overflowY: 'auto',
-                      overflowX: 'hidden',
+                      overflowX: 'hidden'
                     }}
                   >
                     <div className='d-flex flex-row mt-3 mb-3'>

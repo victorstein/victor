@@ -20,7 +20,7 @@ const componentsSelector = () => {
 
   return (
     <div className='w-100'>
-      <div className='d-flex flex-row mb-3'>
+      <div className='d-flex flex-row'>
         <h3 className='text-left mb-0'>Sections</h3>
       </div>
 
@@ -30,17 +30,7 @@ const componentsSelector = () => {
         id={empty ? 'landingCreatorBlock' : 'normalLanding'}
         loader={Loader}
       >
-        <div
-          style={{
-            minHeight: '350px',
-            width: '100%',
-            maxHeight: '600px',
-            overflow: 'auto'
-          }}
-          className='scrollerLandingCreator'
-        >
           {empty ? <WarningComponent /> : <Sections />}
-        </div>
       </BlockUi>
     </div>
   )

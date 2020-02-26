@@ -57,8 +57,8 @@ export const resendVerificationEmailpGql = () => {
 }
 
 export const componentsSectionsGql = (data = '') => {
-  const schema = `query components($perPage: Float!, $page: Float!){
-    components(perPage: $perPage, page: $page) {
+  const schema = `query components($perPage: Float!, $page: Float!, $filters: [componentFilter!]) {
+    components(perPage: $perPage, page: $page, filters: $filters) {
       ${data}
     }
   }

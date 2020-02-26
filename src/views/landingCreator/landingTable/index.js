@@ -13,8 +13,6 @@ import {objectToArray} from '../utils'
 import 'animate.css'
 import './styles.css'
 
-
-
 const LandingTable = () => {
   const {
     listLanding,
@@ -85,13 +83,13 @@ const LandingTable = () => {
         <Table responsive className='fixed_header_landing' style={{ minHeight: '300px' }}>
           <thead>
             <tr>
-              <th className='text-center'>#</th>
-              <th>Name</th>
-              <th>Sections</th>
-              <th className='text-right'>Actions</th>
+              <th className='text-center' scope='col'>#</th>
+              <th scope='col'>Name</th>
+              <th scope='col'>Sections</th>
+              <th className='text-right' scope='col'>Actions</th>
             </tr>
           </thead>
-          <tbody>
+          <tbody className='tBodyLandings'>
             <RenderBodyTable data={mapLandings} // el array de landings
             idLandingSelected={idLandingSelected}
             erase={deleteLanding} // eliminar un landing , (context function)
@@ -114,16 +112,16 @@ const RenderBodyTable = ({ data, idLandingSelected, erase, setLandingEditing, se
   return data.map((value, index) => {
     return (
       <tr className={' animated fadeInDown ' + (value.id === idLandingSelected ? 'bg-default' : '')} key={index}>
-        <td className='text-center'>{index + 1}</td>
+        <td className='text-center' scope='row' >{index + 1}</td>
         <td className='text-white'>{value.title}</td>
         <td className='text-white'>{value.composer.length}</td>
-        <td className='text-right'>
+        <td className='text-right p-0 pr-2'>
           <Button className='btn-icon btn-simple animation-on-hover' color='info' size='sm' id={'tdbtnselect' + index} 
             onClick = {() => {
               setSelectLanding(value.id) // la id del landing seleccionado
             }}
           >
-            <i className='fa fa-user'></i>
+            <i className='fa fa-location-arrow'></i>
           </Button>
           <UncontrolledTooltip placement='top' target={'tdbtnselect'+index}>
             Select Landing
