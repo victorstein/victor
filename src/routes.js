@@ -13,11 +13,12 @@ const routes = [
     path: '/dashboard',
     name: 'Dashboard',
     icon: 'tim-icons icon-chart-pie-36',
-    component: LandingCreator,
+    component: Dashboard,
     //component: Dashboard,
     role: [],
     layout: '/admin',
-    fullContent: true
+    fullContent: false,
+    visible: true
   },
   {
     path: '/login',
@@ -25,7 +26,8 @@ const routes = [
     icon: 'tim-icons icon-single-02',
     component: Login,
     role: [],
-    layout: '/auth'
+    layout: '/auth',
+    visible: false
   },
   {
     path: '/imageEditor',
@@ -33,7 +35,8 @@ const routes = [
     icon: 'tim-icons icon-image-02',
     component: ImageEditor,
     role: ['Admin', 'User'],
-    layout: '/admin'
+    layout: '/admin',
+    visible: true
   },
   {
     path: '/test1',
@@ -41,17 +44,18 @@ const routes = [
     icon: 'tim-icons icon-app',
     component: Test1,
     role: ['User', 'Admin'],
-    layout: '/admin'
+    layout: '/admin',
+    visible: true
   },
   {
     path: '/landing',
     name: 'Landing',
     icon: 'tim-icons icon-controller',
-    component: Dashboard,
-    //component: LandingCreator,
+    component: LandingCreator,
     role: [],
     fullContent: true,
-    layout: '/admin'
+    layout: '/admin',
+    visible: true
   },
   {
     path: '/projets',
@@ -59,7 +63,8 @@ const routes = [
     icon: 'tim-icons icon-palette',
     component: Projets,
     layout: '/admin',
-    role: []
+    role: [],
+    visible: true
   },
   {
     path: '/user/createUser',
@@ -67,7 +72,8 @@ const routes = [
     icon: 'tim-icons icon-single-02',
     component: CreateUser,
     layout: '/admin',
-    role: ['Admin']
+    role: ['Admin'],
+    visible: false
   },
   {
     path: '/user/detailUser',
@@ -76,7 +82,8 @@ const routes = [
     component: DetailUser,
     layout: '/admin',
     role: ['Admin'],
-    fullContent: true
+    fullContent: true,
+    visible: false
   }
 ]
 

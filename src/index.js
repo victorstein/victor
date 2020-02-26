@@ -22,8 +22,6 @@ import {
 import AuthLayout from 'layouts/Auth/Auth.jsx'
 
 import AdminLayout from 'layouts/Admin/index.js'
-// import AdminLayout from 'layouts/Admin/Admin.jsx'
-import RTLLayout from 'layouts/RTL/RTL.jsx'
 
 import BlockScreen from './components/BlockScreen'
 import initialState from './store/initialState'
@@ -41,20 +39,15 @@ export const GlobalContext = createContext()
 const Main = () => {
   const [state, dispatch] = useReducer(reducer, initialState)
 
-  const getClient = () => {
-    return client
-  }
-
   return (
     <GlobalContext.Provider value={{ state: state, dispatch: dispatch }}>
-      <ApolloProvider client={getClient()}>
+      <ApolloProvider client={client}>
 
         <Router>
         <BlockScreen>
             <Switch>
               <Route path='/auth' render={props => <AuthLayout {...props} />} />
               <Route path='/admin' render={props => <AdminLayout {...props} />} />
-              <Route path='/rtl' render={props => <RTLLayout {...props} />} />
               <Redirect from='/' to='/admin/dashboard' />
             </Switch>
           </BlockScreen>

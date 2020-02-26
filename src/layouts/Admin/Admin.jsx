@@ -19,7 +19,6 @@ import { Route, Switch } from 'react-router-dom'
 // javascript plugin used to create scrollbars on windows
 import PerfectScrollbar from 'perfect-scrollbar'
 // react plugin for creating notifications over the dashboard
-import NotificationAlert from 'react-notification-alert'
 import { Row, Col } from 'reactstrap'
 
 // core components
@@ -129,18 +128,13 @@ class Admin extends React.Component {
       if (prop.collapse) {
         return this.getRoutes(prop.views)
       }
-      if (prop.layout === '/admin') {
-        console.log(prop)
-        return (
-          <Route
-            path={prop.layout + prop.path}
-            component={prop.component}
-            key={key}
-          />
-        )
-      } else {
-        return null
-      }
+      return (
+        <Route
+          path={prop.layout + prop.path}
+          component={prop.component}
+          key={key}
+        />
+      )
     })
   }
   handleActiveClick = color => {

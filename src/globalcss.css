@@ -1,3 +1,7 @@
 /*.ps__thumb-y{
     display: none !important;
 }*/
+
+.block-ui {
+    z-index: 0;
+}

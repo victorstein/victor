@@ -20,6 +20,7 @@ import { NavLink } from "react-router-dom";
 import PropTypes from "prop-types";
 // javascript plugin used to create scrollbars on windows
 import PerfectScrollbar from "perfect-scrollbar";
+import {GlobalContext} from '../../index'
 
 // reactstrap components
 import { Nav, Collapse } from "reactstrap";
@@ -27,6 +28,7 @@ import { Nav, Collapse } from "reactstrap";
 var ps;
 
 class Sidebar extends React.Component {
+
   constructor(props) {
     super(props);
     this.state = this.getCollapseStates(props.routes);
@@ -62,9 +64,19 @@ class Sidebar extends React.Component {
   }
   // this function creates the links and collapses that appear in the sidebar (left menu)
   createLinks = routes => {
-    const { rtlActive } = this.props;
+    /*const userRol = state.user.role.name
+      let isValidRoute = false
+      routes.forEach((value, index) => {
+        if (
+          props.location.pathname === value.layout + value.path &&
+          (value.role.indexOf(userRol) > -1 || value.role.length === 0)
+        ) {
+          isValidRoute = true
+        }
+      })*/
     return routes.map((prop, key) => {
-      if(prop.layout !== '/admin') {
+    
+      if(prop.layout !== '/admin' || !prop.visible) {
         return null;
       }
       if (prop.redirect) {
@@ -83,59 +95,50 @@ class Sidebar extends React.Component {
               data-toggle="collapse"
               aria-expanded={this.state[prop.state]}
               onClick={e => {
-                e.preventDefault();
-                this.setState(st);
+                e.preventDefault()
+                this.setState(st)
               }}
             >
-              {prop.icon !== undefined ? (
-                <>
-                  <i className={prop.icon} />
-                  <p>
-                    {rtlActive ? prop.rtlName : prop.name}
-                    <b className="caret" />
-                  </p>
-                </>
-              ) : (
-                <>
-                  <span className="sidebar-mini-icon">
-                    {rtlActive ? prop.rtlMini : prop.mini}
+                <React.Fragment>
+                  <span className='sidebar-mini-icon'>
+                    {prop.mini}
                   </span>
                   <span className="sidebar-normal">
-                    {rtlActive ? prop.rtlName : prop.name}
+                    {prop.name}
                     <b className="caret" />
                   </span>
-                </>
-              )}
+                </React.Fragment>
             </a>
             <Collapse isOpen={this.state[prop.state]}>
               <ul className="nav">{this.createLinks(prop.views)}</ul>
             </Collapse>
           </li>
-        );
+        )
       }
       return (
         <li className={this.activeRoute(prop.layout + prop.path)} key={key}>
           <NavLink to={prop.layout + prop.path} activeClassName="" onClick={this.props.closeSidebar}>
             {prop.icon !== undefined ? (
               <>
-                <i className={prop.icon} />
-                <p>{rtlActive ? prop.rtlName : prop.name}</p>
+                <i className={prop.icon}/>
+                <p>{prop.name}</p>
               </>
             ) : (
               <>
                 <span className="sidebar-mini-icon">
-                  {rtlActive ? prop.rtlMini : prop.mini}
+                  {prop.mini}
                 </span>
                 <span className="sidebar-normal">
-                  {rtlActive ? prop.rtlName : prop.name}
+                  {prop.name}
                 </span>
               </>
             )}
           </NavLink>
         </li>
-      );
-    });
-  };
+      )
+    })
+  }
+
   // verifies if routeName is the one active (in browser input)
   activeRoute = routeName => {
     return this.props.location.pathname.indexOf(routeName) > -1 ? "active" : "";
@@ -153,6 +156,7 @@ class Sidebar extends React.Component {
       ps.destroy();
     }
   }
+  
   render() {
     const { activeColor, logo } = this.props;
     let logoImg = null;
