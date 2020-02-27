@@ -15,6 +15,7 @@ import gql from 'graphql-tag'
 import { BeatLoader } from 'react-spinners'
 import Avatar from 'react-avatar'
 import { Link } from 'react-router-dom'
+import { Bar } from 'react-chartjs-2'
 
 const userByid = gql`
 query userByid(
@@ -51,6 +52,79 @@ const DetailIndex = (props) => {
 
   if (error) {
     console.log(error.graphQLErrors)
+  }
+
+  const chartExample7 = {
+    data: canvas => {
+      const ctx = canvas.getContext('2d')
+      var gradientStroke = ctx.createLinearGradient(0, 230, 0, 50)
+
+      gradientStroke.addColorStop(1, 'rgba(253,93,147,0.8)')
+      gradientStroke.addColorStop(0, 'rgba(253,93,147,0)') // blue colors
+      return {
+        labels: ['OCT', 'NOV', 'DEC'],
+        datasets: [
+          {
+            label: 'Projects',
+            fill: true,
+            backgroundColor: gradientStroke,
+            hoverBackgroundColor: gradientStroke,
+            borderColor: '#ff5991',
+            borderWidth: 2,
+            borderDash: [],
+            borderDashOffset: 0.0,
+            data: [5, 12, 8]
+          }
+        ]
+      }
+    },
+    options: {
+      maintainAspectRatio: false,
+      legend: {
+        display: false
+      },
+      tooltips: {
+        backgroundColor: '#f5f5f5',
+        titleFontColor: '#333',
+        bodyFontColor: '#666',
+        bodySpacing: 4,
+        xPadding: 12,
+        mode: 'nearest',
+        intersect: 0,
+        position: 'nearest'
+      },
+      responsive: true,
+      scales: {
+        yAxes: [
+          {
+            gridLines: {
+              drawBorder: false,
+              color: 'rgba(253,93,147,0.1)',
+              zeroLineColor: 'transparent'
+            },
+            ticks: {
+              suggestedMin: 10,
+              suggestedMax: 30,
+              padding: 10,
+              fontColor: '#9e9e9e'
+            }
+          }
+        ],
+        xAxes: [
+          {
+            gridLines: {
+              drawBorder: false,
+              color: 'rgba(253,93,147,0.1)',
+              zeroLineColor: 'transparent'
+            },
+            ticks: {
+              padding: 20,
+              fontColor: '#9e9e9e'
+            }
+          }
+        ]
+      }
+    }
   }
 
   return (
@@ -103,7 +177,7 @@ const DetailIndex = (props) => {
               </div>
               {
                 (loading) ? (
-                  <div className='d-flex justify-content-center p-2 m-2'>
+                  <div style={{ paddingTop: '35%' }} className='d-flex justify-content-center  m-2'>
                     <BeatLoader
                       color='#4A90E2'
                       size={40}
@@ -113,12 +187,13 @@ const DetailIndex = (props) => {
                 )
                   : (
                     <div className='card-description'>
-                      <h5>Description</h5>
-                      <p>
-                        Do not be scared of the truth because we need to restart the
-                        human foundation in truth And I love you like Kanye loves
-                        Kanye I love Rick Owens’ bed design but the back is...
-                      </p>
+                      <h6 className='text-center'>Last Project</h6>
+                      <div className='chart-area'>
+                        <Bar
+                          data={chartExample7.data}
+                          options={chartExample7.options}
+                        />
+                      </div>
                     </div>
                   )
               }
