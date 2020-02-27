@@ -14,7 +14,7 @@ const routes = [
     name: 'Dashboard',
     icon: 'tim-icons icon-chart-pie-36',
     component: Dashboard,
-    //component: Dashboard,
+    // component: Dashboard,
     role: [],
     layout: '/admin',
     fullContent: false,
@@ -73,7 +73,7 @@ const routes = [
     component: CreateUser,
     layout: '/admin',
     role: ['Admin'],
-    visible: false
+    visible: true
   },
   {
     path: '/user/detailUser',
