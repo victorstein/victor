@@ -32,7 +32,7 @@ const allUsers = gql`
   query allUsers(
   $perPage : Float!
   $page : Float!
-  $filters : IntOrStr!
+  $filters : IntOrStrOrBool!
 ){
   users(
     perPage: $perPage, 
