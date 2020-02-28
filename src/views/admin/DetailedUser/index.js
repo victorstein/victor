@@ -16,6 +16,7 @@ import { BeatLoader } from 'react-spinners'
 import Avatar from 'react-avatar'
 import { Link } from 'react-router-dom'
 import { Bar } from 'react-chartjs-2'
+import UseContex from './ContexStore'
 
 const userByid = gql`
 query userByid(
@@ -128,7 +129,7 @@ const DetailIndex = (props) => {
   }
 
   return (
-    <div>
+    <UseContex.Provider value={idUser}>
       <Link
         to='/admin/user/createUser'
       >
@@ -211,7 +212,7 @@ const DetailIndex = (props) => {
           </Card>
         </Col>
       </Row>
-    </div>
+    </UseContex.Provider>
   )
 }
 
