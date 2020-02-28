@@ -13,8 +13,59 @@ import {
 } from 'reactstrap'
 import classnames from 'classnames'
 import Select from 'react-select'
+import UseContex from './ContexStore'
+import { useQuery } from '@apollo/react-hooks'
+import gql from 'graphql-tag'
+import { BeatLoader } from 'react-spinners'
+import moment from 'moment'
+
+const projects = gql`
+   query projects(
+  $perPage : Float!
+  $page : Float!
+  $siteNameFilters : IntOrStrOrBool!
+  $domainFilters  : IntOrStrOrBool!
+  $idUser : IntOrStrOrBool!
+){
+  projects(
+    perPage : $perPage
+    page :  $page
+    filters : [
+      {
+        field : SITENAME
+        value : $siteNameFilters
+      },
+      {
+        field : DOMAIN
+        value : $domainFilters
+      },
+      {
+        field : CREATEDBY
+        value : $idUser
+      }
+    ]
+  ){
+    docs{
+      id
+      domain
+      siteName
+      accountUsername
+      createdAt
+      createdBy{
+        id
+        fullName
+      }
+    }
+    total
+    page
+    perPage
+    pages
+  }
+}
+`
 
 const TableDetail = () => {
+  // const idUSer = React.useContext(UseContex.contextStore)
   const [focusInput, setFocusInput] = useState({
     inputSiteName: {
       focus: false
@@ -27,6 +78,80 @@ const TableDetail = () => {
     label: '5',
     value: '5'
   })
+  const [variables, setVariables] = useState({
+    perPage: 5,
+    page: 1,
+    domainFilters: '',
+    siteNameFilters: '',
+    idUser: React.useContext(UseContex.contextStore)
+  })
+
+  const { loading, error, data } = useQuery(projects, { variables })
+
+  // console.log('idTienda', React.useContext(UseContex.contextStore))
+
+  if (data) {
+    console.log(data)
+  }
+
+  const contendTable = () => {
+    if (!loading && data) {
+      if (error) {
+        return (
+          <tbody>
+            <tr>
+              <td colSpan={5}>
+                <div className='d-flex justify-content-center p-2 m-2'>
+                  No Data
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        )
+      }
+      if (data.projects.docs.length === 0) {
+        return (
+          <tbody>
+            <tr>
+              <td colSpan={5}>
+                <div className='d-flex justify-content-center p-2 m-2'>
+                  No Data
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        )
+      }
+      return (
+        data.projects.docs.map((value, index) => (
+          <tbody key={index}>
+            <tr>
+              <td className='text-left'>{value.siteName}</td>
+              <td className='text-left'>{value.accountUsername}</td>
+              <td className='text-left'>{moment(value.createdAt).format('MM / DD / YYYY')}</td>
+              <td className='text-left'>{value.domain}</td>
+            </tr>
+          </tbody>
+        ))
+      )
+    } else {
+      return (
+        <tbody>
+          <tr>
+            <td colSpan={5}>
+              <div className='d-flex justify-content-center p-2 m-2'>
+                <BeatLoader
+                  color='#4A90E2'
+                  size={20}
+                  loading={loading}
+                />
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      )
+    }
+  }
 
   return (
     <div>
@@ -97,33 +222,10 @@ const TableDetail = () => {
             <th scope='col'>Site Name</th>
             <th scope='col'>Account Name</th>
             <th scope='col' className='text-center'>Created At</th>
-            <th scope='col' className='text-center'>Created By</th>
             <th scope='col' className='text-center'>Domain</th>
           </tr>
         </thead>
-        <tbody>
-          <tr>
-            <td className='text-left'>test</td>
-            <td className='text-left'>test</td>
-            <td className='text-left'>test</td>
-            <td className='text-left'>test</td>
-            <td className='text-left'>test</td>
-          </tr>
-          <tr>
-            <td className='text-left'>test</td>
-            <td className='text-left'>test</td>
-            <td className='text-left'>test</td>
-            <td className='text-left'>test</td>
-            <td className='text-left'>test</td>
-          </tr>
-          <tr>
-            <td className='text-left'>test</td>
-            <td className='text-left'>test</td>
-            <td className='text-left'>test</td>
-            <td className='text-left'>test</td>
-            <td className='text-left'>test</td>
-          </tr>
-        </tbody>
+        {contendTable()}
       </Table>
       <Row className='p-2'>
         <Col className='col-4'>
