@@ -75,11 +75,11 @@ const TableDetail = () => {
     }
   })
   const [singleSelect, setSingleSelect] = useState({
-    label: '5',
-    value: '5'
+    label: '10',
+    value: '10'
   })
   const [variables, setVariables] = useState({
-    perPage: 5,
+    perPage: 10,
     page: 1,
     domainFilters: '',
     siteNameFilters: '',
@@ -170,6 +170,14 @@ const TableDetail = () => {
               type='text'
               placeholder='Site Name'
               bsSize='sm'
+              onChange={(e) => {
+                // console.log(e.target.value)
+                setVariables({
+                  ...variables,
+                  page: 1,
+                  siteNameFilters: e.target.value
+                })
+              }}
               onFocus={(e) => setFocusInput({
                 ...focusInput,
                 inputSiteName: {
@@ -199,6 +207,14 @@ const TableDetail = () => {
               type='text'
               placeholder='Accont Name'
               bsSize='sm'
+              onChange={(e) => {
+                // console.log(e.target.value)
+                setVariables({
+                  ...variables,
+                  page: 1,
+                  domainFilters: e.target.value
+                })
+              }}
               onFocus={(e) => setFocusInput({
                 ...focusInput,
                 inputAccontName: {
@@ -242,6 +258,11 @@ const TableDetail = () => {
                   value={singleSelect}
                   onChange={(value) => {
                     setSingleSelect(value)
+                    setVariables({
+                      ...variables,
+                      page: 1,
+                      perPage: parseInt(value.value)
+                    })
                   }}
                   options={[
                     {
@@ -261,25 +282,62 @@ const TableDetail = () => {
           </FormGroup>
         </Col>
         <Col className='col-8'>
-          <div className='maxPaginatio'>
-            <Pagination>
-              <PaginationItem>
-                <PaginationLink>
-                      Previous
-                </PaginationLink>
-              </PaginationItem>
-              <PaginationItem>
-                <PaginationLink>
-                    1
-                </PaginationLink>
-              </PaginationItem>
-              <PaginationItem>
-                <PaginationLink>
-                      Next
-                </PaginationLink>
-              </PaginationItem>
-            </Pagination>
-          </div>
+          {
+            (error) ? null
+              : (data && data.projects.docs.length !== 0) &&
+                <div className='maxPaginatio'>
+                  <Pagination>
+                    <PaginationItem
+                      disabled={!((loading || variables.page !== 1))}
+                    >
+                      <PaginationLink
+                        onClick={(e) => {
+                          setVariables({
+                            ...variables,
+                            page: variables.page + -1
+                          })
+                        }}
+                      >
+                          Previous
+                      </PaginationLink>
+                    </PaginationItem>
+                    {
+                      [...Array(data.projects.pages)].map((pagina, index) => (
+                        <PaginationItem
+                          disabled={loading}
+                          key={index}
+                          active={variables.page === index + 1}
+                        >
+                          <PaginationLink
+                            onClick={(e) => {
+                              setVariables({
+                                ...variables,
+                                page: index + 1
+                              })
+                            }}
+                          >
+                            {index + 1}
+                          </PaginationLink>
+                        </PaginationItem>
+                      ))
+                    }
+                    <PaginationItem
+                      disabled={!((loading) || data.projects.pages !== variables.page)}
+                    >
+                      <PaginationLink
+                        onClick={(e) => {
+                          setVariables({
+                            ...variables,
+                            page: variables.page + 1
+                          })
+                        }}
+                      >
+                          Next
+                      </PaginationLink>
+                    </PaginationItem>
+                  </Pagination>
+                </div>
+          }
         </Col>
       </Row>
 
