@@ -1,6 +1,6 @@
 import React from 'react'
 
-const contextStore = React.createContext({ idUser: null })
+const contextStore = React.createContext(null)
 
 export default {
   contextStore: contextStore,

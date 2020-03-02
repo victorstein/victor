@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import {
   Card,
   CardHeader,
@@ -17,6 +17,7 @@ import Avatar from 'react-avatar'
 import { Link } from 'react-router-dom'
 import { Bar } from 'react-chartjs-2'
 import UseContex from './ContexStore'
+import ModalProject from './ModalProject'
 
 const userByid = gql`
 query userByid(
@@ -59,6 +60,11 @@ const getLastThreeMonths = gql`
 
 const DetailIndex = (props) => {
   const { idUser } = props.location.state
+  const [store, setStore] = useState({
+    idUser: idUser,
+    idProject: '',
+    modalVisible: false
+  })
 
   const { loading, error, data } = useQuery(userByid, { variables: { id: idUser } })
 
@@ -67,7 +73,6 @@ const DetailIndex = (props) => {
   if (error) {
     console.log(error.graphQLErrors)
   }
-  console.log(idUser)
 
   const chartExample7 = () => {
     const suggestedMaxValue = reqChart.data.getLastThreeMonths.data.sort()[0]
@@ -124,7 +129,7 @@ const DetailIndex = (props) => {
   const DataCharBar = (canvas) => {
     const ctx = canvas.getContext('2d')
     var gradientStroke = ctx.createLinearGradient(0, 230, 0, 50)
-    console.log(reqChart.data)
+    // console.log(reqChart.data)
     gradientStroke.addColorStop(1, 'rgba(253,93,147,0.8)')
     gradientStroke.addColorStop(0, 'rgba(253,93,147,0)') // blue colors
 
@@ -147,7 +152,14 @@ const DetailIndex = (props) => {
   }
 
   return (
-    <UseContex.Provider value={idUser}>
+    <UseContex.Provider value={{
+      state: store,
+      setState: (params) => {
+        setStore(params)
+      }
+    }}
+    >
+      <ModalProject />
       <Link
         to='/admin/user/createUser'
       >

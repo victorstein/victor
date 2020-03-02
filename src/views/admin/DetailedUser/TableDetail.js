@@ -9,7 +9,8 @@ import {
   InputGroupText,
   Label,
   FormGroup,
-  Pagination, PaginationItem, PaginationLink
+  Pagination, PaginationItem, PaginationLink, Button,
+  UncontrolledTooltip
 } from 'reactstrap'
 import classnames from 'classnames'
 import Select from 'react-select'
@@ -64,8 +65,9 @@ const projects = gql`
 }
 `
 
-const TableDetail = () => {
+const TableDetail = (props) => {
   // const idUSer = React.useContext(UseContex.contextStore)
+  const STORE = React.useContext(UseContex.contextStore)
   const [focusInput, setFocusInput] = useState({
     inputSiteName: {
       focus: false
@@ -83,16 +85,14 @@ const TableDetail = () => {
     page: 1,
     domainFilters: '',
     siteNameFilters: '',
-    idUser: React.useContext(UseContex.contextStore)
+    idUser: STORE.state.idUser
   })
 
   const { loading, error, data } = useQuery(projects, { variables })
 
-  // console.log('idTienda', React.useContext(UseContex.contextStore))
-
-  if (data) {
-    console.log(data)
-  }
+  // if (data) {
+  //   console.log(data)
+  // }
 
   const contendTable = () => {
     if (!loading && data) {
@@ -130,6 +130,29 @@ const TableDetail = () => {
               <td className='text-left'>{value.accountUsername}</td>
               <td className='text-left'>{moment(value.createdAt).format('MM / DD / YYYY')}</td>
               <td className='text-left'>{value.domain}</td>
+              <td className='text-center'>
+                <Button
+                  className='btn-link btn-icon'
+                  color='primary'
+                  id={`ViewButton_${value.id}`}
+                  onClick={(e) => (
+                    // alert(JSON.stringify(value))
+                    STORE.setState({
+                      ...STORE.state,
+                      idProject: value.id,
+                      modalVisible: true
+                    })
+                  )}
+                >
+                  <i className='fas fa-eye' />
+                </Button>
+                <UncontrolledTooltip
+                  delay={0}
+                  target={`ViewButton_${value.id}`}
+                >
+                  View Project
+                </UncontrolledTooltip>
+              </td>
             </tr>
           </tbody>
         ))
@@ -239,6 +262,7 @@ const TableDetail = () => {
             <th scope='col'>Account Name</th>
             <th scope='col' className='text-center'>Created At</th>
             <th scope='col' className='text-center'>Domain</th>
+            <th scope='col' className='text-center'>Actions</th>
           </tr>
         </thead>
         {contendTable()}
@@ -298,7 +322,7 @@ const TableDetail = () => {
                           })
                         }}
                       >
-                          Previous
+                      Previous
                       </PaginationLink>
                     </PaginationItem>
                     {
@@ -332,7 +356,7 @@ const TableDetail = () => {
                           })
                         }}
                       >
-                          Next
+                      Next
                       </PaginationLink>
                     </PaginationItem>
                   </Pagination>
