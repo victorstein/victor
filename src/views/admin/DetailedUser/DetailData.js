@@ -17,6 +17,7 @@ const DetaillData = (props) => {
   const [verticalTabs, setVerticalTabs] = useState({
     tabsActive: 'info'
   })
+
   return (
     <div>
       <Row>
@@ -60,7 +61,7 @@ const DetaillData = (props) => {
             <TabPane tabId='info'>
               {
                 (props.loading) ? (
-                  <div style={{ paddingTop: '15%' }} className='d-flex justify-content-center pl-2 pr-2 m-2 '>
+                  <div style={{ paddingTop: '20%' }} className='d-flex justify-content-center pl-2 pr-2 m-2 '>
                     <BeatLoader
                       color='#4A90E2'
                       size={50}
