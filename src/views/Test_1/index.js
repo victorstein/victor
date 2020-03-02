@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react'
+import React, { useState, useContext, useRef } from 'react'
 import {GlobalContext} from '../../index'
 import {SET_BLOCK_SCREEN} from '../../store/actions'
 // reactstrap components
@@ -16,6 +16,7 @@ import gql from 'graphql-tag'
 import { useLazyQuery } from '@apollo/react-hooks'
 import CodeEditor from '../../components/CodeEditor'
 import EasyBlock from '../../components/BlockScreen/EasyBlock'
+import AlertGlobal from '../../components/AlertGlobal'
 
 const GET_DOG_PHOTO = gql`
   query permissions{
@@ -34,6 +35,8 @@ query roles {
 
 const Test1 = () => {
   const {state,dispatch} = useContext(GlobalContext)
+  // create our ref
+  const myInput = useRef()
   const [getDog, { loading, data }] = useLazyQuery(GET_DOG_PHOTO, { fetchPolicy: 'no-cache' })
   const [getDog2, dataGetDog2] = useLazyQuery(GET_DOG_PHOTO2, { fetchPolicy: 'no-cache' })
   const [typeEditor, setTypeEditor] = useState('raw')
@@ -54,6 +57,7 @@ const Test1 = () => {
     } else {
       getDog()
     }*/
+    //console.log(' myInput ', myInput)
     getDog()
     setCount(count+1)
     //getDog()
@@ -69,12 +73,23 @@ const Test1 = () => {
   }
 
   const clickButton = () => {
-    getDog2()
+    const options = {
+      message: 'Trolazoooo',
+      options: {
+      icon: 'icon-bell-55',
+      type: 'dark',
+      autoDismiss: 4,
+      place: 'bl'
+      }
+    }
+    myInput.current.showAlert(options)
+    //getDog2()
   }
 
   return (
     <Card className='card-stats'>
      <EasyBlock isBlock={isBlock} />
+      <AlertGlobal ref={myInput} />
       <CardBody>
         <Row>
           <Col xs='12'>
@@ -88,7 +103,7 @@ const Test1 = () => {
                   onClick={() => changeTypeRadio('raw')}
                   defaultChecked
                 />
-                Raw
+                Raw asdsa
                 <span className='form-check-sign'></span>
               </Label>
             </FormGroup>

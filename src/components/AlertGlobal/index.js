@@ -13,7 +13,7 @@ const DEFAULT_OPTIONS = {
 }
 
 class AlertGlobal extends React.Component {
-  componentDidUpdate (prevProps) {
+ /* componentDidUpdate (prevProps) {
     if (this.props.message) {
       let options = {}
       if (this.props.options) {
@@ -31,7 +31,29 @@ class AlertGlobal extends React.Component {
       }
       this.refs.notificationAlert.notificationAlert(options)
     }
+  }*/
+
+  showAlert=(data) => {
+    const { message, options } = data
+    if (message) {
+      let finalOptions = {}
+      if (!options) {
+        finalOptions = {...DEFAULT_OPTIONS}
+        finalOptions['message'] = message
+      } else {
+        finalOptions = {
+          ...DEFAULT_OPTIONS,
+          message: message,
+          icon: (options.icon) ? ('tim-icons ' + options.icon) : DEFAULT_OPTIONS.icon,
+          type: (options.type) ? options.type : DEFAULT_OPTIONS.type,
+          autoDismiss: (options.autoDismiss) ? options.autoDismiss : DEFAULT_OPTIONS.autoDismiss,
+          place: (options.place) ? options.place : DEFAULT_OPTIONS.place
+        }
+      }
+      this.refs.notificationAlert.notificationAlert(finalOptions)
+    }
   }
+
 
   render () {
     return (
