@@ -32,7 +32,7 @@ const allUsers = gql`
   query allUsers(
   $perPage : Float!
   $page : Float!
-  $filters : IntOrStr!
+  $filters : IntOrStrOrBool!
 ){
   users(
     perPage: $perPage, 
@@ -160,21 +160,21 @@ const TableUser = (props) => {
                   <Button
                     className='btn-link btn-icon'
                     color='primary'
-                    id='ViewButton'
+                    id={`ViewButton_${value.id}`}
                   >
                     <i className='fas fa-eye' />
                   </Button>
                 </Link>
                 <UncontrolledTooltip
                   delay={0}
-                  target='ViewButton'
+                  target={`ViewButton_${value.id}`}
                 >
                  View
                 </UncontrolledTooltip>
                 <Button
                   className='btn-link btn-icon'
                   color='warning'
-                  id='tooltip324367706'
+                  id={`permissionsButton_${value.id}`}
                   onClick={(e) => setAddPermissions({
                     visible: true,
                     user: value
@@ -184,14 +184,14 @@ const TableUser = (props) => {
                 </Button>
                 <UncontrolledTooltip
                   delay={0}
-                  target='tooltip324367706'
+                  target={`permissionsButton_${value.id}`}
                 >
                 add permissions
                 </UncontrolledTooltip>
                 <Button
                   className='btn-link btn-icon'
                   color='danger'
-                  id='tooltip974171201'
+                  id={`deleteButton_${value.id}`}
                   size='sm'
                   onClick={(e) => setAlertDelete({
                     visible: true,
@@ -202,7 +202,7 @@ const TableUser = (props) => {
                 </Button>
                 <UncontrolledTooltip
                   delay={0}
-                  target='tooltip974171201'
+                  target={`deleteButton_${value.id}`}
                 >
                   Delete
                 </UncontrolledTooltip>
@@ -230,7 +230,6 @@ const TableUser = (props) => {
   }
 
   const deleteUser = async () => {
-    console.log(alertDelete.user.id)
     await deleteUserMutation({ variables: { id: alertDelete.user.id } })
     setAlertDelete({
       visible: false,

@@ -39,7 +39,7 @@ const allpermissions = gql`
   query permissions(
   $perPage : Float!
   $page : Float!
-  $filters : IntOrStr!
+  $filters : IntOrStrOrBool!
 ){
   permissions(
      perPage: $perPage, 

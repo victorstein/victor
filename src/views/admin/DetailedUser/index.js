@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import {
   Card,
   CardHeader,
@@ -16,6 +16,8 @@ import { BeatLoader } from 'react-spinners'
 import Avatar from 'react-avatar'
 import { Link } from 'react-router-dom'
 import { Bar } from 'react-chartjs-2'
+import UseContex from './ContexStore'
+import ModalProject from './ModalProject'
 
 const userByid = gql`
 query userByid(
@@ -45,40 +47,37 @@ query userByid(
 }
 `
 
+const getLastThreeMonths = gql`
+  query getLastThreeMonths(
+    $id : String!
+){
+  getLastThreeMonths(id : $id){
+    labels
+    data
+  }
+}
+`
+
 const DetailIndex = (props) => {
   const { idUser } = props.location.state
+  const [store, setStore] = useState({
+    idUser: idUser,
+    idProject: '',
+    modalVisible: false
+  })
 
   const { loading, error, data } = useQuery(userByid, { variables: { id: idUser } })
+
+  const reqChart = useQuery(getLastThreeMonths, { variables: { id: idUser } })
 
   if (error) {
     console.log(error.graphQLErrors)
   }
 
-  const chartExample7 = {
-    data: canvas => {
-      const ctx = canvas.getContext('2d')
-      var gradientStroke = ctx.createLinearGradient(0, 230, 0, 50)
+  const chartExample7 = () => {
+    const suggestedMaxValue = reqChart.data.getLastThreeMonths.data.sort()[0]
 
-      gradientStroke.addColorStop(1, 'rgba(253,93,147,0.8)')
-      gradientStroke.addColorStop(0, 'rgba(253,93,147,0)') // blue colors
-      return {
-        labels: ['OCT', 'NOV', 'DEC'],
-        datasets: [
-          {
-            label: 'Projects',
-            fill: true,
-            backgroundColor: gradientStroke,
-            hoverBackgroundColor: gradientStroke,
-            borderColor: '#ff5991',
-            borderWidth: 2,
-            borderDash: [],
-            borderDashOffset: 0.0,
-            data: [5, 12, 8]
-          }
-        ]
-      }
-    },
-    options: {
+    return {
       maintainAspectRatio: false,
       legend: {
         display: false
@@ -104,7 +103,7 @@ const DetailIndex = (props) => {
             },
             ticks: {
               suggestedMin: 10,
-              suggestedMax: 30,
+              suggestedMax: suggestedMaxValue,
               padding: 10,
               fontColor: '#9e9e9e'
             }
@@ -127,8 +126,40 @@ const DetailIndex = (props) => {
     }
   }
 
+  const DataCharBar = (canvas) => {
+    const ctx = canvas.getContext('2d')
+    var gradientStroke = ctx.createLinearGradient(0, 230, 0, 50)
+    // console.log(reqChart.data)
+    gradientStroke.addColorStop(1, 'rgba(253,93,147,0.8)')
+    gradientStroke.addColorStop(0, 'rgba(253,93,147,0)') // blue colors
+
+    return {
+      labels: reqChart.data.getLastThreeMonths.labels,
+      datasets: [
+        {
+          label: 'Projects',
+          fill: true,
+          backgroundColor: gradientStroke,
+          hoverBackgroundColor: gradientStroke,
+          borderColor: '#ff5991',
+          borderWidth: 2,
+          borderDash: [],
+          borderDashOffset: 0.0,
+          data: reqChart.data.getLastThreeMonths.data
+        }
+      ]
+    }
+  }
+
   return (
-    <div>
+    <UseContex.Provider value={{
+      state: store,
+      setState: (params) => {
+        setStore(params)
+      }
+    }}
+    >
+      <ModalProject />
       <Link
         to='/admin/user/createUser'
       >
@@ -176,7 +207,7 @@ const DetailIndex = (props) => {
                 }
               </div>
               {
-                (loading) ? (
+                (reqChart.loading) ? (
                   <div style={{ paddingTop: '35%' }} className='d-flex justify-content-center  m-2'>
                     <BeatLoader
                       color='#4A90E2'
@@ -190,8 +221,8 @@ const DetailIndex = (props) => {
                       <h6 className='text-center'>Last Project</h6>
                       <div className='chart-area'>
                         <Bar
-                          data={chartExample7.data}
-                          options={chartExample7.options}
+                          data={DataCharBar}
+                          options={chartExample7}
                         />
                       </div>
                     </div>
@@ -211,7 +242,7 @@ const DetailIndex = (props) => {
           </Card>
         </Col>
       </Row>
-    </div>
+    </UseContex.Provider>
   )
 }
 

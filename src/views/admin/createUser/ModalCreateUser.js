@@ -116,7 +116,7 @@ const ModalCreateUser = (props) => {
     }
   }
 
-  if (data) { console.log('data', data) }
+  if (error) { console.log('error', error.graphQLErrors) }
 
   return (
     <div className='templateForm'>

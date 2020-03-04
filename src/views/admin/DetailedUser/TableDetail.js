@@ -9,12 +9,65 @@ import {
   InputGroupText,
   Label,
   FormGroup,
-  Pagination, PaginationItem, PaginationLink
+  Pagination, PaginationItem, PaginationLink, Button,
+  UncontrolledTooltip
 } from 'reactstrap'
 import classnames from 'classnames'
 import Select from 'react-select'
+import UseContex from './ContexStore'
+import { useQuery } from '@apollo/react-hooks'
+import gql from 'graphql-tag'
+import { BeatLoader } from 'react-spinners'
+import moment from 'moment'
 
-const TableDetail = () => {
+const projects = gql`
+   query projects(
+  $perPage : Float!
+  $page : Float!
+  $siteNameFilters : IntOrStrOrBool!
+  $domainFilters  : IntOrStrOrBool!
+  $idUser : IntOrStrOrBool!
+){
+  projects(
+    perPage : $perPage
+    page :  $page
+    filters : [
+      {
+        field : SITENAME
+        value : $siteNameFilters
+      },
+      {
+        field : DOMAIN
+        value : $domainFilters
+      },
+      {
+        field : CREATEDBY
+        value : $idUser
+      }
+    ]
+  ){
+    docs{
+      id
+      domain
+      siteName
+      accountUsername
+      createdAt
+      createdBy{
+        id
+        fullName
+      }
+    }
+    total
+    page
+    perPage
+    pages
+  }
+}
+`
+
+const TableDetail = (props) => {
+  // const idUSer = React.useContext(UseContex.contextStore)
+  const STORE = React.useContext(UseContex.contextStore)
   const [focusInput, setFocusInput] = useState({
     inputSiteName: {
       focus: false
@@ -24,9 +77,104 @@ const TableDetail = () => {
     }
   })
   const [singleSelect, setSingleSelect] = useState({
-    label: '5',
-    value: '5'
+    label: '10',
+    value: '10'
   })
+  const [variables, setVariables] = useState({
+    perPage: 10,
+    page: 1,
+    domainFilters: '',
+    siteNameFilters: '',
+    idUser: STORE.state.idUser
+  })
+
+  const { loading, error, data } = useQuery(projects, { variables })
+
+  // if (data) {
+  //   console.log(data)
+  // }
+
+  const contendTable = () => {
+    if (!loading && data) {
+      if (error) {
+        return (
+          <tbody>
+            <tr>
+              <td colSpan={5}>
+                <div className='d-flex justify-content-center p-2 m-2'>
+                  No Data
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        )
+      }
+      if (data.projects.docs.length === 0) {
+        return (
+          <tbody>
+            <tr>
+              <td colSpan={5}>
+                <div className='d-flex justify-content-center p-2 m-2'>
+                  No Data
+                </div>
+              </td>
+            </tr>
+          </tbody>
+        )
+      }
+      return (
+        data.projects.docs.map((value, index) => (
+          <tbody key={index}>
+            <tr>
+              <td className='text-left'>{value.siteName}</td>
+              <td className='text-left'>{value.accountUsername}</td>
+              <td className='text-left'>{moment(value.createdAt).format('MM / DD / YYYY')}</td>
+              <td className='text-left'>{value.domain}</td>
+              <td className='text-center'>
+                <Button
+                  className='btn-link btn-icon'
+                  color='primary'
+                  id={`ViewButton_${value.id}`}
+                  onClick={(e) => (
+                    // alert(JSON.stringify(value))
+                    STORE.setState({
+                      ...STORE.state,
+                      idProject: value.id,
+                      modalVisible: true
+                    })
+                  )}
+                >
+                  <i className='fas fa-eye' />
+                </Button>
+                <UncontrolledTooltip
+                  delay={0}
+                  target={`ViewButton_${value.id}`}
+                >
+                  View Project
+                </UncontrolledTooltip>
+              </td>
+            </tr>
+          </tbody>
+        ))
+      )
+    } else {
+      return (
+        <tbody>
+          <tr>
+            <td colSpan={5}>
+              <div className='d-flex justify-content-center p-2 m-2'>
+                <BeatLoader
+                  color='#4A90E2'
+                  size={20}
+                  loading={loading}
+                />
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      )
+    }
+  }
 
   return (
     <div>
@@ -45,6 +193,14 @@ const TableDetail = () => {
               type='text'
               placeholder='Site Name'
               bsSize='sm'
+              onChange={(e) => {
+                // console.log(e.target.value)
+                setVariables({
+                  ...variables,
+                  page: 1,
+                  siteNameFilters: e.target.value
+                })
+              }}
               onFocus={(e) => setFocusInput({
                 ...focusInput,
                 inputSiteName: {
@@ -74,6 +230,14 @@ const TableDetail = () => {
               type='text'
               placeholder='Accont Name'
               bsSize='sm'
+              onChange={(e) => {
+                // console.log(e.target.value)
+                setVariables({
+                  ...variables,
+                  page: 1,
+                  domainFilters: e.target.value
+                })
+              }}
               onFocus={(e) => setFocusInput({
                 ...focusInput,
                 inputAccontName: {
@@ -97,33 +261,11 @@ const TableDetail = () => {
             <th scope='col'>Site Name</th>
             <th scope='col'>Account Name</th>
             <th scope='col' className='text-center'>Created At</th>
-            <th scope='col' className='text-center'>Created By</th>
             <th scope='col' className='text-center'>Domain</th>
+            <th scope='col' className='text-center'>Actions</th>
           </tr>
         </thead>
-        <tbody>
-          <tr>
-            <td className='text-left'>test</td>
-            <td className='text-left'>test</td>
-            <td className='text-left'>test</td>
-            <td className='text-left'>test</td>
-            <td className='text-left'>test</td>
-          </tr>
-          <tr>
-            <td className='text-left'>test</td>
-            <td className='text-left'>test</td>
-            <td className='text-left'>test</td>
-            <td className='text-left'>test</td>
-            <td className='text-left'>test</td>
-          </tr>
-          <tr>
-            <td className='text-left'>test</td>
-            <td className='text-left'>test</td>
-            <td className='text-left'>test</td>
-            <td className='text-left'>test</td>
-            <td className='text-left'>test</td>
-          </tr>
-        </tbody>
+        {contendTable()}
       </Table>
       <Row className='p-2'>
         <Col className='col-4'>
@@ -140,6 +282,11 @@ const TableDetail = () => {
                   value={singleSelect}
                   onChange={(value) => {
                     setSingleSelect(value)
+                    setVariables({
+                      ...variables,
+                      page: 1,
+                      perPage: parseInt(value.value)
+                    })
                   }}
                   options={[
                     {
@@ -159,25 +306,62 @@ const TableDetail = () => {
           </FormGroup>
         </Col>
         <Col className='col-8'>
-          <div className='maxPaginatio'>
-            <Pagination>
-              <PaginationItem>
-                <PaginationLink>
+          {
+            (error) ? null
+              : (data && data.projects.docs.length !== 0) &&
+                <div className='maxPaginatio'>
+                  <Pagination>
+                    <PaginationItem
+                      disabled={!((loading || variables.page !== 1))}
+                    >
+                      <PaginationLink
+                        onClick={(e) => {
+                          setVariables({
+                            ...variables,
+                            page: variables.page + -1
+                          })
+                        }}
+                      >
                       Previous
-                </PaginationLink>
-              </PaginationItem>
-              <PaginationItem>
-                <PaginationLink>
-                    1
-                </PaginationLink>
-              </PaginationItem>
-              <PaginationItem>
-                <PaginationLink>
+                      </PaginationLink>
+                    </PaginationItem>
+                    {
+                      [...Array(data.projects.pages)].map((pagina, index) => (
+                        <PaginationItem
+                          disabled={loading}
+                          key={index}
+                          active={variables.page === index + 1}
+                        >
+                          <PaginationLink
+                            onClick={(e) => {
+                              setVariables({
+                                ...variables,
+                                page: index + 1
+                              })
+                            }}
+                          >
+                            {index + 1}
+                          </PaginationLink>
+                        </PaginationItem>
+                      ))
+                    }
+                    <PaginationItem
+                      disabled={!((loading) || data.projects.pages !== variables.page)}
+                    >
+                      <PaginationLink
+                        onClick={(e) => {
+                          setVariables({
+                            ...variables,
+                            page: variables.page + 1
+                          })
+                        }}
+                      >
                       Next
-                </PaginationLink>
-              </PaginationItem>
-            </Pagination>
-          </div>
+                      </PaginationLink>
+                    </PaginationItem>
+                  </Pagination>
+                </div>
+          }
         </Col>
       </Row>
 
