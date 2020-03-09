@@ -1,7 +1,11 @@
 import React from 'react'
 import { Card, Row, CardBody, CardTitle, Button, Col, Badge, UncontrolledTooltip } from 'reactstrap'
+import UseContex from './store'
 
 const CardRole = (props) => {
+  const STORE = React.useContext(UseContex.contextStore)
+
+  // console.log(STORE)
   return (
     <Card className='card-stats'>
       <CardBody>
@@ -20,13 +24,20 @@ const CardRole = (props) => {
                 delay={0}
                 target={`editButton_${props.rolaData.id}`}
               >
-                    Edit Role
+                Edit Role
               </UncontrolledTooltip>
               <Button
                 size='ms'
                 className='btn-simple btn-link'
                 color='warning'
                 id={`editButton_${props.rolaData.id}`}
+                onClick={(e) => {
+                  console.log(props.rolaData.id)
+                  STORE.setState({
+                    idRole: props.rolaData.id
+                  })
+                  props.setOpenModal(true)
+                }}
               >
                 <i style={{ marginTop: '-6px' }} className='tim-icons icon-pencil' />
               </Button>
@@ -34,7 +45,7 @@ const CardRole = (props) => {
                 delay={0}
                 target={`deleteButton_${props.rolaData.id}`}
               >
-                    Delete Role
+                Delete Role
               </UncontrolledTooltip>
               <Button
                 size='ms'
