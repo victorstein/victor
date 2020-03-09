@@ -8,6 +8,7 @@ import gql from 'graphql-tag'
 import classnames from 'classnames'
 import { BeatLoader } from 'react-spinners'
 import ModalRole from './ModalRole'
+import UseContex from './store'
 
 const roles = gql`
   query roles(
@@ -50,7 +51,9 @@ const CreateRole = (props) => {
 
   const [openModal, setOpenModal] = useState(false)
 
-  const [idRole, setIdRole] = useState(null)
+  const [store, setStore] = useState({
+    idRole: null
+  })
 
   const { loading, error, data } = useQuery(roles, { variables, fetchPolicy: 'no-cache' })
 
@@ -80,7 +83,7 @@ const CreateRole = (props) => {
         {
           data.roles.docs.map((value, index) => (
             <Col className='col-4' key={index}>
-              <CardRole rolaData={value} />
+              <CardRole setOpenModal={setOpenModal} rolaData={value} />
             </Col>
           )
           )
@@ -90,69 +93,79 @@ const CreateRole = (props) => {
   }
 
   return (
-    <div className='content'>
-      <ModalRole idRole={idRole} openModal={openModal} setOpenModal={setOpenModal} />
-      <h1 className='mb-0'>Create Role</h1>
-      <div className='container p-2 m-2'>
-        <Row>
-          <Col className='col-2 d-flex align-items-center'>
-            <Button
-              onClick={(e) => setOpenModal(true)}
-              className='btn-simple'
-              color='success'
-            >
-              <i className='fas fa-plus-circle mr-2' />
+    <UseContex.Provider value={{
+      state: store,
+      setState: (params) => {
+        setStore(params)
+      }
+    }}
+    >
+      <div className='content'>
+        {
+          (openModal) && <ModalRole openModal={openModal} setOpenModal={setOpenModal} />
+        }
+        <h1 className='mb-0'>Create Role</h1>
+        <div className='container p-2 m-2'>
+          <Row>
+            <Col className='col-2 d-flex align-items-center'>
+              <Button
+                onClick={(e) => setOpenModal(true)}
+                className='btn-simple'
+                color='success'
+              >
+                <i className='fas fa-plus-circle mr-2' />
               Add Role
-            </Button>
-          </Col>
-          <Col className='col-8'>
-            <Label>
+              </Button>
+            </Col>
+            <Col className='col-8'>
+              <Label>
               Filter by Role Name
-            </Label>
-            <InputGroup
-              size='sm'
-              className={`max-whit text-left ${classnames({
+              </Label>
+              <InputGroup
+                size='sm'
+                className={`max-whit text-left ${classnames({
             'input-group-focus': focusInput.inputRoleName.focus
           })}`}
-            >
-              <InputGroupAddon addonType='prepend'>
-                <InputGroupText><i className='fas fa-search' /></InputGroupText>
-              </InputGroupAddon>
-              <Input
-                style={{ maxWidth: '50%' }}
-                type='text'
-                placeholder='Role Name'
-                bsSize='sm'
-                // onChange={(e) => {
-                //   e.preventDefault()
-                //   setFiltersValue({
-                //     ...filtersValue,
-                //     SITENAME: e.target.value
-                //   })
-                // // updateFilter(e.target.value, 'SITENAME')
-                // }}
-                onFocus={(e) => setFocusInput({
-                  ...focusInput,
-                  inputRoleName: {
-                    focus: true
-                  }
-                })}
-                onBlur={(e) => setFocusInput({
-                  ...focusInput,
-                  inputRoleName: {
-                    focus: false
-                  }
-                })}
-              />
-            </InputGroup>
-          </Col>
-        </Row>
+              >
+                <InputGroupAddon addonType='prepend'>
+                  <InputGroupText><i className='fas fa-search' /></InputGroupText>
+                </InputGroupAddon>
+                <Input
+                  style={{ maxWidth: '50%' }}
+                  type='text'
+                  placeholder='Role Name'
+                  bsSize='sm'
+                  // onChange={(e) => {
+                  //   e.preventDefault()
+                  //   setFiltersValue({
+                  //     ...filtersValue,
+                  //     SITENAME: e.target.value
+                  //   })
+                  // // updateFilter(e.target.value, 'SITENAME')
+                  // }}
+                  onFocus={(e) => setFocusInput({
+                    ...focusInput,
+                    inputRoleName: {
+                      focus: true
+                    }
+                  })}
+                  onBlur={(e) => setFocusInput({
+                    ...focusInput,
+                    inputRoleName: {
+                      focus: false
+                    }
+                  })}
+                />
+              </InputGroup>
+            </Col>
+          </Row>
 
-        <div className='content pt-2 mt-2'>
-          {Contend()}
+          <div className='content pt-2 mt-2'>
+            {Contend()}
+          </div>
         </div>
       </div>
-    </div>
+    </UseContex.Provider>
   )
 }
 
