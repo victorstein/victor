@@ -32,7 +32,6 @@ const CardRole = (props) => {
                 color='warning'
                 id={`editButton_${props.rolaData.id}`}
                 onClick={(e) => {
-                  console.log(props.rolaData.id)
                   STORE.setState({
                     idRole: props.rolaData.id
                   })
