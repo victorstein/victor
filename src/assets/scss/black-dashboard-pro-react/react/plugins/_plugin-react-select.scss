@@ -319,23 +319,23 @@ This file was modified entirely by Creative Tim for React-Select v2.0.0
       &.react-select__control--is-focused {
         &,
         &:hover {
-          border-color: $danger;
+          border-color: #f33620;
         }
       }
       .react-select__value-container--has-value {
         .react-select__single-value,
         .react-select__multi-value__label {
-          color: $danger;
+          color: #ec250d;
         }
       }
     }
     .react-select__multi-value {
-      border: 1px solid $danger;
+      border: 1px solid #f33620;
       .react-select__multi-value__remove {
-        color: $danger-opacity;
-        border-left: 1px solid $danger-opacity;
+        color: #f3352065;
+        border-left: 1px solid #f3352065;
         &:hover {
-          color: $danger;
+          color: #f33620;
           background-color: transparent;
         }
       }
