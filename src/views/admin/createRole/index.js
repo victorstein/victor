@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import { Button, InputGroup, InputGroupAddon, InputGroupText, Input, Label } from 'reactstrap'
 import CardRole from './CardRole'
 import Row from 'reactstrap/lib/Row'
@@ -9,6 +9,8 @@ import classnames from 'classnames'
 import { BeatLoader } from 'react-spinners'
 import ModalRole from './ModalRole'
 import UseContex from './store'
+import './StylesRole.scss'
+import AlertGlobal from '../../../components/AlertGlobal'
 
 const roles = gql`
   query roles(
@@ -38,6 +40,7 @@ const roles = gql`
 `
 
 const CreateRole = (props) => {
+  const myInputAlert = useRef()
   const [focusInput, setFocusInput] = useState({
     inputRoleName: {
       focus: false
@@ -91,6 +94,33 @@ const CreateRole = (props) => {
       </Row>
     )
   }
+  const Alert = () => {
+    const options = {
+      message: 'Trolazoooo',
+      options: {
+        icon: 'icon-bell-55',
+        type: 'dark',
+        autoDismiss: 4,
+        place: 'bl'
+      }
+    }
+    myInputAlert.current.showAlert(options)
+  }
+
+  useEffect(() => {
+    if (!error) {
+      const options = {
+        message: 'Trolazoooo',
+        options: {
+          icon: 'icon-bell-55',
+          type: 'dark',
+          autoDismiss: 4,
+          place: 'bl'
+        }
+      }
+      myInputAlert.current.showAlert(options)
+    }
+  }, [error])
 
   return (
     <UseContex.Provider value={{
@@ -100,6 +130,7 @@ const CreateRole = (props) => {
       }
     }}
     >
+      <AlertGlobal ref={myInputAlert} />
       <div className='content'>
         {
           (openModal) && <ModalRole openModal={openModal} setOpenModal={setOpenModal} />
@@ -109,7 +140,9 @@ const CreateRole = (props) => {
           <Row>
             <Col className='col-2 d-flex align-items-center'>
               <Button
-                onClick={(e) => setOpenModal(true)}
+                onClick={(e) => {
+                  setOpenModal(true)
+                }}
                 className='btn-simple'
                 color='success'
               >
