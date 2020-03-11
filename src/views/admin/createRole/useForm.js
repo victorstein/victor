@@ -6,8 +6,8 @@ const validationForm = (values, schemaValidation, onBlurState) => {
   const classNames = {}
   try {
     const result = schemaValidation.validate(values, { abortEarly: false })
-    console.log(values)
-    console.log(result)
+    // console.log(values)
+    // console.log(result)
     result.error.details.map((inputError) => {
       if (onBlurState[inputError.path[0]]) {
         errors[inputError.path[0]] = inputError.message
