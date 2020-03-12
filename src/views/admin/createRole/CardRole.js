@@ -1,11 +1,53 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import { Card, Row, CardBody, CardTitle, Button, Col, Badge, UncontrolledTooltip } from 'reactstrap'
 import UseContex from './store'
+import { useMutation } from '@apollo/react-hooks'
+import gql from 'graphql-tag'
+
+const deleteRoleByid = gql`
+  mutation deleteRoleByid(
+  $id : String!
+  ){
+  deleteRoleById(id : $id)
+  }
+`
 
 const CardRole = (props) => {
   const STORE = React.useContext(UseContex.contextStore)
 
-  // console.log(STORE)
+  const [sendMutation, setSendMutation] = useState(false)
+
+  const [deleteRoleMutation, { loading, error }] = useMutation(deleteRoleByid, {
+    refetchQueries: ['roles']
+  })
+
+  useEffect(() => {
+    if (sendMutation) {
+      if (!loading) {
+        STORE.actions.AlertGloval({
+          message: 'Prueba Alert',
+          options: {
+            icon: 'icon-bulb-63',
+            type: 'info',
+            autoDismiss: 4,
+            place: 'tr'
+          }
+        })
+      }
+    }
+  }, [sendMutation])
+
+  const deleteRole = async (e) => {
+    e.preventDefault()
+    await deleteRoleMutation({
+      variables: {
+        id: props.rolaData.id
+      }
+    })
+    setSendMutation(true)
+    // console.log('idRole', props.rolaData.id)
+  }
+
   return (
     <Card className='card-stats'>
       <CardBody>
@@ -51,10 +93,7 @@ const CardRole = (props) => {
                 className='btn-simple btn-link'
                 color='danger'
                 id={`deleteButton_${props.rolaData.id}`}
-                // onClick={(e) => setAlertDelete({
-                //   visible: true,
-                //   user: value
-                // })}
+                onClick={(e) => deleteRole(e)}
               >
                 <i style={{ marginTop: '-6px' }} className='tim-icons icon-simple-remove' />
               </Button>
@@ -68,7 +107,8 @@ const CardRole = (props) => {
             style={{
               overflowX: 'hidden',
               maxHeight: '180px',
-              height: '180px'
+              height: '180px',
+              padding: '2px'
             }}
           >
             <Row>
