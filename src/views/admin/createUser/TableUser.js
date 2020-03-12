@@ -248,21 +248,26 @@ const TableUser = (props) => {
           <ReactBSAlert
             warning
             showCancel
-            loading
-            confirmBtnText='Yes, delete it!'
-            confirmBtnBsStyle='danger'
-            cancelBtnBsStyle='success'
             title='Atention!'
             onConfirm={(e) => deleteUser()}
-            onCancel={(e) => setAlertDelete({
-              visible: false,
-              user: null
-            })}
             customButtons={
-              <div>
-                <Button>Cancel</Button>
+              <>
                 <Button
+                  color='danger'
+                  className='animation-on-hover'
                   disabled={reqDeleteUser.loading}
+                  onClick={(e) => setAlertDelete({
+                    visible: false,
+                    user: null
+                  })}
+                >
+                Cancel
+                </Button>
+                <Button
+                  color='info'
+                  className='animation-on-hover'
+                  disabled={reqDeleteUser.loading}
+                  onClick={(e) => deleteUser()}
                 >
                   {
                     (reqDeleteUser.loading)
@@ -276,7 +281,7 @@ const TableUser = (props) => {
                       : ' Yes, delete it!'
                   }
                 </Button>
-              </div>
+              </>
             }
             focusCancelBtn
           >
