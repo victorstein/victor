@@ -10,8 +10,10 @@ import {
 import Select from 'react-select'
 import useForm from './useForm'
 import schema from './schemaForm'
+import { ClipLoader } from 'react-spinners'
 
 const FormModal = (props) => {
+  const { name, permissions, arrayPermissions } = props.defaultValue
   const {
     values,
     handleChange,
@@ -21,7 +23,7 @@ const FormModal = (props) => {
     classNames,
     handleChangeReactSelect,
     handleBlurReactSelect
-  } = useForm(props.submitForm, props.defaultValue, schema)
+  } = useForm(props.submitForm, { name: name, permissions: arrayPermissions }, schema)
 
   // console.log('props.defaultValue', props.defaultValue)
   // console.log(props.allPermissions)
@@ -77,7 +79,7 @@ const FormModal = (props) => {
                 isDisabled={props.loadingPermissions && values}
                 isLoading={props.loadingPermissions}
                 styles={styles}
-                defaultValue={values.permissions || null}
+                defaultValue={permissions || null}
                 onChange={(value) => {
                   const newArrayString = {
                     value: value.map((index) => (
@@ -127,18 +129,18 @@ const FormModal = (props) => {
                   type='submit'
                   className='w-100'
                   color={(props.STORE.state.idRole === null) ? 'info' : 'success'}
+                  disabled={props.loadingReqMutations.reqCreateRoleMutations}
                 >
                   {
-                    // (reqUpdateUser.loading)
-                    //   ? (
-                    //     <ClipLoader
-                    //       color='#4A90E2'
-                    //       size={20}
-                    //       loading
-                    //     />
-                    //   )
-                    //   : 'Update'
-                    (props.STORE.state.idRole === null) ? 'Agregate' : 'Update'
+                    (props.loadingReqMutations.reqCreateRoleMutations)
+                      ? (
+                        <ClipLoader
+                          color='#FFFFFF'
+                          size={20}
+                          loading
+                        />
+                      )
+                      : (props.STORE.state.idRole === null) ? 'Agregate' : 'Update'
                   }
                 </Button>
               </Col>
