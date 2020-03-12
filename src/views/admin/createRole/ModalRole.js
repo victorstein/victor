@@ -6,7 +6,7 @@ import {
 } from 'reactstrap'
 import UseContex from './store'
 import gql from 'graphql-tag'
-import { useLazyQuery, useQuery } from '@apollo/react-hooks'
+import { useLazyQuery, useQuery, useMutation } from '@apollo/react-hooks'
 import FormModal from './FormModal'
 import { BeatLoader } from 'react-spinners'
 import Lottie from 'react-lottie'
@@ -22,6 +22,26 @@ const roleByid = gql`
         id
         name
       }
+  }
+}
+`
+
+const createRole = gql`
+  mutation createRole(
+  $name : String!,
+  $permissions : [String!]
+)
+{
+  createRole(
+      name : $name
+      permissions : $permissions
+  ){
+    id
+    name
+    permissions{
+      id
+      name
+    }
   }
 }
 `
@@ -68,8 +88,37 @@ const ModalRole = (props) => {
 
   const reqPermissions = useQuery(permissions, { variables: { ...variables }, fetchPolicy: 'no-cache' })
 
-  const submitForm = () => {
-    console.log('submitForm')
+  const [createRoleMutations, reqCreateRoleMutations] = useMutation(createRole, {
+    refetchQueries: ['roles'], awaitRefetchQueries: true
+  })
+
+  const submitForm = async (value) => {
+    const { name, permissions } = value
+    try {
+      if (idRole) {
+        alert('update')
+        console.log('valuesForm', { name, permissions })
+      } else {
+        await createRoleMutations({
+          variables: {
+            name: name,
+            permissions: permissions
+          }
+        })
+        props.setOpenModal(false)
+        STORE.actions.AlertGloval({
+          message: 'Create Role Successfully',
+          options: {
+            icon: 'icon-bulb-63',
+            type: 'info',
+            autoDismiss: 4,
+            place: 'tr'
+          }
+        })
+      }
+    } catch (e) {
+      console.log(e)
+    }
   }
   useEffect(() => {
     if (idRole !== null) {
@@ -119,12 +168,19 @@ const ModalRole = (props) => {
   }, [reqPermissions.error, reqQueryRolebyid.error])
 
   let defaultPermissions = null
+  let arrayPermissions = null
 
   if (reqQueryRolebyid.data) {
     defaultPermissions = reqQueryRolebyid.data.roleById.permissions.map(u => ({
       value: u.id,
       label: u.name
     }))
+  }
+
+  if (reqQueryRolebyid.data) {
+    arrayPermissions = reqQueryRolebyid.data.roleById.permissions.map((index) => (
+      index.id
+    ))
   }
 
   const contedModal = () => {
@@ -156,6 +212,9 @@ const ModalRole = (props) => {
           variables={variables}
           loadingPermissions={reqPermissions.loading}
           submitForm={submitForm}
+          loadingReqMutations={{
+            reqCreateRoleMutations: reqCreateRoleMutations.loading
+          }}
           allPermissions={(reqPermissions.data) ? reqPermissions.data.permissions.docs : []}
           STORE={STORE}
           setOpenModal={props.setOpenModal}
@@ -184,17 +243,23 @@ const ModalRole = (props) => {
           setVariables={setVariables}
           variables={variables}
           submitForm={submitForm}
+          loadingReqMutations={{
+            reqCreateRoleMutations: reqCreateRoleMutations.loading
+          }}
           allPermissions={reqPermissions.data.permissions.docs}
           STORE={STORE}
           setOpenModal={props.setOpenModal}
           defaultValue={{
             name: reqQueryRolebyid.data.roleById.name,
-            permissions: defaultPermissions
+            permissions: defaultPermissions,
+            arrayPermissions: arrayPermissions
           }}
         />
       )
     }
   }
+
+  console.log('STORE', STORE)
 
   return (
     <Modal style={{ marginTop: '64px' }} isOpen={props.openModal} size='ms'>
@@ -222,6 +287,22 @@ const ModalRole = (props) => {
           </Button>
         </div>
       </ModalHeader>
+      {
+        // <button
+        //   onClick={(e) =>
+        //     STORE.actions.AlertGloval({
+        //       message: 'Create Role Successfully',
+        //       options: {
+        //         icon: 'icon-bulb-63',
+        //         type: 'success',
+        //         autoDismiss: 4,
+        //         place: 'tr'
+        //       }
+        //     })}
+        // >safasf
+        // </button>
+      }
+
       {contedModal()}
     </Modal>
   )

@@ -59,7 +59,7 @@ const useForm = (submitForm, defaultValues, schema) => {
     setOnBlurState(newBlurState)
     if (Object.keys(errors).length === 0) {
       if (event) event.preventDefault()
-      submitForm()
+      submitForm(values)
     }
     if (event) event.preventDefault()
   }
