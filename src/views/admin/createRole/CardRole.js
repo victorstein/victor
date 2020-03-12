@@ -3,6 +3,8 @@ import { Card, Row, CardBody, CardTitle, Button, Col, Badge, UncontrolledTooltip
 import UseContex from './store'
 import { useMutation } from '@apollo/react-hooks'
 import gql from 'graphql-tag'
+import SweetAlert from 'react-bootstrap-sweetalert'
+import { BeatLoader, ClipLoader } from 'react-spinners'
 
 const deleteRoleByid = gql`
   mutation deleteRoleByid(
@@ -16,40 +18,82 @@ const CardRole = (props) => {
   const STORE = React.useContext(UseContex.contextStore)
 
   const [sendMutation, setSendMutation] = useState(false)
+  const [visibleDeleteModal, setVisibleDeleteMOdal] = useState(false)
 
   const [deleteRoleMutation, { loading, error }] = useMutation(deleteRoleByid, {
-    refetchQueries: ['roles']
+    refetchQueries: ['roles'], awaitRefetchQueries: true
   })
 
   useEffect(() => {
     if (sendMutation) {
-      if (!loading) {
-        STORE.actions.AlertGloval({
-          message: 'Prueba Alert',
-          options: {
-            icon: 'icon-bulb-63',
-            type: 'info',
-            autoDismiss: 4,
-            place: 'tr'
-          }
-        })
-      }
+      STORE.actions.AlertGloval({
+        message: 'Prueba Alert',
+        options: {
+          icon: 'icon-bulb-63',
+          type: 'info',
+          autoDismiss: 4,
+          place: 'tr'
+        }
+      })
     }
   }, [sendMutation])
 
-  const deleteRole = async (e) => {
-    e.preventDefault()
+  const deleteRole = async () => {
+    setSendMutation(true)
     await deleteRoleMutation({
       variables: {
         id: props.rolaData.id
       }
     })
-    setSendMutation(true)
     // console.log('idRole', props.rolaData.id)
   }
 
   return (
     <Card className='card-stats'>
+      {
+        (visibleDeleteModal) &&
+          <SweetAlert
+            warning
+            showCancel
+            onConfirm={(e) => deleteRole()}
+            title='Atention!'
+            customButtons={
+              <div>
+                <Button
+                  color='danger'
+                  className='animation-on-hover'
+                  onClick={(e) => setVisibleDeleteMOdal(false)}
+                  disabled={loading}
+                >Cancel
+                </Button>
+                <Button
+                  color='info'
+                  className='animation-on-hover'
+                  onClick={(e) => deleteRole()}
+                  disabled={loading}
+                >
+                  {
+                    (loading)
+                      ? (
+                        <ClipLoader
+                          size={20}
+                          color='#FFFFFF'
+                          loading
+                        />
+                      )
+                      : ' Yes, delete it!'
+                  }
+                </Button>
+              </div>
+            }
+            focusCancelBtn
+          >
+            <p style={{ color: 'black' }}>
+              <span>Are you sure you want to delete the role :</span>
+            </p>
+            <strong> {props.rolaData.name}</strong>
+          </SweetAlert>
+      }
       <CardBody>
         <Row>
           <Col>
@@ -93,7 +137,7 @@ const CardRole = (props) => {
                 className='btn-simple btn-link'
                 color='danger'
                 id={`deleteButton_${props.rolaData.id}`}
-                onClick={(e) => deleteRole(e)}
+                onClick={(e) => setVisibleDeleteMOdal(true)}
               >
                 <i style={{ marginTop: '-6px' }} className='tim-icons icon-simple-remove' />
               </Button>
