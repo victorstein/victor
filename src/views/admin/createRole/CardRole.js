@@ -4,7 +4,7 @@ import UseContex from './store'
 import { useMutation } from '@apollo/react-hooks'
 import gql from 'graphql-tag'
 import SweetAlert from 'react-bootstrap-sweetalert'
-import { BeatLoader, ClipLoader } from 'react-spinners'
+import { ClipLoader } from 'react-spinners'
 
 const deleteRoleByid = gql`
   mutation deleteRoleByid(
@@ -17,7 +17,7 @@ const deleteRoleByid = gql`
 const CardRole = (props) => {
   const STORE = React.useContext(UseContex.contextStore)
 
-  const [sendMutation, setSendMutation] = useState(false)
+  // const [sendMutation, setSendMutation] = useState(false)
   const [visibleDeleteModal, setVisibleDeleteMOdal] = useState(false)
 
   const [deleteRoleMutation, { loading, error }] = useMutation(deleteRoleByid, {
@@ -25,26 +25,48 @@ const CardRole = (props) => {
   })
 
   useEffect(() => {
-    if (sendMutation) {
+    let messageError = ''
+    if (error) {
+      if (Array.isArray(error.graphQLErrors)) {
+        messageError = error.graphQLErrors[0].message[0]
+      } else {
+        messageError = error.graphQLErrors
+      }
+      console.log('messageError', error.graphQLErrors)
       STORE.actions.AlertGloval({
-        message: 'Prueba Alert',
+        message: messageError,
         options: {
-          icon: 'icon-bulb-63',
-          type: 'info',
+          icon: 'icon-alert-circle-exc',
+          type: 'danger',
           autoDismiss: 4,
           place: 'tr'
         }
       })
+      setVisibleDeleteMOdal(false)
     }
-  }, [sendMutation])
+  }, [error])
 
   const deleteRole = async () => {
-    setSendMutation(true)
-    await deleteRoleMutation({
-      variables: {
-        id: props.rolaData.id
+    try {
+      await deleteRoleMutation({
+        variables: {
+          id: props.rolaData.id
+        }
+      })
+      if (!error) {
+        STORE.actions.AlertGloval({
+          message: 'Delete Role Successfully',
+          options: {
+            icon: 'icon-bulb-63',
+            type: 'info',
+            autoDismiss: 4,
+            place: 'tr'
+          }
+        })
       }
-    })
+    } catch (e) {
+      console.log(e)
+    }
     // console.log('idRole', props.rolaData.id)
   }
 
@@ -58,7 +80,7 @@ const CardRole = (props) => {
             onConfirm={(e) => deleteRole()}
             title='Atention!'
             customButtons={
-              <div>
+              <>
                 <Button
                   color='danger'
                   className='animation-on-hover'
@@ -84,7 +106,7 @@ const CardRole = (props) => {
                       : ' Yes, delete it!'
                   }
                 </Button>
-              </div>
+              </>
             }
             focusCancelBtn
           >
