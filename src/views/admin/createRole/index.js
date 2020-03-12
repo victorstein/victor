@@ -11,6 +11,9 @@ import ModalRole from './ModalRole'
 import UseContex from './store'
 import './StylesRole.scss'
 import AlertGlobal from '../../../components/AlertGlobal'
+import Lottie from 'react-lottie'
+import animationEmptyBox from '../../../assets/lottie/emptyBox.json'
+import animationServerError from '../../../assets/lottie/serverError.json'
 
 const roles = gql`
   query roles(
@@ -57,6 +60,9 @@ const CreateRole = (props) => {
   const [store, setStore] = useState({
     idRole: null
   })
+  const [filtersValue, setFiltersValue] = useState({
+    NAME: ''
+  })
 
   const { loading, error, data } = useQuery(roles, { variables, fetchPolicy: 'no-cache' })
 
@@ -73,58 +79,125 @@ const CreateRole = (props) => {
       )
     }
 
-    if (data.roles.docs.length === 0) {
+    if (error) {
+      const defaultOptions = {
+        loop: true,
+        autoplay: true,
+        animationData: animationServerError,
+        rendererSettings: {
+          preserveAspectRatio: 'xMidYMid slice'
+        }
+      }
       return (
         <div className='d-flex justify-content-center p-2 m-2'>
-            No Data
+          <Lottie
+            isClickToPauseDisabled
+            options={defaultOptions}
+            height='40%'
+            width='40%'
+          />
         </div>
       )
     }
 
-    return (
-      <Row>
-        {
-          data.roles.docs.map((value, index) => (
-            <Col className='col-4' key={index}>
-              <CardRole setOpenModal={setOpenModal} rolaData={value} />
-            </Col>
-          )
-          )
+    if (data) {
+      if (data.roles.docs.length === 0) {
+        const defaultOptions = {
+          loop: true,
+          autoplay: true,
+          animationData: animationEmptyBox,
+          rendererSettings: {
+            preserveAspectRatio: 'xMidYMid slice'
+          }
         }
-      </Row>
-    )
-  }
-  const Alert = () => {
-    const options = {
-      message: 'Trolazoooo',
-      options: {
-        icon: 'icon-bell-55',
-        type: 'dark',
-        autoDismiss: 4,
-        place: 'bl'
+
+        return (
+          <div className='d-flex justify-content-center p-2 m-2'>
+            <Lottie
+              isClickToPauseDisabled
+              options={defaultOptions}
+              height='40%'
+              width='40%'
+            />
+          </div>
+        )
       }
+
+      return (
+        <Row>
+          {
+            data.roles.docs.map((value, index) => (
+              <Col className='col-4' key={index}>
+                <CardRole setOpenModal={setOpenModal} rolaData={value} />
+              </Col>
+            ))
+          }
+        </Row>
+      )
     }
-    myInputAlert.current.showAlert(options)
   }
 
   useEffect(() => {
-    if (!error) {
+    if (error) {
+      let messageError = ''
+      if (Array.isArray(error.graphQLErrors)) {
+        messageError = error.graphQLErrors[0].message[0]
+      } else {
+        messageError = error.graphQLErrors
+      }
+      console.log('messageError', error.graphQLErrors)
       const options = {
-        message: 'Trolazoooo',
+        message: (Array.isArray(messageError)) ? messageError[0] : messageError,
         options: {
-          icon: 'icon-bell-55',
-          type: 'dark',
+          icon: 'icon-alert-circle-exc',
+          type: 'danger',
           autoDismiss: 4,
-          place: 'bl'
+          place: 'tr'
         }
       }
       myInputAlert.current.showAlert(options)
     }
-  }, [error])
+
+    if (data) {
+      if (data.roles.docs.length === 0) {
+        const options = {
+          message: 'No Data',
+          options: {
+            icon: 'icon-bulb-63',
+            type: 'info',
+            autoDismiss: 4,
+            place: 'tr'
+          }
+        }
+        myInputAlert.current.showAlert(options)
+      }
+    }
+  }, [error, data])
+
+  useEffect(() => {
+    const newFilter = []
+    if (filtersValue.NAME) {
+      newFilter.push({
+        field: 'NAME',
+        value: filtersValue.NAME
+      })
+    }
+    setVariables({
+      ...variables,
+      filters: newFilter
+    })
+  }, [filtersValue])
+
+  const actionsAlertGloval = (options) => {
+    myInputAlert.current.showAlert(options)
+  }
 
   return (
     <UseContex.Provider value={{
       state: store,
+      actions: {
+        AlertGloval: actionsAlertGloval
+      },
       setState: (params) => {
         setStore(params)
       }
@@ -168,14 +241,15 @@ const CreateRole = (props) => {
                   type='text'
                   placeholder='Role Name'
                   bsSize='sm'
-                  // onChange={(e) => {
-                  //   e.preventDefault()
-                  //   setFiltersValue({
-                  //     ...filtersValue,
-                  //     SITENAME: e.target.value
-                  //   })
-                  // // updateFilter(e.target.value, 'SITENAME')
-                  // }}
+                  disabled={(data) ? (data.roles.docs.length === 0) : false}
+                  onChange={(e) => {
+                    e.preventDefault()
+                    setFiltersValue({
+                      ...filtersValue,
+                      NAME: e.target.value
+                    })
+                  // updateFilter(e.target.value, 'SITENAME')
+                  }}
                   onFocus={(e) => setFocusInput({
                     ...focusInput,
                     inputRoleName: {

@@ -74,7 +74,7 @@ const FormModal = (props) => {
                 autoFocus={(classNames.permissions === 'has-danger')}
                 closeMenuOnSelect={false}
                 isMulti
-                isDisabled={props.loadingPermissions}
+                isDisabled={props.loadingPermissions && values}
                 isLoading={props.loadingPermissions}
                 styles={styles}
                 defaultValue={values.permissions || null}
