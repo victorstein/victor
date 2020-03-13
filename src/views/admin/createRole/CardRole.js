@@ -5,6 +5,8 @@ import { useMutation } from '@apollo/react-hooks'
 import gql from 'graphql-tag'
 import SweetAlert from 'react-bootstrap-sweetalert'
 import { ClipLoader } from 'react-spinners'
+import Lottie from 'react-lottie'
+import animationEmptyBox from '../../../assets/lottie/emptyBox.json'
 
 const deleteRoleByid = gql`
   mutation deleteRoleByid(
@@ -28,10 +30,11 @@ const CardRole = (props) => {
     let messageError = ''
     if (error) {
       if (Array.isArray(error.graphQLErrors)) {
-        messageError = error.graphQLErrors[0].message[0]
+        messageError = error.graphQLErrors[0].message
       } else {
         messageError = error.graphQLErrors
       }
+      console.log(messageError)
       console.log('messageError', error.graphQLErrors)
       STORE.actions.AlertGloval({
         message: messageError,
@@ -169,27 +172,50 @@ const CardRole = (props) => {
 
         <div className='container'>
           <h4 className='text-center'>Permissions</h4>
-          <div
-            style={{
-              overflowX: 'hidden',
-              maxHeight: '180px',
-              height: '180px',
-              padding: '2px'
-            }}
-          >
-            <Row>
-              {
-                props.rolaData.permissions.map((value, index) => (
-                  <Col
-                    key={index}
-                    className='pr-0 flex-grow-0'
-                  >
-                    <Badge color='info'>{value.name}</Badge>
-                  </Col>
-                ))
-              }
-            </Row>
-          </div>
+
+          {
+            (props.rolaData.permissions.length !== 0) ? (
+              <div
+                style={{
+                  overflowX: 'hidden',
+                  maxHeight: '180px',
+                  height: '180px',
+                  padding: '2px'
+                }}
+              >
+                <Row>
+                  {
+                    props.rolaData.permissions.map((value, index) => (
+                      <Col
+                        key={index}
+                        className='pr-0 flex-grow-0'
+                      >
+                        <Badge color='info'>{value.name}</Badge>
+                      </Col>
+                    ))
+                  }
+                </Row>
+              </div>
+            ) : (
+              <Col className='col-12'>
+                <div style={{ overflow: 'auto' }}>
+                  <Lottie
+                    isClickToPauseDisabled
+                    options={{
+                      loop: true,
+                      autoplay: true,
+                      animationData: animationEmptyBox,
+                      rendererSettings: {
+                        preserveAspectRatio: 'xMidYMid slice'
+                      }
+                    }}
+                    height='79%'
+                    width='76%'
+                  />
+                </div>
+              </Col>
+            )
+          }
         </div>
       </CardBody>
     </Card>
