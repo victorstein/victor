@@ -76,7 +76,7 @@ const FormModal = (props) => {
                 autoFocus={(classNames.permissions === 'has-danger')}
                 closeMenuOnSelect={false}
                 isMulti
-                isDisabled={props.loadingPermissions && values}
+                isDisabled={props.loadingPermissions && !values}
                 isLoading={props.loadingPermissions}
                 styles={styles}
                 defaultValue={permissions || null}
@@ -129,10 +129,10 @@ const FormModal = (props) => {
                   type='submit'
                   className='w-100'
                   color={(props.STORE.state.idRole === null) ? 'info' : 'success'}
-                  disabled={props.loadingReqMutations.reqCreateRoleMutations}
+                  disabled={props.loadingReqMutations.reqCreateRoleMutations || props.loadingReqMutations.reqUpdateRoleMutations}
                 >
                   {
-                    (props.loadingReqMutations.reqCreateRoleMutations)
+                    (props.loadingReqMutations.reqCreateRoleMutations || props.loadingReqMutations.reqUpdateRoleMutations)
                       ? (
                         <ClipLoader
                           color='#FFFFFF'
