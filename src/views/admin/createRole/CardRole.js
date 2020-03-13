@@ -56,6 +56,7 @@ const CardRole = (props) => {
           id: props.rolaData.id
         }
       })
+      setVisibleDeleteMOdal(false)
       if (!error) {
         STORE.actions.AlertGloval({
           message: 'Delete Role Successfully',
