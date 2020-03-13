@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import {
   Button,
   Modal,
@@ -18,6 +18,7 @@ import './stylesUser.scss'
 import { useMutation } from '@apollo/react-hooks'
 import gql from 'graphql-tag'
 import { ClipLoader } from 'react-spinners'
+import Lottie from 'react-lottie'
 
 const DEFAULT_VALUES = {
   name: '',
@@ -103,33 +104,34 @@ const ModalCreateUser = (props) => {
     }
   }
 
-  if (error) {
-    try {
-      if (props.errorAlert.error !== error.graphQLErrors) {
-        props.setErrorAlert({
-          visible: true,
-          error: error.graphQLErrors
-        })
-      }
-    } catch (e) {
-      console.log(e)
+  useEffect(() => {
+    if (error) {
+      props.actionsAlertGloval({
+        message: 'Error creating a new user',
+        options: {
+          icon: 'icon-alert-circle-exc',
+          type: 'danger',
+          autoDismiss: 4,
+          place: 'tr'
+        }
+      })
     }
-  }
 
-  if (error) { console.log('error', error.graphQLErrors) }
+    if (data) {
+      props.actionsAlertGloval({
+        message: 'Created User Successfully',
+        options: {
+          icon: 'icon-bulb-63',
+          type: 'info',
+          autoDismiss: 4,
+          place: 'tr'
+        }
+      })
+    }
+  }, [error, data])
 
   return (
     <div className='templateForm'>
-
-      {
-        // (error)
-        //   ? <AlertGlobal
-        //     type='danger'
-        //     icon='icon-alert-circle-exc'
-        //     message='Error : Error checking user list'
-        //   />
-        //   : null
-      }
       <Modal style={{ marginTop: '64px' }} isOpen={props.openModal} size='lg'>
         <ModalHeader>
           <div className='modal-header '>
