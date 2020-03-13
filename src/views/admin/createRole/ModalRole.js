@@ -26,6 +26,27 @@ const roleByid = gql`
 }
 `
 
+const updateRole = gql`
+  mutation updateRole(
+  $id : String!
+  $name : String!,
+  $newPermissions : [String!]
+){
+  updateRole(
+    name : $name
+    id : $id
+    newPermissions : $newPermissions
+  ){
+    id
+    name
+    permissions{
+      id
+      name
+    }
+  }
+}
+`
+
 const createRole = gql`
   mutation createRole(
   $name : String!,
@@ -92,12 +113,31 @@ const ModalRole = (props) => {
     refetchQueries: ['roles'], awaitRefetchQueries: true
   })
 
+  const [updateRoleMutations, reqUpdateRoleMutations] = useMutation(updateRole, {
+    refetchQueries: ['roles'], awaitRefetchQueries: true
+  })
+
   const submitForm = async (value) => {
     const { name, permissions } = value
     try {
       if (idRole) {
-        alert('update')
-        console.log('valuesForm', { name, permissions })
+        await updateRoleMutations({
+          variables: {
+            id: idRole,
+            name: name,
+            newPermissions: permissions
+          }
+        })
+        props.setOpenModal(false)
+        STORE.actions.AlertGloval({
+          message: 'Update Role Successfully',
+          options: {
+            icon: 'icon-bulb-63',
+            type: 'info',
+            autoDismiss: 4,
+            place: 'tr'
+          }
+        })
       } else {
         await createRoleMutations({
           variables: {
@@ -130,7 +170,7 @@ const ModalRole = (props) => {
     let messageError = ''
     if (reqPermissions.error) {
       if (Array.isArray(reqPermissions.error.graphQLErrors)) {
-        messageError = reqPermissions.error.graphQLErrors[0].message[0]
+        messageError = reqPermissions.error.graphQLErrors[0].message
       } else {
         messageError = reqPermissions.error.graphQLErrors
       }
@@ -149,7 +189,7 @@ const ModalRole = (props) => {
 
     if (reqQueryRolebyid.error) {
       if (Array.isArray(reqQueryRolebyid.error.graphQLErrors)) {
-        messageError = reqQueryRolebyid.error.graphQLErrors[0].message[0]
+        messageError = reqQueryRolebyid.error.graphQLErrors[0].message
       } else {
         messageError = reqQueryRolebyid.error.graphQLErrors
       }
@@ -165,7 +205,45 @@ const ModalRole = (props) => {
       }
       myInputAlert.current.showAlert(options)
     }
-  }, [reqPermissions.error, reqQueryRolebyid.error])
+
+    if (reqCreateRoleMutations.error) {
+      if (Array.isArray(reqCreateRoleMutations.error.graphQLErrors)) {
+        messageError = reqCreateRoleMutations.error.graphQLErrors[0].message
+      } else {
+        messageError = reqCreateRoleMutations.error.graphQLErrors
+      }
+      console.log('messageError', reqCreateRoleMutations.error.graphQLErrors)
+      const options = {
+        message: (Array.isArray(messageError)) ? messageError[0] : messageError,
+        options: {
+          icon: 'icon-alert-circle-exc',
+          type: 'danger',
+          autoDismiss: 4,
+          place: 'tr'
+        }
+      }
+      myInputAlert.current.showAlert(options)
+    }
+
+    if (reqUpdateRoleMutations.error) {
+      if (Array.isArray(reqUpdateRoleMutations.error.graphQLErrors)) {
+        messageError = reqUpdateRoleMutations.error.graphQLErrors[0].message
+      } else {
+        messageError = reqUpdateRoleMutations.error.graphQLErrors
+      }
+      console.log('messageError', reqUpdateRoleMutations.error.graphQLErrors)
+      const options = {
+        message: (Array.isArray(messageError)) ? messageError[0] : messageError,
+        options: {
+          icon: 'icon-alert-circle-exc',
+          type: 'danger',
+          autoDismiss: 4,
+          place: 'tr'
+        }
+      }
+      myInputAlert.current.showAlert(options)
+    }
+  }, [reqPermissions.error, reqQueryRolebyid.error, reqCreateRoleMutations.error, reqUpdateRoleMutations.error])
 
   let defaultPermissions = null
   let arrayPermissions = null
@@ -213,7 +291,8 @@ const ModalRole = (props) => {
           loadingPermissions={reqPermissions.loading}
           submitForm={submitForm}
           loadingReqMutations={{
-            reqCreateRoleMutations: reqCreateRoleMutations.loading
+            reqCreateRoleMutations: reqCreateRoleMutations.loading,
+            reqUpdateRoleMutations: reqUpdateRoleMutations.loading
           }}
           allPermissions={(reqPermissions.data) ? reqPermissions.data.permissions.docs : []}
           STORE={STORE}
@@ -244,7 +323,8 @@ const ModalRole = (props) => {
           variables={variables}
           submitForm={submitForm}
           loadingReqMutations={{
-            reqCreateRoleMutations: reqCreateRoleMutations.loading
+            reqCreateRoleMutations: reqCreateRoleMutations.loading,
+            reqUpdateRoleMutations: reqUpdateRoleMutations.loading
           }}
           allPermissions={reqPermissions.data.permissions.docs}
           STORE={STORE}
@@ -258,8 +338,6 @@ const ModalRole = (props) => {
       )
     }
   }
-
-  console.log('STORE', STORE)
 
   return (
     <Modal style={{ marginTop: '64px' }} isOpen={props.openModal} size='ms'>
@@ -287,22 +365,6 @@ const ModalRole = (props) => {
           </Button>
         </div>
       </ModalHeader>
-      {
-        // <button
-        //   onClick={(e) =>
-        //     STORE.actions.AlertGloval({
-        //       message: 'Create Role Successfully',
-        //       options: {
-        //         icon: 'icon-bulb-63',
-        //         type: 'success',
-        //         autoDismiss: 4,
-        //         place: 'tr'
-        //       }
-        //     })}
-        // >safasf
-        // </button>
-      }
-
       {contedModal()}
     </Modal>
   )
