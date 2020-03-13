@@ -141,7 +141,7 @@ const CreateRole = (props) => {
     if (error) {
       let messageError = ''
       if (Array.isArray(error.graphQLErrors)) {
-        messageError = error.graphQLErrors[0].message[0]
+        messageError = error.graphQLErrors[0].message
       } else {
         messageError = error.graphQLErrors
       }
