@@ -1,6 +1,6 @@
 import React, { useState, useContext, useRef } from 'react'
-import {GlobalContext} from '../../index'
-import {SET_BLOCK_SCREEN} from '../../store/actions'
+import { GlobalContext } from '../../index'
+import { SET_BLOCK_SCREEN } from '../../store/actions'
 // reactstrap components
 import {
   Card,
@@ -34,7 +34,7 @@ query roles {
 }`
 
 const Test1 = () => {
-  const {state,dispatch} = useContext(GlobalContext)
+  const { state, dispatch } = useContext(GlobalContext)
   // create our ref
   const myInput = useRef()
   const [getDog, { loading, data }] = useLazyQuery(GET_DOG_PHOTO, { fetchPolicy: 'no-cache' })
@@ -47,8 +47,8 @@ const Test1 = () => {
     setTypeEditor(value)
 
     console.log('changeTypeRadio')
-    
-    /*if(count==1) {
+
+    /* if(count==1) {
       localStorage.clear()
       dispatch({
         type: SET_BLOCK_SCREEN,
@@ -56,16 +56,15 @@ const Test1 = () => {
       })
     } else {
       getDog()
-    }*/
-    //console.log(' myInput ', myInput)
+    } */
+    // console.log(' myInput ', myInput)
     getDog()
-    setCount(count+1)
-    //getDog()
-    /*setIsBlock(true)
+    setCount(count + 1)
+    // getDog()
+    /* setIsBlock(true)
     setTimeout( () => {
       setIsBlock(false)
-    }, 7000)*/  
-
+    }, 7000) */
   }
 
   const setNewValue = value => {
@@ -76,19 +75,19 @@ const Test1 = () => {
     const options = {
       message: 'Trolazoooo',
       options: {
-      icon: 'icon-bell-55',
-      type: 'dark',
-      autoDismiss: 4,
-      place: 'bl'
+        icon: 'icon-bell-55',
+        type: 'dark',
+        autoDismiss: 4,
+        place: 'bl'
       }
     }
     myInput.current.showAlert(options)
-    //getDog2()
+    // getDog2()
   }
 
   return (
     <Card className='card-stats'>
-     <EasyBlock isBlock={isBlock} />
+      <EasyBlock isBlock={isBlock} />
       <AlertGlobal ref={myInput} />
       <CardBody>
         <Row>
@@ -104,7 +103,7 @@ const Test1 = () => {
                   defaultChecked
                 />
                 Raw asdsa
-                <span className='form-check-sign'></span>
+                <span className='form-check-sign' />
               </Label>
             </FormGroup>
             <FormGroup check inline className='form-check-radio'>
@@ -117,7 +116,7 @@ const Test1 = () => {
                   onClick={() => changeTypeRadio('editor')}
                 />
                 Code Editor
-                <span className='form-check-sign'></span>
+                <span className='form-check-sign' />
               </Label>
             </FormGroup>
             {typeEditor === 'raw' ? (
@@ -135,9 +134,9 @@ const Test1 = () => {
           </Col>
         </Row>
         <Row>
-              <Col>
-                <Button onClick={ () => clickButton() }> OTHER </Button>
-              </Col>
+          <Col>
+            <Button onClick={() => clickButton()}> OTHER </Button>
+          </Col>
         </Row>
       </CardBody>
     </Card>

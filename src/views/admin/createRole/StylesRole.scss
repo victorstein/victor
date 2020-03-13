@@ -1,0 +1,25 @@
+
+.inputRole{
+    .has-success:after, .has-danger:after{
+        top: 44px !important;
+    }
+}
+
+.selectPermissions{
+    .has-success:after, .has-danger:after{
+       display: none !important;
+    }
+}
+
+.selectStyles{
+    .Select-has-danger{
+        .react-select .react-select__control{
+            border: 1px solid #f33620 !important;
+            color: #ec250d;
+        }
+   
+    }
+    .has-success{
+        border: 1px solid #00bf9a !important;
+    }
+}

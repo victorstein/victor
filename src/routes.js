@@ -7,6 +7,7 @@ import LandingCreator from './views/landingCreator'
 import Projets from './views/Projets'
 import CreateUser from './views/admin/createUser'
 import DetailUser from './views/admin/DetailedUser'
+import CreateRole from './views/admin/createRole'
 
 const routes = [
   {
@@ -84,6 +85,16 @@ const routes = [
     role: ['Admin'],
     fullContent: true,
     visible: false
+  },
+  {
+    path: '/role/createRole',
+    name: 'Create Role',
+    icon: 'tim-icons icon-badge',
+    component: CreateRole,
+    layout: '/admin',
+    role: ['Admin'],
+    fullContent: false,
+    visible: true
   }
 ]
 
