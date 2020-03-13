@@ -212,22 +212,23 @@ const LoginIndex = props => {
           )}
           {((error && !isResendEmail) ||
             (reqFechResendVerificationEmail.loading &&
-              !reqFechResendVerificationEmail.error)) && (
+              !reqFechResendVerificationEmail.error)) &&
+              (
                 <Alert className='mt-2' color={`${classAlert}`}>
-              <Row>
+                  <Row>
                     <Col className='col-1'>
-                  <i className='tim-icons icon-alert-circle-exc' />
-                </Col>
+                      <i className='tim-icons icon-alert-circle-exc' />
+                    </Col>
                     <Col className='col-10 text-left'>
-                  <h4 className='alert-heading'>Error!</h4>
-                </Col>
+                      <h4 className='alert-heading'>Error!</h4>
+                    </Col>
                     <Col className='col-12 text-sm-left'>
-                  <p className='alertText'>{getStringError()}</p>
-                  <div className='text-center'>{resendEmailButton()}</div>
-                </Col>
+                      <p className='alertText'>{getStringError()}</p>
+                      <div className='text-center'>{resendEmailButton()}</div>
+                    </Col>
                   </Row>
-            </Alert>
-          )}
+                </Alert>
+              )}
           {reqFechResendVerificationEmail.error && isResendEmail && (
             <Alert className='mt-2' color='danger'>
               <Row>
@@ -272,12 +273,11 @@ const LoginIndex = props => {
                 id='examplePassword'
                 placeholder='Password'
                 autoComplete='off'
-                onChange={e =>
-                  ValidatorFormChange(
-                    e,
-                    setpasswordInput,
-                    passwordInput,
-                    'password'
+                onChange={e => ValidatorFormChange(
+                  e,
+                  setpasswordInput,
+                  passwordInput,
+                  'password'
                 )}
               />
               {passwordInput.error && (
@@ -286,17 +286,6 @@ const LoginIndex = props => {
             </FormGroup>
             <FormGroup check>
               <Row>
-                {
-                  // <Col className='text-left'>
-                  //   <Label check>
-                  //     <Input type='checkbox' />{' '}
-                  //   Check me out
-                  //     <span className='form-check-sign'>
-                  //       <span className='check' />
-                  //     </span>
-                  //   </Label>
-                  // </Col>
-                }
                 <Col className='text-right'>
                   <a
                     href='#'
