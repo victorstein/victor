@@ -18,7 +18,6 @@ import './stylesUser.scss'
 import { useMutation } from '@apollo/react-hooks'
 import gql from 'graphql-tag'
 import { ClipLoader } from 'react-spinners'
-import Lottie from 'react-lottie'
 
 const DEFAULT_VALUES = {
   name: '',

@@ -4,7 +4,7 @@ import ModalUser from './ModalCreateUser'
 import './stylesUser.scss'
 import AlertGlobal from '../../../components/AlertGlobal'
 
-const CreateUserIndex = () => {
+const CreateUserIndex = (props) => {
   const [openModal, setOpenModal] = useState(false)
   const myInputAlert = useRef()
 
