@@ -39,7 +39,7 @@ const Schemas = Joi.object({
       'any.required': 'Name is a required',
       'string.empty': 'Name is a required'
     }),
-  confirmPassword: Joi.ref('password')
+  confirmPassword: Joi.required().valid(Joi.ref('password')).messages({ 'any.only': 'pasword not mach' })
 })
 
 const validationForm = (values) => {

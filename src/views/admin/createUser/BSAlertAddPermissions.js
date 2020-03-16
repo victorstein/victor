@@ -7,11 +7,12 @@ import {
   Modal,
   ModalHeader,
   ModalBody,
-  ModalFooter,
-  Alert
+  ModalFooter
 } from 'reactstrap'
 import { ClipLoader } from 'react-spinners'
 import './stylesUser.scss'
+import Lottie from 'react-lottie'
+import animationServerError from '../../../assets/lottie/serverError.json'
 
 const userByid = gql`
 query userByid( $id : String!){
@@ -137,6 +138,7 @@ const BSAlertAddPermissions = (props) => {
 
   const { loading, error, data } = useQuery(userByid, { variables: { id: props.User.id }, fetchPolicy: 'no-cache' })
 
+  // const { loading: loadingReqRoles, data: dataReqRoles, error: errroReqRoles }
   const reqRoles = useQuery(allRoles, { variables: { ...rolesPagingParams }, fetchPolicy: 'no-cache' })
 
   const reqPermissions = useQuery(allpermissions, { variables: { ...stateReqpermissions }, fetchPolicy: 'no-cache' })
@@ -145,7 +147,7 @@ const BSAlertAddPermissions = (props) => {
     refetchQueries: ['allUsers']
   })
 
-  useEffect(() => {
+  const validateErrorQuery = () => {
     if (data) {
       setSingleSelect({
         label: data.userById.role.name,
@@ -160,11 +162,108 @@ const BSAlertAddPermissions = (props) => {
         return a.isBase ? -1 : 1
       })
       setMultiSelectValue(permissions)
+      return null
     }
-  }, [data])
+    if (error) {
+      let messageError = ''
+      if (Array.isArray(error.graphQLErrors)) {
+        messageError = error.graphQLErrors[0].message
+      } else {
+        messageError = error.graphQLErrors
+      }
+      console.log('messageError', error.graphQLErrors)
+      props.actionsAlertGloval({
+        message: messageError,
+        options: {
+          icon: 'icon-alert-circle-exc',
+          type: 'danger',
+          autoDismiss: 4,
+          place: 'tr'
+        }
+      })
+      return null
+    }
+
+    if (reqRoles.error) {
+      let messageError = ''
+      if (Array.isArray(reqRoles.error.graphQLErrors)) {
+        messageError = reqRoles.error.graphQLErrors[0].message
+      } else {
+        messageError = reqRoles.error.graphQLErrors
+      }
+      console.log('messageError', reqRoles.error.graphQLErrors)
+      props.actionsAlertGloval({
+        message: messageError,
+        options: {
+          icon: 'icon-alert-circle-exc',
+          type: 'danger',
+          autoDismiss: 4,
+          place: 'tr'
+        }
+      })
+      return null
+    }
+
+    if (reqPermissions.error) {
+      let messageError = ''
+      if (Array.isArray(reqPermissions.error.graphQLErrors)) {
+        messageError = reqPermissions.error.graphQLErrors[0].message
+      } else {
+        messageError = reqPermissions.error.graphQLErrors
+      }
+      console.log('messageError', reqPermissions.error.graphQLErrors)
+      props.actionsAlertGloval({
+        message: messageError,
+        options: {
+          icon: 'icon-alert-circle-exc',
+          type: 'danger',
+          autoDismiss: 4,
+          place: 'tr'
+        }
+      })
+      return null
+    }
+  }
+
+  useEffect(() => {
+    validateErrorQuery()
+  }, [data, error, reqRoles.error, reqPermissions.error])
+
+  useEffect(() => {
+    if (reqUpdateUser.data) {
+      props.actionsAlertGloval({
+        message: 'Update Permissions Successfully',
+        options: {
+          icon: 'icon-bulb-63',
+          type: 'info',
+          autoDismiss: 4,
+          place: 'tr'
+        }
+      })
+    }
+
+    if (reqUpdateUser.error) {
+      let messageError = ''
+      if (Array.isArray(reqUpdateUser.error.graphQLErrors)) {
+        messageError = reqUpdateUser.error.graphQLErrors[0].message
+      } else {
+        messageError = reqUpdateUser.error.graphQLErrors
+      }
+      console.log('messageError', reqUpdateUser.error.graphQLErrors)
+      props.actionsAlertGloval({
+        message: messageError,
+        options: {
+          icon: 'icon-alert-circle-exc',
+          type: 'danger',
+          autoDismiss: 4,
+          place: 'tr'
+        }
+      })
+    }
+  }, [reqUpdateUser.data, reqUpdateUser.error])
 
   const conted = () => {
-    if (loading || reqRoles.loading) {
+    if (loading || reqRoles.loading || reqPermissions.loading) {
       return (
         <div className='d-flex justify-content-center p-2 m-2'>
           <ClipLoader
@@ -175,10 +274,23 @@ const BSAlertAddPermissions = (props) => {
         </div>
       )
     } else {
-      if (error || reqRoles.error) {
+      if (error || reqRoles.error || reqPermissions.error) {
+        const defaultOptions = {
+          loop: true,
+          autoplay: true,
+          animationData: animationServerError,
+          rendererSettings: {
+            preserveAspectRatio: 'xMidYMid slice'
+          }
+        }
         return (
           <div className='d-flex justify-content-center p-2 m-2'>
-            <Alert color='danger'>Error connecting to server</Alert>
+            <Lottie
+              isClickToPauseDisabled
+              options={defaultOptions}
+              height='40%'
+              width='40%'
+            />
           </div>
         )
       }
@@ -316,6 +428,7 @@ const BSAlertAddPermissions = (props) => {
         visible: false,
         user: {}
       })
+      // props.actionsAlertGloval()
     } catch (e) {
       console.log(e)
     }
@@ -350,7 +463,7 @@ const BSAlertAddPermissions = (props) => {
                 className='w-100'
                 color='info'
                 type='submit'
-                disabled={reqUpdateUser.loading || error}
+                disabled={reqUpdateUser.loading || (error) ? true : false || (reqPermissions.error) ? true : !!(false || (reqRoles.error))}
                 onClick={(e) => submitInputUpdate()}
               >
                 {

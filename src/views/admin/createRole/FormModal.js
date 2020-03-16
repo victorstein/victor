@@ -8,7 +8,7 @@ import {
   Form
 } from 'reactstrap'
 import Select from 'react-select'
-import useForm from './useForm'
+import useForm from '../../../utils/useFormHooks/useForm'
 import schema from './schemaForm'
 import { ClipLoader } from 'react-spinners'
 
@@ -24,9 +24,6 @@ const FormModal = (props) => {
     handleChangeReactSelect,
     handleBlurReactSelect
   } = useForm(props.submitForm, { name: name, permissions: arrayPermissions }, schema)
-
-  // console.log('props.defaultValue', props.defaultValue)
-  // console.log(props.allPermissions)
 
   const allPermissions = props.allPermissions.map(u => ({
     value: u.id,
