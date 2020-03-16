@@ -14,10 +14,12 @@ const TemplatesIndex = (props) => {
         <Col xs='12'>
           <h1 className='mb-0'>Projects</h1>
         </Col>
+        <Col className='col-12'>
+          <div className='p-2 m-2 w-100'>
+            <TableProjects setOpenModal={setOpenModal} />
+          </div>
+        </Col>
       </Row>
-      <div className='container p-2 m-2'>
-        <TableProjects setOpenModal={setOpenModal} />
-      </div>
     </div>
   )
 }

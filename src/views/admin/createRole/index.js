@@ -204,12 +204,12 @@ const CreateRole = (props) => {
     }}
     >
       <AlertGlobal ref={myInputAlert} />
-      <div className='content'>
+      <div className='w-100'>
         {
           (openModal) && <ModalRole openModal={openModal} setOpenModal={setOpenModal} />
         }
         <h1 className='mb-0'>Create Role</h1>
-        <div className='container p-2 m-2'>
+        <div className='p-2 m-2 w-100'>
           <Row>
             <Col className='col-2 d-flex align-items-center'>
               <Button
@@ -267,7 +267,7 @@ const CreateRole = (props) => {
             </Col>
           </Row>
 
-          <div className='content pt-2 mt-2'>
+          <div className='w-100 pt-2 mt-2'>
             {Contend()}
           </div>
         </div>

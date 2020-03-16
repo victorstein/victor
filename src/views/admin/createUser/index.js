@@ -19,9 +19,8 @@ const CreateUserIndex = (props) => {
       {
         openModal && <ModalUser actionsAlertGloval={actionsAlertGloval} openModal={openModal} setOpenModal={setOpenModal} />
       }
-
       <h1 className='mb-0'>Create User</h1>
-      <div className='container p-2 m-2'>
+      <div className='w-100 p-2 m-2'>
         <TableUser actionsAlertGloval={actionsAlertGloval} setOpenModal={setOpenModal} />
       </div>
     </div>
