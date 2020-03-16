@@ -295,6 +295,7 @@ const TableUser = (props) => {
       {
         (addPermissions.visible) &&
           <BSAlertAddPermissions
+            actionsAlertGloval={props.actionsAlertGloval}
             User={addPermissions.user}
             setAddPermissions={setAddPermissions}
             addPermissions={addPermissions.visible}
