@@ -225,7 +225,7 @@ const ModalCreateUser = (props) => {
                       (errors.confirmPassword && onBlurState.confirmPassword) &&
                         (
                           <label className='error'>
-                            pasword not mach
+                            {errors.confirmPassword}
                           </label>
                         )
                     }
