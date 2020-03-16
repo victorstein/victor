@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import {
   Button,
   Card,
@@ -98,9 +98,60 @@ const TableUser = (props) => {
     { variables, fetchPolicy: 'no-cache' }
   )
 
-  const [deleteUserMutation, reqDeleteUser] = useMutation(deleteUserById, {
+  const [deleteUserMutation, { data: dataReqDeleteUser, loading: loadingReqDeleteUser, error: errorReqDeleteUser }] = useMutation(deleteUserById, {
     refetchQueries: ['allUsers']
   })
+
+  useEffect(() => {
+    if (error) {
+      let messageError = ''
+      if (Array.isArray(error.graphQLErrors)) {
+        messageError = error.graphQLErrors[0].message
+      } else {
+        messageError = error.graphQLErrors
+      }
+      console.log('messageError', error.graphQLErrors)
+      props.actionsAlertGloval({
+        message: messageError,
+        options: {
+          icon: 'icon-alert-circle-exc',
+          type: 'danger',
+          autoDismiss: 4,
+          place: 'tr'
+        }
+      })
+    }
+    if (dataReqDeleteUser) {
+      props.actionsAlertGloval({
+        message: 'Delete User Successfully',
+        options: {
+          icon: 'icon-bulb-63',
+          type: 'info',
+          autoDismiss: 4,
+          place: 'tr'
+        }
+      })
+    }
+
+    if (errorReqDeleteUser) {
+      let messageError = ''
+      if (Array.isArray(errorReqDeleteUser.graphQLErrors)) {
+        messageError = errorReqDeleteUser.graphQLErrors[0].message
+      } else {
+        messageError = errorReqDeleteUser.graphQLErrors
+      }
+      console.log('messageError', errorReqDeleteUser.graphQLErrors)
+      props.actionsAlertGloval({
+        message: messageError,
+        options: {
+          icon: 'icon-alert-circle-exc',
+          type: 'danger',
+          autoDismiss: 4,
+          place: 'tr'
+        }
+      })
+    }
+  }, [error, dataReqDeleteUser, errorReqDeleteUser])
 
   const contendTable = () => {
     if (!loading && data) {
@@ -255,7 +306,7 @@ const TableUser = (props) => {
                 <Button
                   color='danger'
                   className='animation-on-hover'
-                  disabled={reqDeleteUser.loading}
+                  disabled={loadingReqDeleteUser}
                   onClick={(e) => setAlertDelete({
                     visible: false,
                     user: null
@@ -266,11 +317,11 @@ const TableUser = (props) => {
                 <Button
                   color='info'
                   className='animation-on-hover'
-                  disabled={reqDeleteUser.loading}
+                  disabled={loadingReqDeleteUser}
                   onClick={(e) => deleteUser()}
                 >
                   {
-                    (reqDeleteUser.loading)
+                    (loadingReqDeleteUser)
                       ? (
                         <ClipLoader
                           size={20}
@@ -337,7 +388,6 @@ const TableUser = (props) => {
                           bsSize='sm'
                           disabled={error}
                           onChange={(e) => {
-                            // console.log(e.target.value)
                             setVariables({
                               ...variables,
                               page: 1,
