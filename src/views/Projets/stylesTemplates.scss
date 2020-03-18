@@ -6,13 +6,16 @@ $blueColor: #27293d;
     }
    
 }
+.has-success.has-label:after, .has-danger.has-label:after {
+    top: 44px !important;
+}
 
 .InputGroupVictor {
     .has-danger.has-label:after {
-        top: 13px !important;
+        top: 10px !important;
     }
     .has-success.has-label:after{
-        top: 13px !important;
+        top: 10px !important;
     }
 }
 .selectUser{
