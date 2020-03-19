@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import {
   FormGroup,
   Label,
@@ -28,7 +28,7 @@ const PageThree = (props) => {
     developerEmail: '',
     topic: '',
     passwordWordpress: '',
-    confirmPassword: '',
+    confirmPasswordWordpress: '',
     language: 'EN'
   }
 
@@ -42,24 +42,31 @@ const PageThree = (props) => {
     handleBlur,
     errors,
     handleSubmit,
-    classNames
-    // handleChangeReactSelect,
-    // handleBlurReactSelect
+    classNames,
+    handleChangeReactSelect,
+    handleBlurReactSelect,
+    setEspecificValue
   } = useForm(submitForm, defaultValueForm, schema.schemaPageThree)
+
+  useEffect(() => {
+    if (props.dataForm.PageTwo.userName) {
+      setEspecificValue(props.dataForm.PageTwo.userName, 'userName')
+    }
+  }, [props])
   return (
     <div className='pt-4'>
       <Form onSubmit={handleSubmit}>
         <Row>
           <Col className='col-4'>
             <FormGroup className={` has-label  ${(classNames.userName) ? classNames.userName : (values.userName === '') ? '' : 'has-success'}`}>
-              <Label for='userName'>Developer Email</Label>
+              <Label for='userName'>User Name</Label>
               <Input
                 type='text'
                 className='iccon'
                 name='userName'
                 id='userName'
-                // disabled
-                placeholder='Developer Email'
+                disabled
+                placeholder='User Name'
                 onChange={handleChange}
                 onBlur={handleBlur}
                 value={values.userName || ''}
@@ -204,33 +211,54 @@ const PageThree = (props) => {
             </div>
           </Col>
           <Col className='col-4'>
-            <FormGroup>
-              <Label for='confirmPasswor'>Confirm Passwor</Label>
+            <FormGroup className={` has-label  ${(classNames.confirmPasswordWordpress) ? classNames.confirmPasswordWordpress : (values.confirmPasswordWordpress === '') ? '' : 'has-success'}`}>
+              <Label for='confirmPasswordWordpress'>Confirm Passwor</Label>
               <Input
                 type='password'
-                name='confirmPasswor'
-                id='confirmPasswor'
-                placeholder='Confirm Password'
+                className='iccon'
+                name='confirmPasswordWordpress'
+                id='confirmPasswordWordpress'
+                placeholder='Confirm Passwor'
+                onChange={handleChange}
+                onBlur={handleBlur}
+                value={values.confirmPasswordWordpress || ''}
               />
+              {
+                errors.confirmPasswordWordpress && (
+                  <label className='error'>
+                    {errors.confirmPasswordWordpress}
+                  </label>
+                )
+              }
             </FormGroup>
           </Col>
           <Col className='ccol-4'>
-            <FormGroup>
-              <Label for='language'>Language</Label>
-              <Select
-                className='react-select primary'
-                classNamePrefix='react-select'
-                name='singleSelect'
-                // value={this.state.singleSelect}
-                onChange={value =>
-                  this.setState({ singleSelect: value })}
-                options={[
-                  { value: 'EN', label: 'English' },
-                  { value: 'ES', label: 'Spanish' }
-                ]}
-                placeholder='Single Select'
-              />
-            </FormGroup>
+            <div className='selectPermissions'>
+              <FormGroup className={` has-label  ${(classNames.language) ? classNames.language : (values.language === '') ? '' : 'has-success'}`}>
+                <Label for='language'>Language</Label>
+                <Select
+                  className={`react-select ${(classNames.language) ? 'danger' : (values.language === []) ? 'info' : 'success'}`}
+                  classNamePrefix='react-select'
+                  name='language'
+                  id='language'
+                  defaultValue={{ value: 'EN', label: 'English' }}
+                  onChange={handleChangeReactSelect}
+                  onBlur={handleBlurReactSelect}
+                  options={[
+                    { value: 'EN', label: 'English' },
+                    { value: 'ES', label: 'Spanish' }
+                  ]}
+                  placeholder='Language'
+                />
+                {
+                  errors.language && (
+                    <label className='error'>
+                      {errors.language}
+                    </label>
+                  )
+                }
+              </FormGroup>
+            </div>
           </Col>
         </Row>
         <ModalFooter>
