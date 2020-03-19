@@ -64,12 +64,15 @@ const useForm = (submitForm, defaultValues, schema) => {
 
   const setEspecificValue = (value, inputName) => {
     const newValue = value
+    const newBlurState = {
+      ...onBlurState, [inputName]: true
+    }
     const { errors, classNames } = validationForm({
       ...values,
       [inputName]: newValue
     },
     schemaValidation,
-    onBlurState)
+    newBlurState)
     setErrors(errors)
     setClassNames(classNames)
     setValues(values => ({ ...values, [inputName]: newValue }))
