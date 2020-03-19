@@ -17,7 +17,7 @@ import Select from 'react-select'
 import useForm from '../../../utils/useFormHooks/useForm'
 import schema from './ValidationFormSchema'
 import classnames from 'classnames'
-// import { passwordGenerator } from '../../../utils/PasswordGenerator'
+import { passwordGenerator } from '../../../utils/PasswordGenerator'
 
 const PageThree = (props) => {
   const [activeInput, setActiveInput] = React.useState({
@@ -33,7 +33,13 @@ const PageThree = (props) => {
   }
 
   const submitForm = () => {
-    console.log('submit Final')
+    const { PageTwo, PageOne } = props.dataForm
+    const finalDataWizzard = {
+      siteName: PageOne.projectsName,
+      domain: PageOne.domainURL,
+      accountUsername: PageOne.nameAccount
+    }
+    console.log('submit Final', finalDataWizzard)
   }
 
   const {
@@ -104,14 +110,14 @@ const PageThree = (props) => {
           </Col>
           <Col className='col-4'>
             <FormGroup className={` has-label  ${(classNames.topic) ? classNames.topic : (values.topic === '') ? '' : 'has-success'}`}>
-              <Label for='topic'>Developer Email</Label>
+              <Label for='topic'>Topic</Label>
               <Input
                 type='text'
                 className='iccon'
                 name='topic'
                 id='topic'
                 // disabled
-                placeholder='Developer Email'
+                placeholder='Topic'
                 onChange={handleChange}
                 onBlur={handleBlur}
                 value={values.topic || ''}
@@ -157,24 +163,11 @@ const PageThree = (props) => {
                 <InputGroupAddon style={{ display: 'contents' }} addonType='prepend'>
                   <InputGroupText id='exclamationPageThree'>
                     <i
-                      // onClick={async (e) => {
-                      //   const newPassword = await passwordGenerator()
-                      //   this.setState(
-                      //     {
-                      //       passwordInput: {
-                      //         labelError: '',
-                      //         error: false,
-                      //         value: newPassword,
-                      //         className: 'has-success'
-                      //       },
-                      //       confirmPasswordInput: {
-                      //         labelError: '',
-                      //         error: false,
-                      //         value: newPassword,
-                      //         className: 'has-success'
-                      //       }
-                      //     })
-                      // }}
+                      onClick={async (e) => {
+                        const newPassword = await passwordGenerator()
+                        setEspecificValue(newPassword, 'passwordWordpress')
+                        setEspecificValue(newPassword, 'confirmPasswordWordpress')
+                      }}
                       className='fas fa-exclamation-circle'
                     />
                   </InputGroupText>
@@ -232,7 +225,7 @@ const PageThree = (props) => {
               }
             </FormGroup>
           </Col>
-          <Col className='ccol-4'>
+          <Col className='col-4'>
             <div className='selectPermissions'>
               <FormGroup className={` has-label  ${(classNames.language) ? classNames.language : (values.language === '') ? '' : 'has-success'}`}>
                 <Label for='language'>Language</Label>

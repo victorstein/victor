@@ -1,7 +1,7 @@
 import Joi from '@hapi/joi'
 
 const schemaPageOne = {
-  nameAccount: Joi.string()
+  userName: Joi.string()
     .label('Name Account')
     .required()
     .messages({
@@ -15,13 +15,6 @@ const schemaPageOne = {
       'any.required': 'Domain UR is required',
       'string.empty': 'Domain UR is required'
     }),
-  projectsName: Joi.string()
-    .label('Projects Name')
-    .required()
-    .messages({
-      'any.required': 'Projects Name is required',
-      'string.empty': 'Projects Name is required'
-    }),
   projectOwner: Joi.string()
     .label('Project Owner')
     .required()
@@ -29,29 +22,12 @@ const schemaPageOne = {
       'any.required': 'Project Owner is required',
       'string.empty': 'ProjectOwner is required'
     }),
-  seller: Joi.string()
-    .label('Seller')
-    .required()
-    .messages({
-      'any.required': 'Seller is required',
-      'string.empty': 'Seller is required'
-    }),
   developerName: Joi.string()
     .label('Developer Name')
     .required()
     .messages({
       'any.required': 'Developer Name is required',
       'string.empty': 'Developer Name is required'
-    })
-}
-
-const schemaPageTwo = {
-  userName: Joi.string()
-    .label('Name Account')
-    .required()
-    .messages({
-      'any.required': 'Name is required',
-      'string.empty': 'Name is required'
     }),
   password: Joi
     .string()
@@ -64,6 +40,33 @@ const schemaPageTwo = {
       'string.empty': 'password is a required'
     }),
   confirmPassword: Joi.required().valid(Joi.ref('password')).messages({ 'any.only': 'pasword not mach' })
+}
+
+const schemaPageTwo = {
+  passwordWordpress: Joi.string()
+    .required()
+    .regex(/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/)
+    .message('Please enter a valid password address.')
+    .label('Password')
+    .messages({
+      'any.required': 'password is a required',
+      'string.empty': 'password is a required'
+    }),
+  confirmPasswordWordpress: Joi.required().valid(Joi.ref('passwordWordpress')).messages({ 'any.only': 'pasword not mach' }),
+  language: Joi.string()
+    .label('Language')
+    .required()
+    .messages({
+      'any.required': 'Language is required',
+      'string.empty': 'Language is required'
+    }),
+  theme: Joi.string()
+    .label('Language')
+    .required()
+    .messages({
+      'any.required': 'Language is required',
+      'string.empty': 'Language is required'
+    })
 }
 
 const schemaPageThree = {
@@ -90,16 +93,6 @@ const schemaPageThree = {
       'any.required': 'Topic is required',
       'string.empty': 'Topic is required'
     }),
-  passwordWordpress: Joi.string()
-    .required()
-    .regex(/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/)
-    .message('Please enter a valid password address.')
-    .label('Password')
-    .messages({
-      'any.required': 'password is a required',
-      'string.empty': 'password is a required'
-    }),
-  confirmPasswordWordpress: Joi.required().valid(Joi.ref('passwordWordpress')).messages({ 'any.only': 'pasword not mach' }),
   language: Joi.string()
     .label('Language')
     .required()

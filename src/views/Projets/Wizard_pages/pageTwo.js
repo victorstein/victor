@@ -14,30 +14,28 @@ import {
   Button
 } from 'reactstrap'
 import classnames from 'classnames'
+import Select from 'react-select'
 // import UserContext, { UserConsumer } from '../ModalWizardProvider'
-// import { passwordGenerator } from '../../../utils/PasswordGenerator'
+import { passwordGenerator } from '../../../utils/PasswordGenerator'
 // import { nameGenerator } from '../../../utils/nameGenerator'
 import useForm from '../../../utils/useFormHooks/useForm'
 import schema from './ValidationFormSchema'
 
 const PageTwo = (props) => {
   const [activeInput, setActiveInput] = useState({
-    userName: false,
-    password: false
+    passwordWordpress: false
   })
 
   const defaultValueForm = {
-    userName: '',
-    password: '',
-    confirmPassword: ''
+    passwordWordpress: '',
+    confirmPasswordWordpress: '',
+    language: 'EN',
+    theme: 'Total'
   }
 
   const submitForm = () => {
-    props.setDataForm({
-      ...props.dataForm,
-      PageTwo: values
-    })
-    props.nextStep()
+    const { PageOne } = props.dataForm
+    console.log('FinalData', { FinalData: { PageOne, PageTwo: values } })
   }
 
   const {
@@ -46,9 +44,10 @@ const PageTwo = (props) => {
     handleBlur,
     errors,
     handleSubmit,
-    classNames
-    // handleChangeReactSelect,
-    // handleBlurReactSelect
+    classNames,
+    handleChangeReactSelect,
+    handleBlurReactSelect,
+    setEspecificValue
   } = useForm(submitForm, defaultValueForm, schema.schemaPageTwo)
 
   // console.log(props.dataForm)
@@ -57,75 +56,63 @@ const PageTwo = (props) => {
     <div className='pt-4'>
       <Form onSubmit={handleSubmit}>
         <Row>
-          <Col className='col-12'>
-            <UncontrolledTooltip className='Tooltip_wizard' placement='top' target='exclamationName' delay={0}>
-              <div>
-                <p className='pl-2'>Click to generate the username automatically.</p>
-              </div>
-            </UncontrolledTooltip>
-            <div className='InputGroupVictor'>
-              <Label style={{ color: 'rgba(255, 255, 255, 0.6)' }} for='userName'>User Name</Label>
-              <InputGroup
-                className={`
-              text-left 
-              has-label ${(classNames.userName) ? classNames.userName : (values.userName === '') ? '' : 'has-success'}
-              ${classnames({ 'input-group-focus': activeInput.userName })}
-              `}
-              >
-                <InputGroupAddon style={{ display: 'contents' }} addonType='prepend'>
-                  <InputGroupText id='exclamationName'>
-                    <i
-                      className='fas fa-exclamation-circle'
-                    // onClick={async (e) => {
-                    // const newName = await nameGenerator(PageOneData.data.domainURL)
-                    // this.setState({
-                    //   userNameInput: {
-                    //     labelError: '',
-                    //     error: false,
-                    //     value: newName,
-                    //     className: 'has-success'
-                    //   }
-                    // })
-                    // console.log(newName)
-                    // }}
-                    />
-                  </InputGroupText>
-                </InputGroupAddon>
-                <Input
-                  type='text'
-                  name='userName'
-                  id='userName'
-                  placeholder='User Name'
-                  onChange={handleChange}
-                  value={values.userName || ''}
-                  onFocus={(e) => {
-                    setActiveInput({
-                      ...activeInput,
-                      userName: true
-                    })
-                  }}
-                  onBlur={(e) => {
-                    handleBlur(e)
-                    setActiveInput({
-                      ...activeInput,
-                      userName: false
-                    })
-                  }}
+          <Col className='col-6'>
+            <div className='selectPermissions'>
+              <FormGroup className={` has-label  ${(classNames.theme) ? classNames.theme : (values.theme === '') ? '' : 'has-success'}`}>
+                <Label for='language'>Theme</Label>
+                <Select
+                  className={`react-select ${(classNames.theme) ? 'danger' : (values.theme === []) ? 'info' : 'success'}`}
+                  classNamePrefix='react-select'
+                  name='theme'
+                  id='theme'
+                  defaultValue={{ value: 'Total', label: 'Total' }}
+                  onChange={handleChangeReactSelect}
+                  onBlur={handleBlurReactSelect}
+                  options={[
+                    { value: 'Total', label: 'Total' }
+                  ]}
+                  placeholder='Theme'
                 />
                 {
-                  errors.userName && (
-                    <label className='col-12 error'>
-                      {errors.userName}
+                  errors.theme && (
+                    <label className='error'>
+                      {errors.theme}
                     </label>
                   )
                 }
-              </InputGroup>
+              </FormGroup>
             </div>
           </Col>
-        </Row>
-        <Row>
           <Col className='col-6'>
-            <UncontrolledTooltip className='Tooltip_wizard' placement='top' target='password' delay={0}>
+            <div className='selectPermissions'>
+              <FormGroup className={` has-label  ${(classNames.language) ? classNames.language : (values.language === '') ? '' : 'has-success'}`}>
+                <Label for='language'>Language</Label>
+                <Select
+                  className={`react-select ${(classNames.language) ? 'danger' : (values.language === []) ? 'info' : 'success'}`}
+                  classNamePrefix='react-select'
+                  name='language'
+                  id='language'
+                  defaultValue={{ value: 'EN', label: 'English' }}
+                  onChange={handleChangeReactSelect}
+                  onBlur={handleBlurReactSelect}
+                  options={[
+                    { value: 'EN', label: 'English' },
+                    { value: 'ES', label: 'Spanish' }
+                  ]}
+                  placeholder='Language'
+                />
+                {
+                  errors.language && (
+                    <label className='error'>
+                      {errors.language}
+                    </label>
+                  )
+                }
+              </FormGroup>
+            </div>
+          </Col>
+          <Col className='col-6'>
+            <UncontrolledTooltip className='Tooltip_wizard' placement='top' target='passwordWordpress' delay={0}>
               <div>
                 <p className='pl-2'>Password required at leat:</p>
                 <ul className='text-left pl-3 pt-0'>
@@ -143,34 +130,21 @@ const PageTwo = (props) => {
               </div>
             </UncontrolledTooltip>
             <div className='InputGroupVictor'>
-              <Label style={{ color: 'rgba(255, 255, 255, 0.6)' }} for='password'>Password</Label>
+              <Label style={{ color: 'rgba(255, 255, 255, 0.6)' }} for='passwordWordpress'>Password</Label>
               <InputGroup
                 className={`
             text-left 
-            has-label ${(classNames.password) ? classNames.password : (values.password === '') ? '' : 'has-success'}
-            ${classnames({ 'input-group-focus': activeInput.password })}
+            has-label ${(classNames.passwordWordpress) ? classNames.passwordWordpress : (values.passwordWordpress === '') ? '' : 'has-success'}
+            ${classnames({ 'input-group-focus': activeInput.passwordWordpress })}
             `}
               >
                 <InputGroupAddon style={{ display: 'contents' }} addonType='prepend'>
                   <InputGroupText id='exclamation-circle'>
                     <i
                       onClick={async (e) => {
-                        // const newPassword = await passwordGenerator()
-                        // this.setState(
-                        //   {
-                        //     passwordInput: {
-                        //       labelError: '',
-                        //       error: false,
-                        //       value: newPassword,
-                        //       className: 'has-success'
-                        //     },
-                        //     confirmPasswordInput: {
-                        //       labelError: '',
-                        //       error: false,
-                        //       value: newPassword,
-                        //       className: 'has-success'
-                        //     }
-                        //   })
+                        const newPassword = await passwordGenerator()
+                        setEspecificValue(newPassword, 'passwordWordpress')
+                        setEspecificValue(newPassword, 'confirmPasswordWordpress')
                       }}
                       className='fas fa-exclamation-circle'
                     />
@@ -178,29 +152,29 @@ const PageTwo = (props) => {
                 </InputGroupAddon>
                 <Input
                   type='password'
-                  name='password'
-                  id='password'
+                  name='passwordWordpress'
+                  id='passwordWordpress'
                   placeholder='Password'
                   onChange={handleChange}
-                  value={values.password || ''}
+                  value={values.passwordWordpress || ''}
                   onFocus={(e) => {
                     setActiveInput({
                       ...activeInput,
-                      password: true
+                      passwordWordpress: true
                     })
                   }}
                   onBlur={(e) => {
                     handleBlur(e)
                     setActiveInput({
                       ...activeInput,
-                      password: false
+                      passwordWordpress: false
                     })
                   }}
                 />
                 {
-                  errors.password && (
+                  errors.passwordWordpress && (
                     <label className='col-12 error'>
-                      {errors.password}
+                      {errors.passwordWordpress}
                     </label>
                   )
                 }
@@ -208,21 +182,21 @@ const PageTwo = (props) => {
             </div>
           </Col>
           <Col className='col-6'>
-            <FormGroup className={`has-label  ${(classNames.confirmPassword) ? classNames.confirmPassword : (values.confirmPassword === '') ? '' : 'has-success'}`}>
-              <Label for='password'>Confirm Password</Label>
+            <FormGroup className={`has-label  ${(classNames.confirmPasswordWordpress) ? classNames.confirmPasswordWordpress : (values.confirmPasswordWordpress === '') ? '' : 'has-success'}`}>
+              <Label for='confirmPasswordWordpress'>Confirm Password</Label>
               <Input
                 type='password'
-                name='confirmPassword'
-                id='confirmPassword'
+                name='confirmPasswordWordpress'
+                id='confirmPasswordWordpress'
                 placeholder='Confirm Password'
                 onChange={handleChange}
-                value={values.confirmPassword || ''}
+                value={values.confirmPasswordWordpress || ''}
                 onBlur={handleBlur}
               />
               {
-                errors.confirmPassword && (
+                errors.confirmPasswordWordpress && (
                   <label className='col-12 error'>
-                    {errors.confirmPassword}
+                    {errors.confirmPasswordWordpress}
                   </label>
                 )
               }
@@ -248,7 +222,7 @@ const PageTwo = (props) => {
               className='w-100'
               color='primary'
             >
-              Next
+              Finish
             </Button>
           </div>
         </ModalFooter>
