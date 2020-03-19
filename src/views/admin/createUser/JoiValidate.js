@@ -8,7 +8,7 @@ const Schemas = Joi.object({
     .required()
     .label('Email')
     .messages({
-      'string.email': 'Please enter a valid Email address.',
+      'string.email': 'Please enter a valid Email.',
       'any.required': 'Email is a required',
       'string.empty': 'Email is a required'
     }),
