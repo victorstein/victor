@@ -9,6 +9,11 @@ $blueColor: #27293d;
 .has-success.has-label:after, .has-danger.has-label:after {
     top: 44px !important;
 }
+.selectPermissions{
+    .has-success:after, .has-danger:after{
+       display: none !important;
+    }
+}
 
 .InputGroupVictor {
     .has-danger.has-label:after {
