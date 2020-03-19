@@ -11,7 +11,7 @@ import Stepper from 'react-stepper-horizontal'
 
 import PageOne from './Wizard_pages/pageOne'
 import PageTwo from './Wizard_pages/pageTwo'
-import PageThree from './Wizard_pages/pageThree'
+// import PageThree from './Wizard_pages/pageThree'
 
 // isOpen={this.props.openModal}
 
@@ -34,7 +34,6 @@ const Nav = (props) => {
           //   <i className='tim-icons icon-single-02' />
           // )
         },
-        { title: 'Development Environment' },
         { title: 'WordPress installation' }
       ]}
       activeStep={props.currentStep - 1}
@@ -44,12 +43,7 @@ const Nav = (props) => {
 
 const ModalWizard = (props) => {
   const [dataForm, setDataForm] = useState({
-    PageOne: {},
-    PageTwo: {
-      confirmPassword: '',
-      password: '',
-      userName: ''
-    }
+    PageOne: {}
   })
   return (
     <div className='templateForm'>
@@ -83,8 +77,11 @@ const ModalWizard = (props) => {
             }}
           >
             <PageOne dataForm={dataForm} setDataForm={setDataForm} hashKey='PageOne' />
-            <PageTwo dataForm={dataForm} setDataForm={setDataForm} hashKey='PageTwo' />
-            <PageThree dataForm={dataForm} setDataForm={setDataForm} hashKey='PageThree' />
+            <PageTwo dataForm={dataForm} hashKey='PageTwo' />
+            {
+              // <PageThree dataForm={dataForm} setDataForm={setDataForm} hashKey='PageThree' />
+            }
+
           </StepWizard>
         </ModalBody>
       </Modal>
