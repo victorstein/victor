@@ -266,7 +266,7 @@ const TableProyects = (props) => {
   return (
     <Card className='w-100'>
       <CardHeader>
-        <CardTitle tag='h4'>Proyect list</CardTitle>
+        <CardTitle tag='h4'>Project list</CardTitle>
         <Row>
           <Col className='col-2'>
             <Button
