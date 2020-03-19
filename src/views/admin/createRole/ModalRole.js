@@ -289,8 +289,6 @@ const ModalRole = (props) => {
       )
     }
 
-    console.log(idRole)
-
     if (idRole === null) {
       return (
         <FormModal
