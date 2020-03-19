@@ -45,7 +45,11 @@ const Nav = (props) => {
 const ModalWizard = (props) => {
   const [dataForm, setDataForm] = useState({
     PageOne: {},
-    PageTwo: {}
+    PageTwo: {
+      confirmPassword: '',
+      password: '',
+      userName: ''
+    }
   })
   return (
     <div className='templateForm'>
