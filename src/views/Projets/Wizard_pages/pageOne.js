@@ -14,7 +14,10 @@ const PageOne = (props) => {
   }
 
   const submitForm = () => {
-    console.log('submit')
+    props.setDataForm({
+      ...props.dataForm,
+      PageOne: values
+    })
     props.nextStep()
   }
 
@@ -29,7 +32,7 @@ const PageOne = (props) => {
     // handleBlurReactSelect
   } = useForm(submitForm, defaultValueForm, schema.schemaPageOne)
   return (
-    <div>
+    <div className='pt-4'>
       <Form onSubmit={handleSubmit}>
         <Row>
           <Col className='col-4'>
@@ -180,11 +183,11 @@ const PageOne = (props) => {
             // </Col>
             }
 
-            <Col className='col-6 pt-2'>
+            <Col className='col-4 pt-2'>
               <Button
                 type='submit'
                 className='w-100'
-                color='success'
+                color='primary'
               >
                 Next
               </Button>
