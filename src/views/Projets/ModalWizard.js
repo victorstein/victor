@@ -1,18 +1,52 @@
-import React from 'react'
+import React, { useState } from 'react'
 import {
   Button,
   Modal,
   ModalHeader,
   ModalBody
 } from 'reactstrap'
+
 import StepWizard from 'react-step-wizard'
+import Stepper from 'react-stepper-horizontal'
 
 import PageOne from './Wizard_pages/pageOne'
 import PageTwo from './Wizard_pages/pageTwo'
+import PageThree from './Wizard_pages/pageThree'
 
 // isOpen={this.props.openModal}
 
+const Nav = (props) => {
+  // console.log('propsNav', props)
+  return (
+    <Stepper
+      activeColor='#1d8cf8'
+      defaultTitleColor='#FFFFFF'
+      activeTitleColor='#FFFFFF'
+      completeTitleColor='#FFFFF'
+      completeColor='#1d8cf8'
+      defaultColor='#525f7f'
+      // circleFontColor='#1d8cf8'
+      lineMarginOffset={6}
+      steps={[
+        {
+          title: 'Create Account'
+          // icon: (
+          //   <i className='tim-icons icon-single-02' />
+          // )
+        },
+        { title: 'Development Environment' },
+        { title: 'WordPress installation' }
+      ]}
+      activeStep={props.currentStep - 1}
+    />
+  )
+}
+
 const ModalWizard = (props) => {
+  const [dataForm, setDataForm] = useState({
+    PageOne: {},
+    PageTwo: {}
+  })
   return (
     <div className='templateForm'>
       <Modal style={{ marginTop: '64px' }} isOpen={props.openModal} size='lg'>
@@ -36,6 +70,7 @@ const ModalWizard = (props) => {
         </ModalHeader>
         <ModalBody>
           <StepWizard
+            nav={<Nav />}
             transitions={{
               enterRight: 'fadeIn',
               enterLeft: 'fadeIn',
@@ -43,8 +78,9 @@ const ModalWizard = (props) => {
               exitLeft: 'fadeInDown'
             }}
           >
-            <PageOne hashKey='PageOne' />
-            <PageTwo hashKey='PageTwo' />
+            <PageOne dataForm={dataForm} setDataForm={setDataForm} hashKey='PageOne' />
+            <PageTwo dataForm={dataForm} setDataForm={setDataForm} hashKey='PageTwo' />
+            <PageThree dataForm={dataForm} setDataForm={setDataForm} hashKey='PageThree' />
           </StepWizard>
         </ModalBody>
       </Modal>
