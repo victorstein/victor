@@ -1,12 +1,12 @@
 import Joi from '@hapi/joi'
 
 const schemaPageOne = {
-  userName: Joi.string()
+  AccountName: Joi.string()
     .label('Name Account')
     .required()
     .messages({
-      'any.required': 'Name Account is required',
-      'string.empty': 'Name Account is required'
+      'any.required': 'Account Name is required',
+      'string.empty': 'Account Name is required'
     }),
   domainURL: Joi.string()
     .label('Domain UR')
@@ -15,12 +15,12 @@ const schemaPageOne = {
       'any.required': 'Domain UR is required',
       'string.empty': 'Domain UR is required'
     }),
-  projectOwner: Joi.string()
-    .label('Project Owner')
+  clientName: Joi.string()
+    .label('Client Name')
     .required()
     .messages({
-      'any.required': 'Project Owner is required',
-      'string.empty': 'ProjectOwner is required'
+      'any.required': 'Client Name is required',
+      'string.empty': 'Client Name is required'
     }),
   developerName: Joi.string()
     .label('Developer Name')

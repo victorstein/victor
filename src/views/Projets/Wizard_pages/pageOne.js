@@ -20,12 +20,13 @@ import classnames from 'classnames'
 const PageOne = (props) => {
   const [activeInput, setActiveInput] = useState({
     userName: false,
-    password: false
+    password: false,
+    domainURL: false
   })
   const defaultValueForm = {
-    userName: '',
+    AccountName: '',
     domainURL: '',
-    projectOwner: '',
+    clientName: '',
     developerName: '',
     password: '',
     confirmPassword: ''
@@ -54,66 +55,148 @@ const PageOne = (props) => {
       <Form onSubmit={handleSubmit}>
         <Row>
           <Col className='col-6'>
-            <FormGroup className={` has-label  ${(classNames.userName) ? classNames.userName : (values.userName === '') ? '' : 'has-success'}`}>
-              <Label for='userName'>Name Account</Label>
+            <FormGroup className={` has-label  ${(classNames.AccountName) ? classNames.AccountName : (values.AccountName === '') ? '' : 'has-success'}`}>
+              <Label for='AccountName'>Account Name</Label>
               <Input
                 type='text'
                 className='iccon'
-                name='userName'
-                id='userName'
-                placeholder='User Name'
+                name='AccountName'
+                id='AccountName'
+                placeholder='Account Name'
                 onChange={handleChange}
                 onBlur={handleBlur}
-                value={values.userName || ''}
+                value={values.AccountName || ''}
               />
               {
-                errors.userName && (
+                errors.AccountName && (
                   <label className='error'>
-                    {errors.userName}
+                    {errors.AccountName}
                   </label>
                 )
               }
             </FormGroup>
           </Col>
           <Col className='col-6'>
-            <FormGroup className={`has-label  ${(classNames.domainURL) ? classNames.domainURL : (values.domainURL === '') ? '' : 'has-success'}`}>
-              <Label for='domainURL'>Domain url</Label>
+            <Label for='domainURL'>Domain URL</Label>
+            {
+              /* <div className='iconNone'>
+              <Label for='domainURL'>Domain URL</Label>
+              <InputGroup
+                className={`
+          text-left
+          has-label ${(classNames.domainURL) ? classNames.domainURL : (values.domainURL === '') ? '' : 'has-success'}
+          ${classnames({ 'input-group-focus': activeInput.domainURL })}
+          `}
+              >
+                <Input
+                  style={{
+                    borderRadius: '0.4285rem',
+                    marginRight: '2px'
+                  }}
+                  type='text'
+                  name='domainURL'
+                  id='domainURL'
+                  placeholder='Domain url'
+                  onChange={handleChange}
+                  value={values.domainURL || ''}
+                  onFocus={(e) => {
+                    setActiveInput({
+                      ...activeInput,
+                      domainURL: true
+                    })
+                  }}
+                  onBlur={(e) => {
+                    handleBlur(e)
+                    setActiveInput({
+                      ...activeInput,
+                      domainURL: false
+                    })
+                  }}
+                />
+                <InputGroupAddon style={{ borderRadius: '0.4285rem' }}>
+                  <InputGroupText>bytfm.com</InputGroupText>
+                </InputGroupAddon>
+                {
+                  errors.domainURL && (
+                    <label className='col-12 error'>
+                      {errors.domainURL}
+                    </label>
+                  )
+                }
+              </InputGroup>
+            </div> */
+            }
+            {
+              //       <InputGroup className="inputGroupAppendRight">
+              //   <Input placeholder="username" className='form-input-append'/>
+              //   <InputGroupAddon addonType="append">
+              //     <InputGroupText>@example.com</InputGroupText>
+              //   </InputGroupAddon>
+              // </InputGroup>
+            }
+            <div className='iconNone'>
+         
+            <InputGroup
+              className={`
+          inputGroupAppendRight
+          has-label ${(classNames.domainURL) ? classNames.domainURL : (values.domainURL === '') ? '' : 'has-success'}
+          ${classnames({ 'input-group-focus': activeInput.domainURL })}
+          `}
+            >
               <Input
+                className='form-input-append'
                 type='text'
                 name='domainURL'
                 id='domainURL'
                 placeholder='Domain url'
                 onChange={handleChange}
-                onBlur={handleBlur}
                 value={values.domainURL || ''}
+                onFocus={(e) => {
+                  setActiveInput({
+                    ...activeInput,
+                    domainURL: true
+                  })
+                }}
+                onBlur={(e) => {
+                  handleBlur(e)
+                  setActiveInput({
+                    ...activeInput,
+                    domainURL: false
+                  })
+                }}
               />
+              <InputGroupAddon addonType='append'>
+                <InputGroupText>bytfm.com</InputGroupText>
+              </InputGroupAddon>
               {
                 errors.domainURL && (
-                  <label className='error'>
+                  <label className='col-12 error'>
                     {errors.domainURL}
                   </label>
                 )
               }
-            </FormGroup>
+            </InputGroup>
+               </div>
           </Col>
+          <Col className='col-4' />
         </Row>
         <Row>
           <Col className='col-6'>
-            <FormGroup className={`has-label  ${(classNames.projectOwner) ? classNames.projectOwner : (values.projectOwner === '') ? '' : 'has-success'}`}>
-              <Label for='projectOwner'>Project Owner</Label>
+            <FormGroup className={`has-label  ${(classNames.clientName) ? classNames.clientName : (values.clientName === '') ? '' : 'has-success'}`}>
+              <Label for='clientName'>Client Name</Label>
               <Input
                 type='text'
-                name='projectOwner'
-                id='projectOwner'
-                placeholder='Project Owner'
+                name='clientName'
+                id='clientName'
+                placeholder='Client Name'
                 onChange={handleChange}
                 onBlur={handleBlur}
-                value={values.projectOwner || ''}
+                value={values.clientName || ''}
               />
               {
-                errors.projectOwner && (
+                errors.clientName && (
                   <label className='error'>
-                    {errors.projectOwner}
+                    {errors.clientName}
                   </label>
                 )
               }
