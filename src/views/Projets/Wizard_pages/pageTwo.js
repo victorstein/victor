@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import {
   FormGroup,
   Label,
@@ -15,11 +15,40 @@ import {
 } from 'reactstrap'
 import classnames from 'classnames'
 import Select from 'react-select'
-// import UserContext, { UserConsumer } from '../ModalWizardProvider'
 import { passwordGenerator } from '../../../utils/PasswordGenerator'
 // import { nameGenerator } from '../../../utils/nameGenerator'
 import useForm from '../../../utils/useFormHooks/useForm'
 import schema from './ValidationFormSchema'
+import gql from 'graphql-tag'
+import { useMutation } from '@apollo/react-hooks'
+import { ClipLoader } from 'react-spinners'
+
+const createProject = gql`
+  mutation createProject(
+ $siteName: String!
+ $domain: String!
+ $accountUsername: String!
+ $developerName: String!
+ $theme: String!
+ $accountPassword: String!
+ $wordpressLanguage: wordpressLanguage!
+ $wordpressPassword: String!
+){
+  createProject(
+   siteName: $siteName
+   domain: $domain
+   accountUsername: $accountUsername
+   developerName: $developerName
+   theme: $theme
+   accountPassword: $accountPassword
+   wordpressLanguage: $wordpressLanguage
+   wordpressPassword: $wordpressPassword
+  ){
+    id
+    domain
+  }
+}
+`
 
 const PageTwo = (props) => {
   const [activeInput, setActiveInput] = useState({
@@ -33,10 +62,65 @@ const PageTwo = (props) => {
     theme: 'Total'
   }
 
-  const submitForm = () => {
+  const [createProjectMutations, { error, loading }] = useMutation(createProject, {
+    refetchQueries: ['Allprojects'], awaitRefetchQueries: true
+  })
+
+  const submitForm = async () => {
     const { PageOne } = props.dataForm
-    console.log('FinalData', { FinalData: { PageOne, PageTwo: values } })
+    try {
+      const FinalData = {
+        siteName: PageOne.siteName,
+        domain: PageOne.domainURL + '.bytfm.com',
+        accountUsername: PageOne.accountName.toLowerCase(),
+        developerName: PageOne.developerName,
+        theme: values.theme,
+        accountPassword: PageOne.password,
+        wordpressLanguage: values.language,
+        wordpressPassword: values.passwordWordpress
+      }
+      await createProjectMutations({ variables: { ...FinalData } })
+      props.setOpenModal(false)
+      props.actionsAlertGloval({
+        message: 'Create New Project Successfully',
+        options: {
+          icon: 'icon-bulb-63',
+          type: 'info',
+          autoDismiss: 4,
+          place: 'tr'
+        }
+      })
+      return null
+    } catch (e) {
+      console.log(e)
+    }
+    // console.log('FinalData', { FinalData: { PageOne: { ...PageOne, accountName: PageOne.accountName.toLowerCase() }, PageTwo: values } })
   }
+
+  useEffect(() => {
+    let messageError = ''
+    if (error) {
+      if (Array.isArray(error.graphQLErrors)) {
+        messageError = error.graphQLErrors[0].message
+      } else {
+        messageError = error.graphQLErrors
+      }
+      console.log('messageError', error.graphQLErrors)
+      const options = {
+        message: (Array.isArray(messageError)) ? messageError[0] : messageError,
+        options: {
+          icon: 'icon-alert-circle-exc',
+          type: 'danger',
+          autoDismiss: 4,
+          place: 'tr'
+        }
+      }
+      props.actionsAlertGloval(options)
+    }
+    if (loading) {
+      props.setloading(loading)
+    }
+  }, [error, loading])
 
   const {
     values,
@@ -208,6 +292,7 @@ const PageTwo = (props) => {
             <Button
               className='w-100'
               color='primary'
+              disabled={loading}
               onClick={(e) => {
                 e.preventDefault()
                 props.previousStep()
@@ -221,8 +306,17 @@ const PageTwo = (props) => {
               type='submit'
               className='w-100'
               color='primary'
+              disabled={loading}
             >
-              Finish
+              {
+                (loading) ? (
+                  <ClipLoader
+                    color='#FFFFFF'
+                    size={20}
+                    loading
+                  />
+                ) : 'Finish'
+              }
             </Button>
           </div>
         </ModalFooter>
