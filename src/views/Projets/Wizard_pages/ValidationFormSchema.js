@@ -1,14 +1,32 @@
 import Joi from '@hapi/joi'
 
 const schemaPageOne = {
-  AccountName: Joi.string()
+  siteName: Joi.string()
     .label('Name Account')
     .required()
     .messages({
+      'any.required': 'Site Name is required',
+      'string.empty': 'Site Name is required'
+    }),
+  accountName: Joi
+    .string()
+    .pattern(/^[a-zA-Z]+$/)
+    .required()
+    .strict()
+    .trim()
+    .min(8)
+    .max(8)
+    .label('Name Account')
+    .messages({
       'any.required': 'Account Name is required',
-      'string.empty': 'Account Name is required'
+      'string.empty': 'Account Name is required',
+      'string.min': ' Account Username should be exactly 8 characters',
+      'string.max': 'Account Username should be exactly 8 characters',
+      'string.pattern.base': 'Account name cannot have special characters'
     }),
   domainURL: Joi.string()
+    .strict()
+    .trim()
     .label('Domain UR')
     .required()
     .messages({
