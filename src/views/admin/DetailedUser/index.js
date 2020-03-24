@@ -66,7 +66,7 @@ const DetailIndex = (props) => {
     modalVisible: false
   })
 
-  const { loading, error, data } = useQuery(userByid, { variables: { id: idUser } })
+  const { loading, error, data } = useQuery(userByid, { variables: { id: idUser }, fetchPolicy: 'no-cache' })
 
   const reqChart = useQuery(getLastThreeMonths, { variables: { id: idUser } })
 
