@@ -45,6 +45,7 @@ const ModalWizard = (props) => {
   const [dataForm, setDataForm] = useState({
     PageOne: {}
   })
+  const [loading, setloading] = useState(false)
   return (
     <div className='templateForm'>
       <Modal style={{ marginTop: '64px' }} isOpen={props.openModal} size='lg'>
@@ -60,6 +61,7 @@ const ModalWizard = (props) => {
               style={{ border: 'none' }}
               color='info'
               aria-label='Close'
+              disabled={loading}
               onClick={(e) => { props.setOpenModal(false) }}
             >
               <i style={{ fontSize: '24px' }} className='tim-icons icon-simple-remove' />
@@ -76,8 +78,14 @@ const ModalWizard = (props) => {
               exitLeft: 'fadeInDown'
             }}
           >
-            <PageOne dataForm={dataForm} setDataForm={setDataForm} hashKey='PageOne' />
-            <PageTwo dataForm={dataForm} hashKey='PageTwo' />
+            <PageOne actionsAlertGloval={props.actionsAlertGloval} dataForm={dataForm} setDataForm={setDataForm} hashKey='PageOne' />
+            <PageTwo
+              actionsAlertGloval={props.actionsAlertGloval}
+              dataForm={dataForm}
+              hashKey='PageTwo'
+              setloading={setloading}
+              setOpenModal={props.setOpenModal}
+            />
             {
               // <PageThree dataForm={dataForm} setDataForm={setDataForm} hashKey='PageThree' />
             }
