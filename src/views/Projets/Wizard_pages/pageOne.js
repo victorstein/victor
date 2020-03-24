@@ -24,7 +24,8 @@ const PageOne = (props) => {
     domainURL: false
   })
   const defaultValueForm = {
-    AccountName: '',
+    siteName: '',
+    accountName: '',
     domainURL: '',
     clientName: '',
     developerName: '',
@@ -47,30 +48,59 @@ const PageOne = (props) => {
     errors,
     handleSubmit,
     classNames
-    // handleChangeReactSelect,
-    // handleBlurReactSelect
   } = useForm(submitForm, defaultValueForm, schema.schemaPageOne)
+
   return (
     <div className='pt-4'>
       <Form onSubmit={handleSubmit}>
         <Row>
-          <Col className='col-6'>
-            <FormGroup className={` has-label  ${(classNames.AccountName) ? classNames.AccountName : (values.AccountName === '') ? '' : 'has-success'}`}>
-              <Label for='AccountName'>Account Name</Label>
+          <Col className='col-12'>
+            <FormGroup className={` has-label  ${(classNames.siteName) ? classNames.siteName : (values.siteName === '') ? '' : 'has-success'}`}>
+              <Label for='siteName'>Site Name</Label>
               <Input
                 type='text'
                 className='iccon'
-                name='AccountName'
-                id='AccountName'
+                name='siteName'
+                id='siteName'
+                placeholder='Site Name'
+                onChange={handleChange}
+                onBlur={handleBlur}
+                value={values.siteName || ''}
+              />
+              {
+                errors.siteName && (
+                  <label className='error'>
+                    {errors.siteName}
+                  </label>
+                )
+              }
+            </FormGroup>
+          </Col>
+          <Col className='col-6'>
+            <UncontrolledTooltip className='Tooltip_wizard' placement='top' target='accountName' delay={0}>
+              <div>
+                <p className='pl-2'>Password required at leat:</p>
+                <ul className='text-left pl-3 pt-0'>
+                  <p>The account name must contain 8 characters only. Please avoid the use of special characters.</p>
+                </ul>
+              </div>
+            </UncontrolledTooltip>
+            <FormGroup className={` has-label  ${(classNames.accountName) ? classNames.accountName : (values.accountName === '') ? '' : 'has-success'}`}>
+              <Label for='accountName'>Account Name</Label>
+              <Input
+                type='text'
+                className='iccon'
+                name='accountName'
+                id='accountName'
                 placeholder='Account Name'
                 onChange={handleChange}
                 onBlur={handleBlur}
-                value={values.AccountName || ''}
+                value={values.accountName || ''}
               />
               {
-                errors.AccountName && (
+                errors.accountName && (
                   <label className='error'>
-                    {errors.AccountName}
+                    {errors.accountName}
                   </label>
                 )
               }
@@ -78,21 +108,16 @@ const PageOne = (props) => {
           </Col>
           <Col className='col-6'>
             <Label for='domainURL'>Domain URL</Label>
-            {
-              /* <div className='iconNone'>
-              <Label for='domainURL'>Domain URL</Label>
+            <div className='iconNone'>
               <InputGroup
                 className={`
-          text-left
+          inputGroupAppendRight
           has-label ${(classNames.domainURL) ? classNames.domainURL : (values.domainURL === '') ? '' : 'has-success'}
           ${classnames({ 'input-group-focus': activeInput.domainURL })}
           `}
               >
                 <Input
-                  style={{
-                    borderRadius: '0.4285rem',
-                    marginRight: '2px'
-                  }}
+                  className='form-input-append'
                   type='text'
                   name='domainURL'
                   id='domainURL'
@@ -113,7 +138,7 @@ const PageOne = (props) => {
                     })
                   }}
                 />
-                <InputGroupAddon style={{ borderRadius: '0.4285rem' }}>
+                <InputGroupAddon addonType='append'>
                   <InputGroupText>bytfm.com</InputGroupText>
                 </InputGroupAddon>
                 {
@@ -124,59 +149,7 @@ const PageOne = (props) => {
                   )
                 }
               </InputGroup>
-            </div> */
-            }
-            {
-              //       <InputGroup className="inputGroupAppendRight">
-              //   <Input placeholder="username" className='form-input-append'/>
-              //   <InputGroupAddon addonType="append">
-              //     <InputGroupText>@example.com</InputGroupText>
-              //   </InputGroupAddon>
-              // </InputGroup>
-            }
-            <div className='iconNone'>
-         
-            <InputGroup
-              className={`
-          inputGroupAppendRight
-          has-label ${(classNames.domainURL) ? classNames.domainURL : (values.domainURL === '') ? '' : 'has-success'}
-          ${classnames({ 'input-group-focus': activeInput.domainURL })}
-          `}
-            >
-              <Input
-                className='form-input-append'
-                type='text'
-                name='domainURL'
-                id='domainURL'
-                placeholder='Domain url'
-                onChange={handleChange}
-                value={values.domainURL || ''}
-                onFocus={(e) => {
-                  setActiveInput({
-                    ...activeInput,
-                    domainURL: true
-                  })
-                }}
-                onBlur={(e) => {
-                  handleBlur(e)
-                  setActiveInput({
-                    ...activeInput,
-                    domainURL: false
-                  })
-                }}
-              />
-              <InputGroupAddon addonType='append'>
-                <InputGroupText>bytfm.com</InputGroupText>
-              </InputGroupAddon>
-              {
-                errors.domainURL && (
-                  <label className='col-12 error'>
-                    {errors.domainURL}
-                  </label>
-                )
-              }
-            </InputGroup>
-               </div>
+            </div>
           </Col>
           <Col className='col-4' />
         </Row>
