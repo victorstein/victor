@@ -6,8 +6,6 @@ const validationForm = (values, schemaValidation, onBlurState) => {
   const classNames = {}
   try {
     const result = schemaValidation.validate(values, { abortEarly: false })
-    // console.log(values)
-    // console.log(result)
     result.error.details.map((inputError) => {
       if (onBlurState[inputError.path[0]]) {
         errors[inputError.path[0]] = inputError.message
@@ -59,11 +57,26 @@ const useForm = (submitForm, defaultValues, schema) => {
     setOnBlurState(newBlurState)
     if (Object.keys(errors).length === 0) {
       if (event) event.preventDefault()
-      submitForm(values)
+      submitForm()
     }
     if (event) event.preventDefault()
   }
 
+  const setEspecificValue = (value, inputName) => {
+    const newValue = value
+    const newBlurState = {
+      ...onBlurState, [inputName]: true
+    }
+    const { errors, classNames } = validationForm({
+      ...values,
+      [inputName]: newValue
+    },
+    schemaValidation,
+    newBlurState)
+    setErrors(errors)
+    setClassNames(classNames)
+    setValues(values => ({ ...values, [inputName]: newValue }))
+  }
   const handleChangeDatePicker = (value, inputName) => {
     let newDate = null
     if (value) {
@@ -81,7 +94,14 @@ const useForm = (submitForm, defaultValues, schema) => {
   }
 
   const handleChangeReactSelect = (value, inputName) => {
-    const newValue = value.value
+    let newValue = null
+    if (value) {
+      if (Array.isArray(value)) {
+        newValue = value.map((multiValue) => multiValue.value)
+      } else {
+        newValue = value.value
+      }
+    }
     const { errors, classNames } = validationForm({
       ...values,
       [inputName]: newValue
@@ -112,9 +132,7 @@ const useForm = (submitForm, defaultValues, schema) => {
       ...onBlurState, [targetName]: true
     }
     const { errors, classNames } = validationForm(values, schemaValidation, newBlurState)
-    setErrors(errors)
-    setClassNames(classNames)
-    setOnBlurState(newBlurState)
+    setNewStates(errors, classNames, newBlurState)
   }
 
   const handleBlurReactDate = (date, name) => {
@@ -122,9 +140,7 @@ const useForm = (submitForm, defaultValues, schema) => {
       ...onBlurState, [name]: true
     }
     const { errors, classNames } = validationForm(values, schemaValidation, newBlurState)
-    setErrors(errors)
-    setClassNames(classNames)
-    setOnBlurState(newBlurState)
+    setNewStates(errors, classNames, newBlurState)
   }
 
   const handleBlur = (event) => {
@@ -133,12 +149,16 @@ const useForm = (submitForm, defaultValues, schema) => {
       ...onBlurState, [event.target.name]: true
     }
     const { errors, classNames } = validationForm(values, schemaValidation, newBlurState)
+    setNewStates(errors, classNames, newBlurState)
+  }
+  const setNewStates = (errors, classNames, newBlurState) => {
     setErrors(errors)
     setClassNames(classNames)
     setOnBlurState(newBlurState)
   }
 
   return {
+    setEspecificValue,
     handleChange,
     handleChangeReactSelect,
     handleChangeDatePicker,

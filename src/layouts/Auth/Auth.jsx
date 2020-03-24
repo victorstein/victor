@@ -20,6 +20,7 @@ import Animation from './Animation'
 
 import routes from '../../routes.js'
 import { Row, Col, Container } from 'reactstrap'
+import logo from '../../assets/img/LogoTop.svg'
 
 class Pages extends React.Component {
   getRoutes = routes => {
@@ -86,6 +87,13 @@ class Pages extends React.Component {
             <Row>
               <Col>
                 <Animation />
+              </Col>
+              <Col>
+                <img 
+                  className='w-100 full-page imageLogo img-fluid pull-left'
+                  src={logo}
+                  //src='https://www.topfloormarketing.net/wp-content/uploads/elementor/thumbs/logo-white-o4fg8d27bjfd3fcsxkyjca1dc9gv9etducfvof69ey.png' 
+                  alt="Logo" />
               </Col>
             </Row>
           </div>

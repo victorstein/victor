@@ -8,7 +8,7 @@ const Schemas = Joi.object({
     .required()
     .label('Email')
     .messages({
-      'string.email': 'Please enter a valid Email address.',
+      'string.email': 'Please enter a valid Email.',
       'any.required': 'Email is a required',
       'string.empty': 'Email is a required'
     }),
@@ -25,8 +25,8 @@ const Schemas = Joi.object({
     .required()
     .label('Last Name')
     .messages({
-      'any.required': 'Name is a required',
-      'string.empty': 'Name is a required'
+      'any.required': 'Last Name is a required',
+      'string.empty': 'Last Name is a required'
     }),
   password: Joi
     .string()
@@ -36,8 +36,8 @@ const Schemas = Joi.object({
     .message('Please enter a valid password address.')
     .label('Password')
     .messages({
-      'any.required': 'Name is a required',
-      'string.empty': 'Name is a required'
+      'any.required': 'password is a required',
+      'string.empty': 'password is a required'
     }),
   confirmPassword: Joi.required().valid(Joi.ref('password')).messages({ 'any.only': 'pasword not mach' })
 })

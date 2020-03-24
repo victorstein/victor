@@ -263,7 +263,7 @@ const BSAlertAddPermissions = (props) => {
   }, [reqUpdateUser.data, reqUpdateUser.error])
 
   const conted = () => {
-    if (loading || reqRoles.loading || reqPermissions.loading) {
+    if (loading || reqRoles.loading) {
       return (
         <div className='d-flex justify-content-center p-2 m-2'>
           <ClipLoader
@@ -372,6 +372,8 @@ const BSAlertAddPermissions = (props) => {
                   placeholder='Choose City'
                   name='multipleSelect'
                   isClearable={false}
+                  isLoading={reqPermissions.loading}
+                  isDisabled={reqPermissions.loading}
                   closeMenuOnSelect={false}
                   isMulti
                   onInputChange={(e) => {

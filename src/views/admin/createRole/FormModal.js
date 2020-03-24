@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import {
   Row, Col, Button,
   ModalBody,
@@ -29,6 +29,10 @@ const FormModal = (props) => {
     value: u.id,
     label: u.name
   }))
+
+  useEffect(() => {
+    props.setValues(values)
+  }, [values])
 
   const styles = {
     input: (base, state) => {

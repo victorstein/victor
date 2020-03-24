@@ -313,7 +313,7 @@ class ValidationForms extends React.Component {
                       />
                       {this.state.registerEmailState === "has-danger" ? (
                         <label className="error">
-                          Please enter a valid email address.
+                          Please enter a valid email.
                         </label>
                       ) : null}
                     </FormGroup>
@@ -404,7 +404,7 @@ class ValidationForms extends React.Component {
                       />
                       {this.state.loginEmailState === "has-danger" ? (
                         <label className="error">
-                          Please enter a valid email address.
+                          Please enter a valid email.
                         </label>
                       ) : null}
                     </FormGroup>
@@ -481,7 +481,7 @@ class ValidationForms extends React.Component {
                           />
                           {this.state.emailState === "has-danger" ? (
                             <label className="error">
-                              Please enter a valid email address.
+                              Please enter a valid email.
                             </label>
                           ) : null}
                         </FormGroup>

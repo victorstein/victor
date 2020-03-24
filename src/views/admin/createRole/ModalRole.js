@@ -104,6 +104,7 @@ const ModalRole = (props) => {
     page: 1,
     filters: ''
   })
+  const [values, setValues] = useState(null)
 
   const [queryRolebyid, reqQueryRolebyid] = useLazyQuery(roleByid, { fetchPolicy: 'no-cache' })
 
@@ -117,8 +118,8 @@ const ModalRole = (props) => {
     refetchQueries: ['roles'], awaitRefetchQueries: true
   })
 
-  const submitForm = async (value) => {
-    const { name, permissions } = value
+  const submitForm = async () => {
+    const { name, permissions } = values
     try {
       if (idRole) {
         await updateRoleMutations({
@@ -138,6 +139,10 @@ const ModalRole = (props) => {
             place: 'tr'
           }
         })
+        STORE.setState({
+          idRole: null
+        })
+        return null
       } else {
         await createRoleMutations({
           variables: {
@@ -155,6 +160,7 @@ const ModalRole = (props) => {
             place: 'tr'
           }
         })
+        return null
       }
     } catch (e) {
       console.log(e)
@@ -290,6 +296,8 @@ const ModalRole = (props) => {
           variables={variables}
           loadingPermissions={reqPermissions.loading}
           submitForm={submitForm}
+          values={values}
+          setValues={setValues}
           loadingReqMutations={{
             reqCreateRoleMutations: reqCreateRoleMutations.loading,
             reqUpdateRoleMutations: reqUpdateRoleMutations.loading
@@ -318,6 +326,8 @@ const ModalRole = (props) => {
     } else if (reqQueryRolebyid.data) {
       return (
         <FormModal
+          values={values}
+          setValues={setValues}
           loadingPermissions={reqPermissions.loading}
           setVariables={setVariables}
           variables={variables}

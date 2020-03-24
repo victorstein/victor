@@ -1,420 +1,304 @@
-import React, { Component } from 'react'
+import React, { useState } from 'react'
 import {
+  Form,
+  Row,
+  Col,
   FormGroup,
   Label,
   Input,
-  Row,
-  Col
+  ModalFooter,
+  Button,
+  UncontrolledTooltip,
+  InputGroup,
+  InputGroupAddon,
+  InputGroupText
 } from 'reactstrap'
-import UserContext, { UserConsumer } from '../ModalWizardProvider'
+import useForm from '../../../utils/useFormHooks/useForm'
+import schema from './ValidationFormSchema'
+import classnames from 'classnames'
 
-class PageOne extends Component {
-  static contextType = UserContext
-  constructor(props) {
-    super(props)
-    this.state = {
-      nameAccountInput: {
-        className: '',
-        value: '',
-        error: false,
-        labelError: ''
-      },
-      domainURLInput: {
-        className: '',
-        value: '',
-        error: false,
-        labelError: ''
-      },
-      projectsNameInput: {
-        className: '',
-        value: '',
-        error: false,
-        labelError: ''
-      },
-      projectOwnerInput: {
-        className: '',
-        value: '',
-        error: false,
-        labelError: ''
-      },
-      sellerInput: {
-        className: '',
-        value: '',
-        error: false,
-        labelError: ''
-      },
-      developerNameInput: {
-        className: '',
-        value: '',
-        error: false,
-        labelError: ''
-      }
-    }
+const PageOne = (props) => {
+  const [activeInput, setActiveInput] = useState({
+    userName: false,
+    password: false,
+    domainURL: false
+  })
+  const defaultValueForm = {
+    siteName: '',
+    accountName: '',
+    domainURL: '',
+    clientName: '',
+    developerName: '',
+    password: '',
+    confirmPassword: ''
   }
 
-  isValidated() {
-    const {
-      nameAccountInput,
-      domainURLInput,
-      projectsNameInput,
-      projectOwnerInput,
-      sellerInput,
-      developerNameInput
-    } = this.state
-    if (
-      nameAccountInput.className === 'has-success' &&
-      domainURLInput.className === 'has-success' &&
-      projectsNameInput.className === 'has-success' &&
-      projectOwnerInput.className === 'has-success' &&
-      sellerInput.className === 'has-success' &&
-      developerNameInput.className === 'has-success'
-    ) {
-      const { setState } = this.context
-      const dataPage = {
-        nameAccount: this.state.nameAccountInput.value,
-        domainURL: this.state.domainURLInput.value,
-        projectsName: this.state.projectsNameInput.value,
-        projectOwner: this.state.projectOwnerInput.value,
-        seller: this.state.sellerInput.value,
-        developerName: this.state.developerNameInput.value
-      }
-      setState({
-        PageOneData: {
-          data: { ...dataPage },
-          complete: true
-        }
-      })
-      return true
-    } else {
-      if (nameAccountInput.className !== 'has-success') {
-        this.setState({
-          nameAccountInput: {
-            labelError: 'Name is required',
-            error: true,
-            value: nameAccountInput.value,
-            className: 'has-danger'
-          }
-        })
-      }
-      if (domainURLInput.className !== 'has-success') {
-        this.setState({
-          domainURLInput: {
-            labelError: 'Domain is required',
-            error: true,
-            value: domainURLInput.value,
-            className: 'has-danger'
-          }
-        })
-      }
-      if (projectsNameInput.className !== 'has-success') {
-        this.setState({
-          projectsNameInput: {
-            labelError: 'project name is required',
-            error: true,
-            value: projectsNameInput.value,
-            className: 'has-danger'
-          }
-        })
-      }
-      if (projectOwnerInput.className !== 'has-success') {
-        this.setState({
-          projectOwnerInput: {
-            labelError: 'project Owner is required',
-            error: true,
-            value: projectOwnerInput.value,
-            className: 'has-danger'
-          }
-        })
-      }
-      if (sellerInput.className !== 'has-success') {
-        this.setState({
-          sellerInput: {
-            labelError: 'Seller Name is required',
-            error: true,
-            value: sellerInput.value,
-            className: 'has-danger'
-          }
-        })
-      }
-      if (developerNameInput.className !== 'has-success') {
-        this.setState({
-          developerNameInput: {
-            labelError: 'Developer Name is required',
-            error: true,
-            value: developerNameInput.value,
-            className: 'has-danger'
-          }
-        })
-      }
-      return false
-    }
+  const submitForm = () => {
+    props.setDataForm({
+      ...props.dataForm,
+      PageOne: values
+    })
+    props.nextStep()
   }
 
-  render() {
-    const ValidatorFormChange = (event, nameInput) => {
-      const { value } = event.target
-      switch (nameInput) {
-        case 'developerName':
-          if (!value) {
-            this.setState({
-              developerNameInput: {
-                labelError: 'Developer Name is required',
-                error: true,
-                value: value,
-                className: 'has-danger'
-              }
-            })
-          } else {
-            this.setState({
-              developerNameInput: {
-                labelError: '',
-                error: false,
-                value: value,
-                className: 'has-success'
-              }
-            })
-          }
-          break
-        case 'nameAccount':
-          if (!value) {
-            this.setState({
-              nameAccountInput: {
-                labelError: 'Name is required',
-                error: true,
-                value: value,
-                className: 'has-danger'
-              }
-            })
-          } else {
-            this.setState({
-              nameAccountInput: {
-                labelError: '',
-                error: false,
-                value: value,
-                className: 'has-success'
-              }
-            })
-          }
-          break
-        case 'domainURL':
-          if (!value) {
-            this.setState({
-              domainURLInput: {
-                labelError: 'Domin is required',
-                error: true,
-                value: value,
-                className: 'has-danger'
-              }
-            })
-          } else {
-            if (value.includes(' ')) {
-              this.setState({
-                domainURLInput: {
-                  labelError: 'Domain Url cannot contain space',
-                  error: true,
-                  value: value,
-                  className: 'has-danger'
-                }
-              })
-            } else {
-              this.setState({
-                domainURLInput: {
-                  labelError: '',
-                  error: false,
-                  value: value,
-                  className: 'has-success'
-                }
-              })
-            }
+  const {
+    values,
+    handleChange,
+    handleBlur,
+    errors,
+    handleSubmit,
+    classNames
+  } = useForm(submitForm, defaultValueForm, schema.schemaPageOne)
 
-          }
-          break
-        case 'projectsName':
-          if (!value) {
-            this.setState({
-              projectsNameInput: {
-                labelError: 'project name is required',
-                error: true,
-                value: value,
-                className: 'has-danger'
+  return (
+    <div className='pt-4'>
+      <Form onSubmit={handleSubmit}>
+        <Row>
+          <Col className='col-12'>
+            <FormGroup className={` has-label  ${(classNames.siteName) ? classNames.siteName : (values.siteName === '') ? '' : 'has-success'}`}>
+              <Label for='siteName'>Site Name</Label>
+              <Input
+                type='text'
+                className='iccon'
+                name='siteName'
+                id='siteName'
+                placeholder='Site Name'
+                onChange={handleChange}
+                onBlur={handleBlur}
+                value={values.siteName || ''}
+              />
+              {
+                errors.siteName && (
+                  <label className='error'>
+                    {errors.siteName}
+                  </label>
+                )
               }
-            })
-          } else {
-            this.setState({
-              projectsNameInput: {
-                labelError: '',
-                error: false,
-                value: value,
-                className: 'has-success'
-              }
-            })
-          }
-          break
-        case 'projectOwner':
-          if (!value) {
-            this.setState({
-              projectOwnerInput: {
-                labelError: 'project Owner is required',
-                error: true,
-                value: value,
-                className: 'has-danger'
-              }
-            })
-          } else {
-            this.setState({
-              projectOwnerInput: {
-                labelError: '',
-                error: false,
-                value: value,
-                className: 'has-success'
-              }
-            })
-          }
-          break
-        case 'seller':
-          if (!value) {
-            this.setState({
-              sellerInput: {
-                labelError: 'Seller Name is required',
-                error: true,
-                value: value,
-                className: 'has-danger'
-              }
-            })
-          } else {
-            this.setState({
-              sellerInput: {
-                labelError: '',
-                error: false,
-                value: value,
-                className: 'has-success'
-              }
-            })
-          }
-          break
-        default: break
-      }
-    }
-
-    return (
-      <UserConsumer>
-        {
-          (contextValue) => {
-            return (
-              <div className='container'>
-                <form>
-                  <Row>
-                    <Col className='col-4'>
-                      <FormGroup className={`has-label ${this.state.nameAccountInput.className}`}>
-                        <Label for='nameAccount'>Name Account</Label>
-                        <Input
-                          type='text'
-                          name='nameAccount'
-                          id='nameAccount'
-                          placeholder='Name Account'
-                          onChange={e => ValidatorFormChange(e, 'nameAccount')}
-                        />
-                        {this.state.nameAccountInput.error &&
-                          <label className='error'>
-                            {this.state.nameAccountInput.labelError}
-                          </label>}
-                      </FormGroup>
-                    </Col>
-                    <Col className='col-4'>
-                      <FormGroup className={`has-label ${this.state.domainURLInput.className}`}>
-                        <Label for='domainURL'>Domain url</Label>
-                        <Input
-                          type='text'
-                          name='domainURL'
-                          id='domainURL'
-                          placeholder='Domain url'
-                          onChange={e => {
-                            //console.log(e.target.value.includes(' '))
-                            ValidatorFormChange(e, 'domainURL')
-                          }}
-                        />
-                        {this.state.domainURLInput.error &&
-                          <label className='error'>
-                            {this.state.domainURLInput.labelError}
-                          </label>}
-                      </FormGroup>
-                    </Col>
-                    <Col className='col-4'>
-                      <FormGroup className={`has-label ${this.state.projectsNameInput.className}`}>
-                        <Label for='projectsName'>Project's Name</Label>
-                        <Input
-                          type='text'
-                          name='projectsName'
-                          id='projectsName'
-                          placeholder={'Projec\'ts Name'}
-                          onChange={e => ValidatorFormChange(e, 'projectsName')}
-                        />
-                        {this.state.projectsNameInput.error &&
-                          <label className='error'>
-                            {this.state.projectsNameInput.labelError}
-                          </label>}
-                      </FormGroup>
-                    </Col>
-                  </Row>
-                  <Row>
-                    <Col className='col-4'>
-                      <FormGroup className={`has-label ${this.state.projectOwnerInput.className}`}>
-                        <Label for='projectOwner'>Project Owner</Label>
-                        <Input
-                          type='text'
-                          name='projectOwner'
-                          id='projectOwner'
-                          placeholder='Project Owner'
-                          onChange={e => ValidatorFormChange(e, 'projectOwner')}
-                        />
-                        {this.state.projectOwnerInput.error &&
-                          <label className='error'>
-                            {this.state.projectOwnerInput.labelError}
-                          </label>}
-                      </FormGroup>
-                    </Col>
-                    <Col className='col-4'>
-                      <FormGroup className={`has-label ${this.state.sellerInput.className}`}>
-                        <Label for='projectOwner'>Seller</Label>
-                        <Input
-                          type='text'
-                          name='seller'
-                          id='seller'
-                          placeholder='Seller'
-                          onChange={e => ValidatorFormChange(e, 'seller')}
-                        />
-                        {this.state.sellerInput.error &&
-                          <label className='error'>
-                            {this.state.sellerInput.labelError}
-                          </label>}
-                      </FormGroup>
-                    </Col>
-                    <Col className='col-4'>
-                      <FormGroup className={`has-label ${this.state.developerNameInput.className}`}>
-                        <Label for='developerName'>Dveloper Name</Label>
-                        <Input
-                          type='text'
-                          name='developerName'
-                          id='developerName'
-                          placeholder='Developer Name'
-                          onChange={e => ValidatorFormChange(e, 'developerName')}
-                        />
-                        {this.state.developerNameInput.error &&
-                          <label className='error'>
-                            {this.state.developerNameInput.labelError}
-                          </label>}
-                      </FormGroup>
-                    </Col>
-                  </Row>
-                </form>
+            </FormGroup>
+          </Col>
+          <Col className='col-6'>
+            <UncontrolledTooltip className='Tooltip_wizard' placement='top' target='accountName' delay={0}>
+              <div>
+                <p className='pl-2'>Password required at leat:</p>
+                <ul className='text-left pl-3 pt-0'>
+                  <p>The account name must contain 8 characters only. Please avoid the use of special characters.</p>
+                </ul>
               </div>
-            )
-          }
-        }
-      </UserConsumer>
-
-    )
-  }
+            </UncontrolledTooltip>
+            <FormGroup className={` has-label  ${(classNames.accountName) ? classNames.accountName : (values.accountName === '') ? '' : 'has-success'}`}>
+              <Label for='accountName'>Account Name</Label>
+              <Input
+                type='text'
+                className='iccon'
+                name='accountName'
+                id='accountName'
+                placeholder='Account Name'
+                onChange={handleChange}
+                onBlur={handleBlur}
+                value={values.accountName || ''}
+              />
+              {
+                errors.accountName && (
+                  <label className='error'>
+                    {errors.accountName}
+                  </label>
+                )
+              }
+            </FormGroup>
+          </Col>
+          <Col className='col-6'>
+            <Label for='domainURL'>Domain URL</Label>
+            <div className='iconNone'>
+              <InputGroup
+                className={`
+          inputGroupAppendRight
+          has-label ${(classNames.domainURL) ? classNames.domainURL : (values.domainURL === '') ? '' : 'has-success'}
+          ${classnames({ 'input-group-focus': activeInput.domainURL })}
+          `}
+              >
+                <Input
+                  className='form-input-append'
+                  type='text'
+                  name='domainURL'
+                  id='domainURL'
+                  placeholder='Domain url'
+                  onChange={handleChange}
+                  value={values.domainURL || ''}
+                  onFocus={(e) => {
+                    setActiveInput({
+                      ...activeInput,
+                      domainURL: true
+                    })
+                  }}
+                  onBlur={(e) => {
+                    handleBlur(e)
+                    setActiveInput({
+                      ...activeInput,
+                      domainURL: false
+                    })
+                  }}
+                />
+                <InputGroupAddon addonType='append'>
+                  <InputGroupText>bytfm.com</InputGroupText>
+                </InputGroupAddon>
+                {
+                  errors.domainURL && (
+                    <label className='col-12 error'>
+                      {errors.domainURL}
+                    </label>
+                  )
+                }
+              </InputGroup>
+            </div>
+          </Col>
+          <Col className='col-4' />
+        </Row>
+        <Row>
+          <Col className='col-6'>
+            <FormGroup className={`has-label  ${(classNames.clientName) ? classNames.clientName : (values.clientName === '') ? '' : 'has-success'}`}>
+              <Label for='clientName'>Client Name</Label>
+              <Input
+                type='text'
+                name='clientName'
+                id='clientName'
+                placeholder='Client Name'
+                onChange={handleChange}
+                onBlur={handleBlur}
+                value={values.clientName || ''}
+              />
+              {
+                errors.clientName && (
+                  <label className='error'>
+                    {errors.clientName}
+                  </label>
+                )
+              }
+            </FormGroup>
+          </Col>
+          <Col className='col-6'>
+            <FormGroup className={`has-label  ${(classNames.developerName) ? classNames.developerName : (values.developerName === '') ? '' : 'has-success'}`}>
+              <Label for='developerName'>Developer Name</Label>
+              <Input
+                type='text'
+                name='developerName'
+                id='developerName'
+                placeholder='Developer Name'
+                onChange={handleChange}
+                onBlur={handleBlur}
+                value={values.developerName || ''}
+              />
+              {
+                errors.developerName && (
+                  <label className='error'>
+                    {errors.developerName}
+                  </label>
+                )
+              }
+            </FormGroup>
+          </Col>
+          <Col className='col-6'>
+            <UncontrolledTooltip className='Tooltip_wizard' placement='top' target='password' delay={0}>
+              <div>
+                <p className='pl-2'>Password required at leat:</p>
+                <ul className='text-left pl-3 pt-0'>
+                  <li>One upper case letter</li>
+                  <li>One lower case letter</li>
+                  <li>Eight characters</li>
+                  <li>One special characters</li>
+                  <li>One Number</li>
+                </ul>
+              </div>
+            </UncontrolledTooltip>
+            <UncontrolledTooltip className='Tooltip_wizard' placement='top' target='exclamation-circle' delay={0}>
+              <div>
+                <p className='pl-2'>click to generate password automatically.</p>
+              </div>
+            </UncontrolledTooltip>
+            <div className='InputGroupVictor'>
+              <Label style={{ color: 'rgba(255, 255, 255, 0.6)' }} for='password'>Password</Label>
+              <InputGroup
+                className={`
+          text-left 
+          has-label ${(classNames.password) ? classNames.password : (values.password === '') ? '' : 'has-success'}
+          ${classnames({ 'input-group-focus': activeInput.password })}
+          `}
+              >
+                <InputGroupAddon style={{ display: 'contents' }} addonType='prepend'>
+                  <InputGroupText id='exclamation-circle'>
+                    <i
+                      className='fas fa-exclamation-circle'
+                    />
+                  </InputGroupText>
+                </InputGroupAddon>
+                <Input
+                  type='password'
+                  name='password'
+                  id='password'
+                  placeholder='Password'
+                  onChange={handleChange}
+                  value={values.password || ''}
+                  onFocus={(e) => {
+                    setActiveInput({
+                      ...activeInput,
+                      password: true
+                    })
+                  }}
+                  onBlur={(e) => {
+                    handleBlur(e)
+                    setActiveInput({
+                      ...activeInput,
+                      password: false
+                    })
+                  }}
+                />
+                {
+                  errors.password && (
+                    <label className='col-12 error'>
+                      {errors.password}
+                    </label>
+                  )
+                }
+              </InputGroup>
+            </div>
+          </Col>
+          <Col className='col-6'>
+            <FormGroup className={`has-label  ${(classNames.confirmPassword) ? classNames.confirmPassword : (values.confirmPassword === '') ? '' : 'has-success'}`}>
+              <Label for='password'>Confirm Password</Label>
+              <Input
+                type='password'
+                name='confirmPassword'
+                id='confirmPassword'
+                placeholder='Confirm Password'
+                onChange={handleChange}
+                value={values.confirmPassword || ''}
+                onBlur={handleBlur}
+              />
+              {
+                errors.confirmPassword && (
+                  <label className='col-12 error'>
+                    {errors.confirmPassword}
+                  </label>
+                )
+              }
+            </FormGroup>
+          </Col>
+        </Row>
+        <ModalFooter>
+          <Row className='w-100 d-flex justify-content-center'>
+            <Col className='col-4 pt-2'>
+              <Button
+                type='submit'
+                className='w-100'
+                color='primary'
+              >
+                Next
+              </Button>
+            </Col>
+          </Row>
+        </ModalFooter>
+      </Form>
+    </div>
+  )
 }
 
 export default PageOne

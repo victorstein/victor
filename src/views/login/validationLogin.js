@@ -44,7 +44,7 @@ export const ValidatorFormChange = (event, setState, state, type) => {
         })
       } else {
         return setState({
-          labelError: 'Please enter a valid email address.',
+          labelError: 'Please enter a valid email',
           error: true,
           value: event.target.value,
           className: 'has-danger'
