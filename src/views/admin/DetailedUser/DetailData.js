@@ -17,7 +17,6 @@ const DetaillData = (props) => {
   const [verticalTabs, setVerticalTabs] = useState({
     tabsActive: 'info'
   })
-
   return (
     <div>
       <Row>
