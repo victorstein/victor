@@ -137,9 +137,6 @@ const TableProyects = (props) => {
     fetchPolicy: 'no-cache'
   })
 
-  // console.log(userSelect)
-  // console.log({ filters: (userSelect.label === 'User Name') ? '' : userSelect.label })
-
   useEffect(() => {
     const newFilter = []
     if (filtersValue.SITENAME) {
@@ -167,35 +164,19 @@ const TableProyects = (props) => {
   }, [filtersValue])
 
   const contendTable = () => {
-    if (error) {
-      return (
-        <tr>
-          <td colSpan={5}>
-            <div className='d-flex justify-content-center p-2 m-2'>
-              No Data
-            </div>
-          </td>
-        </tr>
-      )
-    }
-
-    if (loading) {
-      return (
-        <tr>
-          <td colSpan={5}>
-            <div className='d-flex justify-content-center p-2 m-2'>
-              <BeatLoader
-                color='#4A90E2'
-                size={20}
-                loading={loading}
-              />
-            </div>
-          </td>
-        </tr>
-      )
-    }
-
     if (!loading && data) {
+      if (error) {
+        return (
+          <tr>
+            <td colSpan={5}>
+              <div className='d-flex justify-content-center p-2 m-2'>
+              No Data
+              </div>
+            </td>
+          </tr>
+        )
+      }
+
       if (data.projects.docs.length === 0) {
         return (
           <tr>
@@ -260,6 +241,20 @@ const TableProyects = (props) => {
             </td>
           </tr>
         )))
+    } else {
+      return (
+        <tr>
+          <td colSpan={5}>
+            <div className='d-flex justify-content-center p-2 m-2'>
+              <BeatLoader
+                color='#4A90E2'
+                size={20}
+                loading={loading}
+              />
+            </div>
+          </td>
+        </tr>
+      )
     }
   }
 
