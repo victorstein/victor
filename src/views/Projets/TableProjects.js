@@ -224,20 +224,6 @@ const TableProyects = (props) => {
               >
                 Agregate Landing
               </UncontrolledTooltip>
-              <Button
-                className='btn-link btn-icon'
-                color='danger'
-                id={`deleteButton_${index}`}
-                size='sm'
-              >
-                <i className='tim-icons icon-simple-remove' />
-              </Button>
-              <UncontrolledTooltip
-                delay={0}
-                target={`deleteButton_${index}`}
-              >
-                Delete Project
-              </UncontrolledTooltip>
             </td>
           </tr>
         )))
