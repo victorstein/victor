@@ -63,7 +63,7 @@ const PageTwo = (props) => {
   }
 
   const [createProjectMutations, { error, loading }] = useMutation(createProject, {
-    refetchQueries: ['Allprojects'], awaitRefetchQueries: true
+    refetchQueries: ['projects'], awaitRefetchQueries: true
   })
 
   const submitForm = async () => {
