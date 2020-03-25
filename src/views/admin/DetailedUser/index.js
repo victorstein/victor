@@ -19,7 +19,6 @@ import { Bar } from 'react-chartjs-2'
 import UseContex from './ContexStore'
 import ModalProject from './ModalProject'
 import AlertGlobal from '../../../components/AlertGlobal'
-import { actions } from 'react-table'
 
 const userByid = gql`
 query userByid(
@@ -154,7 +153,7 @@ const DetailIndex = (props) => {
     }
   }
 
-  const alertSwow = (options) =>{
+  const alertSwow = (options) => {
     myInputAlert.current.showAlert(options)
   }
 
