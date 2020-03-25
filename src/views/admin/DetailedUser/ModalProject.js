@@ -12,7 +12,7 @@ import { BeatLoader } from 'react-spinners'
 import UseContex from './ContexStore'
 import { useQuery } from '@apollo/react-hooks'
 import gql from 'graphql-tag'
-import { array } from 'prop-types'
+import moment from 'moment'
 
 const projectByid = gql`
   query projectByid( $id : String!){
@@ -34,7 +34,7 @@ const projectByid = gql`
     wordpressLanguage
     wordpressPassword
     wordpressUser
-    
+    developerName
   }
 }
 `
@@ -49,9 +49,9 @@ const ModalProject = (props) => {
 
   const { loading, error, data } = useQuery(projectByid, { variables: { id: STORE.state.idProject } })
 
-  // if (data) {
-  //   console.log(data)
-  // }
+  if (data) {
+    console.log(data)
+  }
 
   // console.log(STORE.state)
   return (
@@ -230,6 +230,26 @@ const ModalProject = (props) => {
                           <Col className='col-4'>
                             <p style={{ color: 'white' }}>Wordpress User</p>
                             <p style={{ color: '#e14eca' }}>{data.projectById.wordpressUser}</p>
+                          </Col>
+                          <Col className='col-4'>
+                            <p style={{ color: 'white' }}>Updated At</p>
+                            <p style={{ color: '#e14eca' }}>{moment(data.projectById.updatedAt).format('MMMM DD YYYY')}</p>
+                          </Col>
+                          <Col className='col-4'>
+                            <p style={{ color: 'white' }}>LastUpdated By</p>
+                            <p style={{ color: '#e14eca' }}>{data.projectById.lastUpdatedBy.fullName}</p>
+                          </Col>
+                          <Col className='col-4'>
+                            <p style={{ color: 'white' }}>Database Name</p>
+                            <p style={{ color: '#e14eca' }}>{data.projectById.databaseName}</p>
+                          </Col>
+                          <Col className='col-4'>
+                            <p style={{ color: 'white' }}>Developer Name</p>
+                            <p style={{ color: '#e14eca' }}>{data.projectById.developerName}</p>
+                          </Col>
+                          <Col className='col-4'>
+                            <p style={{ color: 'white' }}>Database User</p>
+                            <p style={{ color: '#e14eca' }}>{data.projectById.databaseUser}</p>
                           </Col>
                         </Row>
                       </div>
