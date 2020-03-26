@@ -24,6 +24,7 @@ import { useQuery } from '@apollo/react-hooks'
 import { BeatLoader } from 'react-spinners'
 import moment from 'moment'
 import { GlobalContext } from '../../index'
+import ModalDetailProject from './ModalDetailProject'
 
 const Allprojects = gql` 
 query projects(
@@ -91,6 +92,9 @@ const TableProyects = (props) => {
       focus: false
     }
   })
+  const [modalDetailProject, setmodalDetailProject] = useState(false)
+  const [idProject, setIdProject] = useState(null)
+
   const [singleSelect, setSingleSelect] = useState({
     label: '10',
     value: '10'
@@ -202,6 +206,11 @@ const TableProyects = (props) => {
                 className='btn-link btn-icon'
                 color='primary'
                 id={`ViewButton_${index}`}
+                onClick={(e) => {
+                  // console.log(value)
+                  setmodalDetailProject(true)
+                  setIdProject(value.id)
+                }}
               >
                 <i className='fas fa-eye' />
               </Button>
@@ -246,6 +255,16 @@ const TableProyects = (props) => {
 
   return (
     <Card className='w-100'>
+      {
+        (modalDetailProject) ? (
+          <ModalDetailProject
+            idProject={idProject}
+            modalDetailProject={modalDetailProject}
+            setmodalDetailProject={setmodalDetailProject}
+            setIdProject={setIdProject}
+          />
+        ) : null
+      }
       <CardHeader>
         <CardTitle tag='h4'>Project list</CardTitle>
         <Row>
