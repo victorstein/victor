@@ -18,6 +18,7 @@ import { Link } from 'react-router-dom'
 import { Bar } from 'react-chartjs-2'
 import UseContex from './ContexStore'
 import ModalProject from './ModalProject'
+import AlertGlobal from '../../../components/AlertGlobal'
 
 const userByid = gql`
 query userByid(
@@ -66,6 +67,7 @@ const DetailIndex = (props) => {
     modalVisible: false
   })
 
+  const myInputAlert = React.useRef()
   const { loading, error, data } = useQuery(userByid, { variables: { id: idUser }, fetchPolicy: 'no-cache' })
 
   const reqChart = useQuery(getLastThreeMonths, { variables: { id: idUser } })
@@ -151,14 +153,22 @@ const DetailIndex = (props) => {
     }
   }
 
+  const alertSwow = (options) => {
+    myInputAlert.current.showAlert(options)
+  }
+
   return (
     <UseContex.Provider value={{
       state: store,
       setState: (params) => {
         setStore(params)
+      },
+      actions: {
+        alertSwow
       }
     }}
     >
+      <AlertGlobal ref={myInputAlert} />
       <ModalProject />
       <Link
         to='/admin/user/createUser'

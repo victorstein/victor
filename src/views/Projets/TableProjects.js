@@ -24,6 +24,7 @@ import { useQuery } from '@apollo/react-hooks'
 import { BeatLoader } from 'react-spinners'
 import moment from 'moment'
 import { GlobalContext } from '../../index'
+import ModalDetailProject from './ModalDetailProject'
 
 const Allprojects = gql` 
 query projects(
@@ -91,11 +92,14 @@ const TableProyects = (props) => {
       focus: false
     }
   })
+  const [modalDetailProject, setmodalDetailProject] = useState(false)
+  const [idProject, setIdProject] = useState(null)
+
   const [singleSelect, setSingleSelect] = useState({
     label: '10',
     value: '10'
   })
-  const [userSelect, setUserSelect] = useState({ value: '0', label: 'User Name' })
+  const [userSelect, setUserSelect] = useState({ value: '1', label: 'All User' })
   const [variables, setVariables] = useState({
     perPage: 10,
     page: 1,
@@ -152,6 +156,7 @@ const TableProyects = (props) => {
       })
     }
     if (filtersValue.CREATEDBY) {
+      console.log(filtersValue)
       newFilter.push({
         field: 'CREATEDBY',
         value: filtersValue.CREATEDBY
@@ -159,6 +164,7 @@ const TableProyects = (props) => {
     }
     setVariables({
       ...variables,
+      page: 1,
       filters: newFilter
     })
   }, [filtersValue])
@@ -202,6 +208,10 @@ const TableProyects = (props) => {
                 className='btn-link btn-icon'
                 color='primary'
                 id={`ViewButton_${index}`}
+                onClick={(e) => {
+                  setmodalDetailProject(true)
+                  setIdProject(value.id)
+                }}
               >
                 <i className='fas fa-eye' />
               </Button>
@@ -224,20 +234,6 @@ const TableProyects = (props) => {
               >
                 Agregate Landing
               </UncontrolledTooltip>
-              <Button
-                className='btn-link btn-icon'
-                color='danger'
-                id={`deleteButton_${index}`}
-                size='sm'
-              >
-                <i className='tim-icons icon-simple-remove' />
-              </Button>
-              <UncontrolledTooltip
-                delay={0}
-                target={`deleteButton_${index}`}
-              >
-                Delete Project
-              </UncontrolledTooltip>
             </td>
           </tr>
         )))
@@ -258,8 +254,47 @@ const TableProyects = (props) => {
     }
   }
 
+  const filterByUSerOptions = () => {
+    const arrayOption = [{
+      value: '1', label: 'All User'
+    }]
+    if (reqUser.data) {
+      reqUser.data.users.docs.map((value, index) => (
+        arrayOption.push({ value: value.id, label: value.fullName })
+      ))
+    }
+    return arrayOption
+  }
+
+  const onchangeSelectUSer = (value) => {
+    console.log('valueSelect', value)
+    if (value.label === 'All User') {
+      setUserSelect(value)
+      setFiltersValue({
+        ...filtersValue,
+        CREATEDBY: ''
+      })
+    } else {
+      setUserSelect(value)
+      setFiltersValue({
+        ...filtersValue,
+        CREATEDBY: value.value
+      })
+    }
+  }
+
   return (
     <Card className='w-100'>
+      {
+        (modalDetailProject) ? (
+          <ModalDetailProject
+            idProject={idProject}
+            modalDetailProject={modalDetailProject}
+            setmodalDetailProject={setmodalDetailProject}
+            setIdProject={setIdProject}
+          />
+        ) : null
+      }
       <CardHeader>
         <CardTitle tag='h4'>Project list</CardTitle>
         <Row>
@@ -293,20 +328,14 @@ const TableProyects = (props) => {
                         const inputValue = e.replace(/\W/g, '')
                         setInputFilterSelect(inputValue)
                       }}
-                      onChange={value => {
-                        setUserSelect(value)
-                        console.log(value.value)
-                        setFiltersValue({
-                          ...filtersValue,
-                          CREATEDBY: value.value
-                        })
-                      }}
-                      options={
-                        (reqUser.data)
-                          ? reqUser.data.users.docs.map((value, index) => (
-                            { value: value.id, label: value.fullName }
-                          )) : []
-                      }
+                      onChange={value => onchangeSelectUSer(value)}
+                      // options={
+                      //   (reqUser.data)
+                      //     ? reqUser.data.users.docs.map((value, index) => (
+                      //       { value: value.id, label: value.fullName }
+                      //     )) : []
+                      // }
+                      options={filterByUSerOptions()}
                       placeholder='filter By User'
                     />
                   </div>
@@ -466,6 +495,7 @@ const TableProyects = (props) => {
                         disabled={!((loading || variables.page !== 1))}
                       >
                         <PaginationLink
+                          disabled={loading}
                           onClick={(e) => {
                             setVariables({
                               ...variables,
@@ -484,6 +514,7 @@ const TableProyects = (props) => {
                             active={variables.page === index + 1}
                           >
                             <PaginationLink
+                              disabled={loading}
                               onClick={(e) => {
                                 setVariables({
                                   ...variables,
@@ -500,6 +531,7 @@ const TableProyects = (props) => {
                         disabled={!((loading) || data.projects.pages !== variables.page)}
                       >
                         <PaginationLink
+                          disabled={loading}
                           onClick={(e) => {
                             setVariables({
                               ...variables,

@@ -1,8 +1,8 @@
 import React, { useEffect } from 'react'
-import UseContex from './ContexStore'
 import { useQuery } from '@apollo/react-hooks'
 import gql from 'graphql-tag'
-import ModalDetailProject from '../../../components/ModalDetailProject'
+import Modal from './../../components/ModalDetailProject'
+import AlertGlobal from '../../components/AlertGlobal'
 
 const projectByid = gql`
   query projectByid( $id : String!){
@@ -29,21 +29,21 @@ const projectByid = gql`
 }
 `
 
-const ModalProject = (props) => {
-  const STORE = React.useContext(UseContex.contextStore)
+const ModalDetailProject = (props) => {
+  const myInputAlert = React.useRef()
+  const { loading, error, data } = useQuery(projectByid, { variables: { id: props.idProject } })
 
-  const { loading, error, data } = useQuery(projectByid, { variables: { id: STORE.state.idProject } })
+  if (data) {
+    console.log(data)
+  }
 
   const ButtonClouse = () => {
-    STORE.setState({
-      ...STORE.state,
-      idProject: '',
-      modalVisible: false
-    })
+    props.setIdProject(null)
+    props.setmodalDetailProject(false)
   }
 
   useEffect(() => {
-    if (STORE.state.modalVisible) {
+    if (props.modalDetailProject) {
       if (error) {
         let messageError = ''
         if (Array.isArray(error.graphQLErrors)) {
@@ -61,22 +61,23 @@ const ModalProject = (props) => {
             place: 'tr'
           }
         }
-        STORE.actions.alertSwow(options)
+        myInputAlert.current.showAlert(options)
       }
     }
-  }, [error, STORE.state.modalVisible])
+  }, [error, props.modalDetailProject])
 
   return (
     <div>
-      <ModalDetailProject
+      <AlertGlobal ref={myInputAlert} />
+      <Modal
         data={data}
         error={error}
         loading={loading}
         ButtonClouse={ButtonClouse}
-        modalVisible={STORE.state.modalVisible}
+        modalVisible={props.modalDetailProject}
       />
     </div>
   )
 }
 
-export default ModalProject
+export default ModalDetailProject
