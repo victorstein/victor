@@ -99,7 +99,7 @@ const TableProyects = (props) => {
     label: '10',
     value: '10'
   })
-  const [userSelect, setUserSelect] = useState({ value: '0', label: 'User Name' })
+  const [userSelect, setUserSelect] = useState({ value: '1', label: 'All User' })
   const [variables, setVariables] = useState({
     perPage: 10,
     page: 1,
@@ -156,6 +156,7 @@ const TableProyects = (props) => {
       })
     }
     if (filtersValue.CREATEDBY) {
+      console.log(filtersValue)
       newFilter.push({
         field: 'CREATEDBY',
         value: filtersValue.CREATEDBY
@@ -163,6 +164,7 @@ const TableProyects = (props) => {
     }
     setVariables({
       ...variables,
+      page: 1,
       filters: newFilter
     })
   }, [filtersValue])
@@ -207,7 +209,6 @@ const TableProyects = (props) => {
                 color='primary'
                 id={`ViewButton_${index}`}
                 onClick={(e) => {
-                  // console.log(value)
                   setmodalDetailProject(true)
                   setIdProject(value.id)
                 }}
@@ -250,6 +251,35 @@ const TableProyects = (props) => {
           </td>
         </tr>
       )
+    }
+  }
+
+  const filterByUSerOptions = () => {
+    const arrayOption = [{
+      value: '1', label: 'All User'
+    }]
+    if (reqUser.data) {
+      reqUser.data.users.docs.map((value, index) => (
+        arrayOption.push({ value: value.id, label: value.fullName })
+      ))
+    }
+    return arrayOption
+  }
+
+  const onchangeSelectUSer = (value) => {
+    console.log('valueSelect', value)
+    if (value.label === 'All User') {
+      setUserSelect(value)
+      setFiltersValue({
+        ...filtersValue,
+        CREATEDBY: ''
+      })
+    } else {
+      setUserSelect(value)
+      setFiltersValue({
+        ...filtersValue,
+        CREATEDBY: value.value
+      })
     }
   }
 
@@ -298,20 +328,14 @@ const TableProyects = (props) => {
                         const inputValue = e.replace(/\W/g, '')
                         setInputFilterSelect(inputValue)
                       }}
-                      onChange={value => {
-                        setUserSelect(value)
-                        console.log(value.value)
-                        setFiltersValue({
-                          ...filtersValue,
-                          CREATEDBY: value.value
-                        })
-                      }}
-                      options={
-                        (reqUser.data)
-                          ? reqUser.data.users.docs.map((value, index) => (
-                            { value: value.id, label: value.fullName }
-                          )) : []
-                      }
+                      onChange={value => onchangeSelectUSer(value)}
+                      // options={
+                      //   (reqUser.data)
+                      //     ? reqUser.data.users.docs.map((value, index) => (
+                      //       { value: value.id, label: value.fullName }
+                      //     )) : []
+                      // }
+                      options={filterByUSerOptions()}
                       placeholder='filter By User'
                     />
                   </div>
@@ -471,6 +495,7 @@ const TableProyects = (props) => {
                         disabled={!((loading || variables.page !== 1))}
                       >
                         <PaginationLink
+                          disabled={loading}
                           onClick={(e) => {
                             setVariables({
                               ...variables,
@@ -489,6 +514,7 @@ const TableProyects = (props) => {
                             active={variables.page === index + 1}
                           >
                             <PaginationLink
+                              disabled={loading}
                               onClick={(e) => {
                                 setVariables({
                                   ...variables,
@@ -505,6 +531,7 @@ const TableProyects = (props) => {
                         disabled={!((loading) || data.projects.pages !== variables.page)}
                       >
                         <PaginationLink
+                          disabled={loading}
                           onClick={(e) => {
                             setVariables({
                               ...variables,
