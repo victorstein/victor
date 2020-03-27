@@ -33,12 +33,12 @@ const DetaillData = (props) => {
         }
         return (
           <div>
-            <div className='d-flex justify-content-center p-2 m-2'>
+            <div className='d-flex justify-content-center'>
               <Lottie
                 isClickToPauseDisabled
                 options={defaultOptions}
-                height='60%'
-                width='60%'
+                height='50%'
+                width='50%'
               />
             </div>
             <p className='text-center'>Server Error</p>
