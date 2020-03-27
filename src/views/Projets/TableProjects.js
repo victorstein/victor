@@ -267,7 +267,6 @@ const TableProyects = (props) => {
   }
 
   const onchangeSelectUSer = (value) => {
-    console.log('valueSelect', value)
     if (value.label === 'All User') {
       setUserSelect(value)
       setFiltersValue({
