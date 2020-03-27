@@ -168,18 +168,19 @@ const DetailIndex = (props) => {
             <h5 className='title'>User Not Found</h5>
           </div>
         )
+      } else {
+        contenAvatar = (
+          <div>
+            <Avatar
+              className='avatar'
+              name={`${data.userById.firstName} ${data.userById.lastName}`}
+              size='124' email={data.userById.email} round
+            />
+            <h5 className='title'>{`${data.userById.firstName} ${data.userById.lastName}`}</h5>
+            <p className='description'><strong>{data.userById.role.name}</strong></p>
+          </div>
+        )
       }
-      contenAvatar = (
-        <div>
-          <Avatar
-            className='avatar'
-            name={`${data.userById.firstName} ${data.userById.lastName}`}
-            size='124' email={data.userById.email} round
-          />
-          <h5 className='title'>{`${data.userById.firstName} ${data.userById.lastName}`}</h5>
-          <p className='description'><strong>{data.userById.role.name}</strong></p>
-        </div>
-      )
     } else {
       contenAvatar = (
         <div>
@@ -198,7 +199,7 @@ const DetailIndex = (props) => {
     }
 
     if (!reqChart.loading && reqChart.data) {
-      if (error) {
+      if (reqChart.error) {
         const defaultOptions = {
           loop: true,
           autoplay: true,
@@ -217,21 +218,22 @@ const DetailIndex = (props) => {
                 width='70%'
               />
             </div>
-            <p>Server Error Fetching Chart Data</p>
+            <p>Server Error</p>
+          </div>
+        )
+      } else {
+        contenChart = (
+          <div className='card-description'>
+            <h6 className='text-center'>Last Project</h6>
+            <div className='chart-area'>
+              <Bar
+                data={DataCharBar}
+                options={() => chartExample7()}
+              />
+            </div>
           </div>
         )
       }
-      contenChart = (
-        <div className='card-description'>
-          <h6 className='text-center'>Last Project</h6>
-          <div className='chart-area'>
-            <Bar
-              data={DataCharBar}
-              options={() => chartExample7()}
-            />
-          </div>
-        </div>
-      )
     } else {
       contenChart = (
         <div style={{ paddingTop: '35%' }} className='d-flex justify-content-center  m-2'>
