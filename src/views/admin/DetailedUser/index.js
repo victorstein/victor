@@ -1,9 +1,8 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import {
   Card,
   CardHeader,
   CardBody,
-  CardText,
   Row,
   Col,
   Button
@@ -19,6 +18,8 @@ import { Bar } from 'react-chartjs-2'
 import UseContex from './ContexStore'
 import ModalProject from './ModalProject'
 import AlertGlobal from '../../../components/AlertGlobal'
+import Lottie from 'react-lottie'
+import animationServerError from '../../../assets/lottie/serverError.json'
 
 const userByid = gql`
 query userByid(
@@ -73,7 +74,7 @@ const DetailIndex = (props) => {
   const reqChart = useQuery(getLastThreeMonths, { variables: { id: idUser } })
 
   if (error) {
-    console.log(error.graphQLErrors)
+    console.log(error)
   }
 
   const chartExample7 = () => {
@@ -131,12 +132,11 @@ const DetailIndex = (props) => {
   const DataCharBar = (canvas) => {
     const ctx = canvas.getContext('2d')
     var gradientStroke = ctx.createLinearGradient(0, 230, 0, 50)
-    // console.log(reqChart.data)
     gradientStroke.addColorStop(1, 'rgba(253,93,147,0.8)')
     gradientStroke.addColorStop(0, 'rgba(253,93,147,0)') // blue colors
 
     return {
-      labels: reqChart.data.getLastThreeMonths.labels,
+      labels: (reqChart.data) ? reqChart.data.getLastThreeMonths.labels : [],
       datasets: [
         {
           label: 'Projects',
@@ -147,11 +147,141 @@ const DetailIndex = (props) => {
           borderWidth: 2,
           borderDash: [],
           borderDashOffset: 0.0,
-          data: reqChart.data.getLastThreeMonths.data
+          data: (reqChart.data) ? reqChart.data.getLastThreeMonths.data : []
         }
       ]
     }
   }
+
+  const contedCardUser = () => {
+    let contenAvatar = null
+    let contenChart = null
+    if (!loading && data) {
+      if (error) {
+        contenAvatar = (
+          <div>
+            <img
+              alt='...'
+              className='avatar'
+              src={require('assets/img/default-avatar.jpg')}
+            />
+            <h5 className='title'>User Not Found</h5>
+          </div>
+        )
+      }
+      contenAvatar = (
+        <div>
+          <Avatar
+            className='avatar'
+            name={`${data.userById.firstName} ${data.userById.lastName}`}
+            size='124' email={data.userById.email} round
+          />
+          <h5 className='title'>{`${data.userById.firstName} ${data.userById.lastName}`}</h5>
+          <p className='description'><strong>{data.userById.role.name}</strong></p>
+        </div>
+      )
+    } else {
+      contenAvatar = (
+        <div>
+          <img
+            alt='...'
+            className='avatar'
+            src={require('assets/img/default-avatar.jpg')}
+          />
+          <BeatLoader
+            color='#4A90E2'
+            size={40}
+            loading
+          />
+        </div>
+      )
+    }
+
+    if (!reqChart.loading && reqChart.data) {
+      if (error) {
+        const defaultOptions = {
+          loop: true,
+          autoplay: true,
+          animationData: animationServerError,
+          rendererSettings: {
+            preserveAspectRatio: 'xMidYMid slice'
+          }
+        }
+        contenChart = (
+          <div>
+            <div className='d-flex justify-content-center p-2 m-2'>
+              <Lottie
+                isClickToPauseDisabled
+                options={defaultOptions}
+                height='70%'
+                width='70%'
+              />
+            </div>
+            <p>Server Error Fetching Chart Data</p>
+          </div>
+        )
+      }
+      contenChart = (
+        <div className='card-description'>
+          <h6 className='text-center'>Last Project</h6>
+          <div className='chart-area'>
+            <Bar
+              data={DataCharBar}
+              options={() => chartExample7()}
+            />
+          </div>
+        </div>
+      )
+    } else {
+      contenChart = (
+        <div style={{ paddingTop: '35%' }} className='d-flex justify-content-center  m-2'>
+          <BeatLoader
+            color='#4A90E2'
+            size={40}
+            loading
+          />
+        </div>
+      )
+    }
+
+    return (
+      <div>
+        {contenAvatar}
+        {contenChart}
+      </div>
+    )
+  }
+
+  useEffect(() => {
+    try {
+      if (error) {
+        let messageError = ''
+        if (Array.isArray(error.graphQLErrors)) {
+          if (error.graphQLErrors.length === 0) {
+            messageError = error
+          } else {
+            messageError = error.graphQLErrors[0].message
+          }
+        } else {
+          messageError = error.graphQLErrors
+        }
+        console.log('messageError', error.graphQLErrors)
+        const options = {
+          message: (Array.isArray(messageError)) ? messageError[0] : messageError,
+          options: {
+            icon: 'icon-alert-circle-exc',
+            type: 'danger',
+            autoDismiss: 4,
+            place: 'tr'
+          }
+        }
+        myInputAlert.current.showAlert(options)
+      }
+    } catch (e) {
+      console.log(e)
+    }
+
+  }, [error])
 
   const alertSwow = (options) => {
     myInputAlert.current.showAlert(options)
@@ -183,61 +313,13 @@ const DetailIndex = (props) => {
         <Col md='3'>
           <Card className='card-user h-100'>
             <CardBody>
-              <CardText />
               <div className='author'>
                 <div className='block block-one' />
                 <div className='block block-two' />
                 <div className='block block-three' />
                 <div className='block block-four' />
-                {
-                  (loading) ? (
-                    <img
-                      alt='...'
-                      className='avatar'
-                      src={require('assets/img/default-avatar.jpg')}
-                    />
-                  )
-                    : (
-                      <Avatar
-                        className='avatar'
-                        name={`${data.userById.firstName} ${data.userById.lastName}`}
-                        size='124' email={data.userById.email} round
-                      />
-                    )
-                }
-                {
-                  (!loading)
-                    ? (
-                      <div>
-                        <h5 className='title'>{`${data.userById.firstName} ${data.userById.lastName}`}</h5>
-                        <p className='description'><strong>{data.userById.role.name}</strong></p>
-                      </div>
-                    )
-                    : null
-                }
+                {contedCardUser()}
               </div>
-              {
-                (reqChart.loading) ? (
-                  <div style={{ paddingTop: '35%' }} className='d-flex justify-content-center  m-2'>
-                    <BeatLoader
-                      color='#4A90E2'
-                      size={40}
-                      loading
-                    />
-                  </div>
-                )
-                  : (
-                    <div className='card-description'>
-                      <h6 className='text-center'>Last Project</h6>
-                      <div className='chart-area'>
-                        <Bar
-                          data={DataCharBar}
-                          options={chartExample7}
-                        />
-                      </div>
-                    </div>
-                  )
-              }
             </CardBody>
           </Card>
         </Col>
