@@ -12,9 +12,9 @@ dotenv.config()
 const NODE_ENV = process.env.NODE_ENV || 'development'
 let URI = ''
 if (NODE_ENV === 'production') {
-  URI = process.env.APOLLO_URI_PROD || 'http://localhost:302000/graphql'
+  URI = process.env.APOLLO_URI_PROD || 'http://186.1.23.93:3000/graphql'
 } else {
-  URI = process.env.APOLLO_URI_DEV || 'http://localhost:302000/graphql'
+  URI = process.env.APOLLO_URI_DEV || 'http://186.1.23.93:3000/graphql'
 }
 
 const httpLink = createUploadLink({
