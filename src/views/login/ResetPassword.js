@@ -45,7 +45,7 @@ const ResetPassword = (props) => {
 
   return (
     <ReactBSAlert
-      style={{ display: 'block', marginTop: '-100px' }}
+      style={{ display: 'block', marginTop: '100px' }}
       title='Reset Password'
       onConfirm={() => props.setAlertResetPassword(false)}
       showConfirm={false}
