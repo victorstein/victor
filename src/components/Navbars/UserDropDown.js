@@ -1,6 +1,7 @@
 import React, { useContext } from 'react'
 import logout from '../../utils/Auth/logout'
 import { GlobalContext } from '../../index'
+import Avatar from 'react-avatar'
 // reactstrap components
 import {
   DropdownToggle,
@@ -22,8 +23,10 @@ const UserDropDown = props => {
   }
 
   let userName = ''
-  if(state.user) {
+  let email = ''
+  if (state.user) {
     userName = state.user.firstName
+    email = state.user.email
   }
   return (
     <Row className='d-flex align-items-center dropdown nav-item d-flex align-items-center justify-content-center'>
@@ -38,7 +41,13 @@ const UserDropDown = props => {
             onClick={e => e.preventDefault()}
           >
             <div className='photo p-0'>
-              <img alt='...' src={require('assets/img/mike.jpg')} />
+              {
+                <Avatar
+                  className='avatar'
+                  name={`${state.user.fullName}`}
+                  size='35' email={email} round
+                />
+              }
             </div>
           </DropdownToggle>
           <DropdownMenu className='dropdown-navbar' right tag='ul'>
