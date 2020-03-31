@@ -282,7 +282,6 @@ const DetailIndex = (props) => {
     } catch (e) {
       console.log(e)
     }
-
   }, [error])
 
   const alertSwow = (options) => {
