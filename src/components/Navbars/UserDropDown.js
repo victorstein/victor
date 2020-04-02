@@ -2,6 +2,7 @@ import React, { useContext } from 'react'
 import logout from '../../utils/Auth/logout'
 import { GlobalContext } from '../../index'
 import Avatar from 'react-avatar'
+import { Link } from 'react-router-dom'
 // reactstrap components
 import {
   DropdownToggle,
@@ -45,17 +46,25 @@ const UserDropDown = props => {
                 <Avatar
                   className='avatar'
                   name={`${state.user.fullName}`}
-                  size='35' email={email} round
+                  size='30' email={email} round
                 />
               }
             </div>
           </DropdownToggle>
           <DropdownMenu className='dropdown-navbar' right tag='ul'>
             <NavLink tag='li'>
-              <DropdownItem className='nav-item'>Profile</DropdownItem>
+              <Link
+                to='/admin/profile'
+              >
+                <DropdownItem className='nav-item'>
+                Profile
+                </DropdownItem>
+              </Link>
             </NavLink>
             <NavLink tag='li'>
-              <DropdownItem className='nav-item'>Settings</DropdownItem>
+              <DropdownItem className='nav-item'>
+                Settings
+              </DropdownItem>
             </NavLink>
             <DropdownItem divider tag='li' />
             <NavLink tag='li'>

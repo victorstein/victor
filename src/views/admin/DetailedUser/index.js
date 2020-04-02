@@ -73,10 +73,6 @@ const DetailIndex = (props) => {
 
   const reqChart = useQuery(getLastThreeMonths, { variables: { id: idUser } })
 
-  if (error) {
-    console.log(error)
-  }
-
   const chartExample7 = () => {
     const suggestedMaxValue = reqChart.data.getLastThreeMonths.data.sort()[0]
 
@@ -135,7 +131,7 @@ const DetailIndex = (props) => {
     gradientStroke.addColorStop(1, 'rgba(253,93,147,0.8)')
     gradientStroke.addColorStop(0, 'rgba(253,93,147,0)') // blue colors
 
-    return {
+    const optionsChact = {
       labels: (reqChart.data) ? reqChart.data.getLastThreeMonths.labels : [],
       datasets: [
         {
@@ -151,6 +147,8 @@ const DetailIndex = (props) => {
         }
       ]
     }
+
+    return (optionsChact)
   }
 
   const contedCardUser = () => {
@@ -227,7 +225,7 @@ const DetailIndex = (props) => {
             <h6 className='text-center'>Last Project</h6>
             <div className='chart-area'>
               <Bar
-                data={DataCharBar}
+                data={(e) => DataCharBar(e)}
                 options={() => chartExample7()}
               />
             </div>

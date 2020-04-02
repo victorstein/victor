@@ -8,6 +8,7 @@ import Projets from './views/Projets'
 import CreateUser from './views/admin/createUser'
 import DetailUser from './views/admin/DetailedUser'
 import CreateRole from './views/admin/createRole'
+import ProfileView from './views/Profile'
 
 const routes = [
   {
@@ -95,6 +96,16 @@ const routes = [
     role: ['Admin'],
     fullContent: false,
     visible: true
+  },
+  {
+    path: '/profile',
+    name: 'Profile',
+    icon: 'tim-icons icon-badge',
+    component: ProfileView,
+    layout: '/admin',
+    role: [],
+    fullContent: false,
+    visible: false
   }
 ]
 
