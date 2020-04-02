@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import gql from 'graphql-tag'
 import { useQuery } from '@apollo/react-hooks'
 import Avatar from 'react-avatar'
@@ -7,6 +7,8 @@ import Lottie from 'react-lottie'
 import animationServerError from '../../assets/lottie/serverError.json'
 import { BeatLoader } from 'react-spinners'
 import ChartProfile from './ChartProfile'
+import AlertGlobal from '../../components/AlertGlobal'
+import ModalEdit from './ModalEdit'
 // import { Bar } from 'react-chartjs-2'
 import {
   Card,
@@ -46,7 +48,36 @@ const me = gql`
 `
 
 const ProfileView = (props) => {
+  const [openModal, setOpenModal] = useState(false)
   const { loading, error, data } = useQuery(me)
+
+  const myInputAlert = React.useRef()
+
+  const actionsAlertGloval = (options) => {
+    myInputAlert.current.showAlert(options)
+  }
+
+  useEffect(() => {
+    let messageError = ''
+    if (error) {
+      if (Array.isArray(error.graphQLErrors)) {
+        messageError = error.graphQLErrors[0].message
+      } else {
+        messageError = error.graphQLErrors
+      }
+      console.log('messageError', error.graphQLErrors)
+      const options = {
+        message: (Array.isArray(messageError)) ? messageError[0] : messageError,
+        options: {
+          icon: 'icon-alert-circle-exc',
+          type: 'danger',
+          autoDismiss: 4,
+          place: 'tr'
+        }
+      }
+      actionsAlertGloval(options)
+    }
+  }, [error])
 
   const contedCardAvatar = () => {
     if (!loading && data) {
@@ -92,6 +123,7 @@ const ProfileView = (props) => {
               </h5>
               <div className='pt-4 container d-flex justify-content-center'>{}
                 <ChartProfile
+                  actionsAlertGloval={actionsAlertGloval}
                   id={(data) ? data.me.id : null}
                 />
               </div>
@@ -99,11 +131,11 @@ const ProfileView = (props) => {
             <Col style={{ height: '400px', maxHeight: '400px', overflow: 'auto' }} className='col-8'>
               <Row>
                 <Col className='col-4'>
-                  <p>FirstName</p>
+                  <p>First Name</p>
                   <p style={{ color: '#e14eca' }}>{data.me.firstName}</p>
                 </Col>
                 <Col className='col-4'>
-                  <p>LastName</p>
+                  <p>Last Name</p>
                   <p style={{ color: '#e14eca' }}>{data.me.lastName}</p>
                 </Col>
                 <Col className='col-4'>
@@ -168,6 +200,21 @@ const ProfileView = (props) => {
 
   return (
     <div className='content'>
+      {
+        (openModal) && (
+          <ModalEdit
+            id={(data) ? data.me.id : null}
+            defaultData={{
+              firstName: data.me.firstName,
+              lastName: data.me.lastName
+            }}
+            actionsAlertGloval={actionsAlertGloval}
+            openModal={openModal}
+            setOpenModal={setOpenModal}
+          />
+        )
+      }
+      <AlertGlobal ref={myInputAlert} />
       <Row>
         <Col xs='12'>
           <h1 className='mb-0'>My Profile</h1>
@@ -182,6 +229,7 @@ const ProfileView = (props) => {
               <CardFooter>
                 <div className='d-flex flex-row-reverse bd-highlight'>
                   <Button
+                    onClick={(e) => setOpenModal(true)}
                     className='btn-round btn-simple' color='warning'
                     disabled={loading || error}
                   >
