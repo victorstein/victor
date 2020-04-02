@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import gql from 'graphql-tag'
 import { useQuery } from '@apollo/react-hooks'
 import { BeatLoader } from 'react-spinners'
@@ -19,6 +19,28 @@ const getLastThreeMonths = gql`
 
 const ChartProfile = (props) => {
   const { data, loading, error } = useQuery(getLastThreeMonths, { variables: { id: props.id } })
+
+  useEffect(() => {
+    let messageError = ''
+    if (error) {
+      if (Array.isArray(error.graphQLErrors)) {
+        messageError = error.graphQLErrors[0].message
+      } else {
+        messageError = error.graphQLErrors
+      }
+      console.log('messageError', error.graphQLErrors)
+      const options = {
+        message: (Array.isArray(messageError)) ? messageError[0] : messageError,
+        options: {
+          icon: 'icon-alert-circle-exc',
+          type: 'danger',
+          autoDismiss: 4,
+          place: 'tr'
+        }
+      }
+      props.actionsAlertGloval(options)
+    }
+  }, [error])
 
   const chartExample7 = () => {
     const suggestedMaxValue = data.getLastThreeMonths.data.sort()[0]
@@ -100,7 +122,7 @@ const ChartProfile = (props) => {
 
   const conted = () => {
     if (!loading && data) {
-      if (!error) {
+      if (error) {
         const defaultOptions = {
           loop: true,
           autoplay: true,
@@ -148,9 +170,6 @@ const ChartProfile = (props) => {
     }
   }
 
-  if (data) {
-    console.log('dataChart', data)
-  }
   return (
     <div>
       {conted()}
