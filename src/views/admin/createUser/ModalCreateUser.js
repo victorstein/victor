@@ -143,12 +143,12 @@ const ModalCreateUser = (props) => {
               <Row>
                 <Col className='col-6'>
                   <FormGroup className={`input ${validateClassname(errors.name, onBlurState.name, values.name)}`}>
-                    <Label for='name'>Name</Label>
+                    <Label for='name'>First Name</Label>
                     <Input
                       type='text'
                       name='name'
                       id='name'
-                      placeholder='Name'
+                      placeholder='First Name'
                       onChange={handleChange}
                       value={values.name || ''}
                       required
