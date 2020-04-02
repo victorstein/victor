@@ -83,7 +83,7 @@ const DetaillData = (props) => {
               <Badge
                 color={(props.user.userById.verified) ? 'success' : 'danger'}
               >
-                {(props.user.userById.verified) ? 'true' : 'false'}
+                {(props.user.userById.verified) ? 'True' : 'False'}
               </Badge>
             </Col>
           </Row>
