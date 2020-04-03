@@ -31,11 +31,13 @@ query projects(
   $perPage : Float!
   $page : Float!
   $filters : [projectFilter!]
+  $sort : [projectSort!]
 ){
   projects(
     perPage : $perPage
     page :  $page
     filters : $filters
+    sort : $sort
   ){
     docs{
       id
@@ -103,7 +105,13 @@ const TableProyects = (props) => {
   const [variables, setVariables] = useState({
     perPage: 10,
     page: 1,
-    filters: []
+    filters: [],
+    sort: [
+      {
+        field: 'CREATEDAT',
+        direction: 'DESCENDING'
+      }
+    ]
   })
 
   const [filtersValue, setFiltersValue] = useState({
@@ -282,6 +290,34 @@ const TableProyects = (props) => {
     }
   }
 
+  const sortTable = () => {
+    if (variables.sort[0].direction === 'DESCENDING') {
+      return (
+        setVariables({
+          ...variables,
+          sort: [
+            {
+              field: 'CREATEDAT',
+              direction: 'ASCENDING'
+            }
+          ]
+        })
+      )
+    } else {
+      return (
+        setVariables({
+          ...variables,
+          sort: [
+            {
+              field: 'CREATEDAT',
+              direction: 'DESCENDING'
+            }
+          ]
+        })
+      )
+    }
+  }
+
   return (
     <Card className='w-100'>
       {
@@ -436,7 +472,23 @@ const TableProyects = (props) => {
                 </Row>
               </th>
               <th scope='col' className='text-center'>Created By</th>
-              <th scope='col' className='text-center'>Created At</th>
+              <th
+                scope='col'
+                className='text-center'
+              >
+              Created At
+                <Button
+                  onClick={() => sortTable()}
+                  size='sm'
+                  className='btn-link btn-icon'
+                  color='success'
+                >
+                  <i
+                    style={{ marginTop: '-2px ' }}
+                    className={(variables.sort[0].direction === 'DESCENDING') ? 'pl-1 tim-icons icon-minimal-up' : 'pl-1 tim-icons icon-minimal-down'}
+                  />
+                </Button>
+              </th>
               <th scope='col' className='text-center'>Account User name</th>
               <th scope='col' className='text-center'>Actions</th>
             </tr>
