@@ -115,7 +115,7 @@ const ProfileView = (props) => {
                 <Avatar
                   className='avatar'
                   name={`${data.me.firstName} ${data.me.lastName}`}
-                  size='125' email={data.me.email} round
+                  size='124' email={data.me.email} round
                 />
               </div>
               <h5 className='text-center'>
