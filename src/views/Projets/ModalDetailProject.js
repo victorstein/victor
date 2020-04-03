@@ -66,16 +66,24 @@ const ModalDetailProject = (props) => {
     }
   }, [error, props.modalDetailProject])
 
+  const swoAlertGlobal = (options) => {
+    myInputAlert.current.showAlert(options)
+  }
+
   return (
     <div>
       <AlertGlobal ref={myInputAlert} />
-      <Modal
-        data={data}
-        error={error}
-        loading={loading}
-        ButtonClouse={ButtonClouse}
-        modalVisible={props.modalDetailProject}
-      />
+      {
+        (props.modalDetailProject) &&
+          <Modal
+            swoAlertGlobal={swoAlertGlobal}
+            data={data}
+            error={error}
+            loading={loading}
+            ButtonClouse={ButtonClouse}
+            modalVisible={props.modalDetailProject}
+          />
+      }
     </div>
   )
 }
