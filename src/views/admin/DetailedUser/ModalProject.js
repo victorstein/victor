@@ -66,15 +66,23 @@ const ModalProject = (props) => {
     }
   }, [error, STORE.state.modalVisible])
 
+  const swoAlertGlobal = (options) => {
+    STORE.actions.alertSwow(options)
+  }
+
   return (
     <div>
-      <ModalDetailProject
-        data={data}
-        error={error}
-        loading={loading}
-        ButtonClouse={ButtonClouse}
-        modalVisible={STORE.state.modalVisible}
-      />
+      {
+        (STORE.state.modalVisible) &&
+          <ModalDetailProject
+            swoAlertGlobal={swoAlertGlobal}
+            data={data}
+            error={error}
+            loading={loading}
+            ButtonClouse={ButtonClouse}
+            modalVisible={STORE.state.modalVisible}
+          />
+      }
     </div>
   )
 }
