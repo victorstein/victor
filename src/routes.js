@@ -41,15 +41,6 @@ const routes = [
     visible: true
   },
   {
-    path: '/test1',
-    name: 'Test1',
-    icon: 'tim-icons icon-app',
-    component: Test1,
-    role: ['User', 'Admin'],
-    layout: '/admin',
-    visible: true
-  },
-  {
     path: '/landing',
     name: 'Landing',
     icon: 'tim-icons icon-controller',
