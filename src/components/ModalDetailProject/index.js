@@ -13,6 +13,7 @@ import moment from 'moment'
 import Lottie from 'react-lottie'
 import animationEmptyBox from '../../assets/lottie/emptyBox.json'
 import animationServerError from '../../assets/lottie/serverError.json'
+import { CopyToClipboard } from 'react-copy-to-clipboard'
 
 const ModalDetailProject = (props) => {
   const [visblePass, setVisblePass] = useState({
@@ -89,86 +90,18 @@ const ModalDetailProject = (props) => {
                       <p style={{ color: 'white' }}>Account User Name</p>
                       <p style={{ color: '#e14eca' }}>{props.data.projectById.accountUsername}</p>
                     </Col>
-                    {
-                    // databasePassword
-                    }
-                    <UncontrolledTooltip
-                      className='Tooltip_wizard'
-                      placement='top'
-                      target='exclamationDatabasePassword'
-                      delay={0}
-                    >
-                      <div>
-                        <p className='pl-2'>View password.</p>
-                      </div>
-                    </UncontrolledTooltip>
                     <Col className='col-4'>
-                      <p style={{ color: 'white' }}>Data Base Password</p>
-                      <Row>
-                        <Col>
-                          <p style={{ color: '#e14eca' }}>
-                            {
-                              (visblePass.DataBasePassword) ? (props.data.projectById.databasePassword) : '••••••••'
-                            }
-                          </p>
-                        </Col>
-                        <Col className='col-1 pl-1' id='exclamationDatabasePassword'>
-                          <i
-                            onClick={(e) => {
-                              setVisblePass({
-                                ...visblePass,
-                                DataBasePassword: !visblePass.DataBasePassword
-                              })
-                            }}
-                            className='fas fa-exclamation-circle'
-                          />
-                        </Col>
-                      </Row>
+                      <p style={{ color: 'white' }}>Developer Name</p>
+                      <p style={{ color: '#e14eca' }}>{props.data.projectById.developerName}</p>
                     </Col>
-
                     <Col className='col-4'>
                       <p style={{ color: 'white' }}>Wordpress Language</p>
                       <p style={{ color: '#e14eca' }}>{props.data.projectById.wordpressLanguage}</p>
                     </Col>
-                    {
-                      // wordpressPassword
-                    }
-                    <UncontrolledTooltip
-                      className='Tooltip_wizard'
-                      placement='top'
-                      target='exclamationWordpressPassword'
-                      delay={0}
-                    >
-                      <div>
-                        <p className='pl-2'>View password.</p>
-                      </div>
-                    </UncontrolledTooltip>
                     <Col className='col-4'>
-                      <p style={{ color: 'white' }}>Wordpress Password</p>
-                      <Row>
-                        <Col>
-                          <p style={{ color: '#e14eca' }}>
-                            {
-                              (visblePass.WordpressPassword)
-                                ? props.data.projectById.wordpressPassword
-                                : '••••••••'
-                            }
-                          </p>
-                        </Col>
-                        <Col className='col-1 pl-1' id='exclamationWordpressPassword'>
-                          <i
-                            className='fas fa-exclamation-circle'
-                            onClick={(e) => {
-                              setVisblePass({
-                                ...visblePass,
-                                WordpressPassword: !visblePass.WordpressPassword
-                              })
-                            }}
-                          />
-                        </Col>
-                      </Row>
+                      <p style={{ color: 'white' }}>Updated At</p>
+                      <p style={{ color: '#e14eca' }}>{moment(props.data.projectById.updatedAt).format('MMMM DD YYYY')}</p>
                     </Col>
-
                     {
                       // accountPassword
                     }
@@ -186,13 +119,35 @@ const ModalDetailProject = (props) => {
                       <p style={{ color: 'white' }}>Account Password</p>
                       <Row>
                         <Col>
-                          <p style={{ color: '#e14eca' }}>
-                            {
-                              (visblePass.AccountPassword)
-                                ? props.data.projectById.accountPassword
-                                : '••••••••'
-                            }
-                          </p>
+                          {
+                            (visblePass.AccountPassword)
+                              ? (
+                                <Row className='d-flex align-items-center'>
+                                  <Col className='pl-3 col-8'>
+                                    <p style={{ color: '#e14eca' }}>{props.data.projectById.accountPassword}</p>
+                                  </Col>
+                                  <Col className='col-2'>
+                                    <CopyToClipboard
+                                      onCopy={() => props.swoAlertGlobal({
+                                        message: 'Copy To Clipboard',
+                                        options: {
+                                          icon: 'icon-alert-circle-exc',
+                                          type: 'success',
+                                          autoDismiss: 4,
+                                          place: 'tr'
+                                        }
+                                      })}
+                                      text={props.data.projectById.accountPassword}
+                                    >
+                                      <Button size='sm' className='btn-link btn-icon' color='success'>
+                                        <i className='tim-icons icon-notes' />
+                                      </Button>
+                                    </CopyToClipboard>
+                                  </Col>
+                                </Row>
+                              )
+                              : <p className='p-0' style={{ color: '#e14eca' }}>••••••••</p>
+                          }
                         </Col>
                         <Col className='col-1 pl-1' id='exclamationAccountPassword'>
                           <i
@@ -211,25 +166,139 @@ const ModalDetailProject = (props) => {
                       <p style={{ color: 'white' }}>Wordpress User</p>
                       <p style={{ color: '#e14eca' }}>{props.data.projectById.wordpressUser}</p>
                     </Col>
+                    {
+                      // wordpressPassword
+                    }
+                    <UncontrolledTooltip
+                      className='Tooltip_wizard'
+                      placement='top'
+                      target='exclamationWordpressPassword'
+                      delay={0}
+                    >
+                      <div>
+                        <p className='pl-2'>View password.</p>
+                      </div>
+                    </UncontrolledTooltip>
                     <Col className='col-4'>
-                      <p style={{ color: 'white' }}>Updated At</p>
-                      <p style={{ color: '#e14eca' }}>{moment(props.data.projectById.updatedAt).format('MMMM DD YYYY')}</p>
+                      <p style={{ color: 'white' }}>Wordpress Password</p>
+                      <Row>
+                        <Col>
+                          {
+                            (visblePass.WordpressPassword)
+                              ? (
+                                <Row className='d-flex align-items-center'>
+                                  <Col className='pl-3 col-8'>
+                                    <p style={{ color: '#e14eca' }}>{props.data.projectById.wordpressPassword}</p>
+                                  </Col>
+                                  <Col className='col-2'>
+                                    <CopyToClipboard
+                                      onCopy={() => props.swoAlertGlobal({
+                                        message: 'Copy To Clipboard',
+                                        options: {
+                                          icon: 'icon-alert-circle-exc',
+                                          type: 'success',
+                                          autoDismiss: 4,
+                                          place: 'tr'
+                                        }
+                                      })}
+                                      text={props.data.projectById.wordpressPassword}
+                                    >
+                                      <Button size='sm' className='btn-link btn-icon' color='success'>
+                                        <i className='tim-icons icon-notes' />
+                                      </Button>
+                                    </CopyToClipboard>
+                                  </Col>
+                                </Row>
+                              )
+                              : <p className='p-0' style={{ color: '#e14eca' }}>••••••••</p>
+                          }
+                        </Col>
+                        <Col className='col-1 pl-1' id='exclamationWordpressPassword'>
+                          <i
+                            className='fas fa-exclamation-circle'
+                            onClick={(e) => {
+                              setVisblePass({
+                                ...visblePass,
+                                WordpressPassword: !visblePass.WordpressPassword
+                              })
+                            }}
+                          />
+                        </Col>
+                      </Row>
                     </Col>
                     <Col className='col-4'>
-                      <p style={{ color: 'white' }}>LastUpdated By</p>
-                      <p style={{ color: '#e14eca' }}>{props.data.projectById.lastUpdatedBy.fullName}</p>
+                      <p style={{ color: 'white' }}>Database User</p>
+                      <p style={{ color: '#e14eca' }}>{props.data.projectById.databaseUser}</p>
                     </Col>
                     <Col className='col-4'>
                       <p style={{ color: 'white' }}>Database Name</p>
                       <p style={{ color: '#e14eca' }}>{props.data.projectById.databaseName}</p>
                     </Col>
+                    {
+                    // databasePassword
+                    }
+                    <UncontrolledTooltip
+                      className='Tooltip_wizard'
+                      placement='top'
+                      target='exclamationDatabasePassword'
+                      delay={0}
+                    >
+                      <div>
+                        <p className='pl-2'>View password.</p>
+                      </div>
+                    </UncontrolledTooltip>
                     <Col className='col-4'>
-                      <p style={{ color: 'white' }}>Developer Name</p>
-                      <p style={{ color: '#e14eca' }}>{props.data.projectById.developerName}</p>
+                      <p style={{ color: 'white' }}>Data Base Password</p>
+                      <Row>
+                        <Col>
+                          <Col className='col-8 p-0'>
+                            {
+                              (visblePass.DataBasePassword)
+                                ? (
+                                  <Row className='d-flex align-items-center'>
+                                    <Col className='pl-3 col-8'>
+                                      <p style={{ color: '#e14eca' }}>{props.data.projectById.databasePassword}</p>
+                                    </Col>
+                                    <Col className='col-2'>
+                                      <CopyToClipboard
+                                        onCopy={() => props.swoAlertGlobal({
+                                          message: 'Copy To Clipboard',
+                                          options: {
+                                            icon: 'icon-alert-circle-exc',
+                                            type: 'success',
+                                            autoDismiss: 4,
+                                            place: 'tr'
+                                          }
+                                        })}
+                                        text={props.data.projectById.databasePassword}
+                                      >
+                                        <Button size='sm' className='btn-link btn-icon' color='success'>
+                                          <i className='tim-icons icon-notes' />
+                                        </Button>
+                                      </CopyToClipboard>
+                                    </Col>
+                                  </Row>
+                                )
+                                : <p className='p-0' style={{ color: '#e14eca' }}>••••••••</p>
+                            }
+                          </Col>
+                        </Col>
+                        <Col className='col-1 pl-1' id='exclamationDatabasePassword'>
+                          <i
+                            onClick={(e) => {
+                              setVisblePass({
+                                ...visblePass,
+                                DataBasePassword: !visblePass.DataBasePassword
+                              })
+                            }}
+                            className='fas fa-exclamation-circle'
+                          />
+                        </Col>
+                      </Row>
                     </Col>
                     <Col className='col-4'>
-                      <p style={{ color: 'white' }}>Database User</p>
-                      <p style={{ color: '#e14eca' }}>{props.data.projectById.databaseUser}</p>
+                      <p style={{ color: 'white' }}>LastUpdated By</p>
+                      <p style={{ color: '#e14eca' }}>{props.data.projectById.lastUpdatedBy.fullName}</p>
                     </Col>
                   </Row>
                 </div>
