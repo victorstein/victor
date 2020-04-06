@@ -182,7 +182,7 @@ const TableProyects = (props) => {
       if (error) {
         return (
           <tr>
-            <td colSpan={5}>
+            <td colSpan={6}>
               <div className='d-flex justify-content-center p-2 m-2'>
               No Data
               </div>
@@ -194,7 +194,7 @@ const TableProyects = (props) => {
       if (data.projects.docs.length === 0) {
         return (
           <tr>
-            <td colSpan={5}>
+            <td colSpan={6}>
               <div className='d-flex justify-content-center p-2 m-2'>
                 No Data
               </div>
@@ -248,12 +248,12 @@ const TableProyects = (props) => {
     } else {
       return (
         <tr>
-          <td colSpan={5}>
+          <td colSpan={6}>
             <div className='d-flex justify-content-center p-2 m-2'>
               <BeatLoader
                 color='#4A90E2'
                 size={20}
-                loading={loading}
+                loading
               />
             </div>
           </td>
