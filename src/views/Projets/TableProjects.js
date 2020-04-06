@@ -364,12 +364,6 @@ const TableProyects = (props) => {
                         setInputFilterSelect(inputValue)
                       }}
                       onChange={value => onchangeSelectUSer(value)}
-                      // options={
-                      //   (reqUser.data)
-                      //     ? reqUser.data.users.docs.map((value, index) => (
-                      //       { value: value.id, label: value.fullName }
-                      //     )) : []
-                      // }
                       options={filterByUSerOptions()}
                       placeholder='filter By User'
                     />
@@ -476,18 +470,24 @@ const TableProyects = (props) => {
                 scope='col'
                 className='text-center'
               >
-              Created At
-                <Button
-                  onClick={() => sortTable()}
-                  size='sm'
-                  className='btn-link btn-icon'
-                  color='success'
-                >
-                  <i
-                    style={{ marginTop: '-2px ' }}
-                    className={(variables.sort[0].direction === 'DESCENDING') ? 'pl-1 tim-icons icon-minimal-up' : 'pl-1 tim-icons icon-minimal-down'}
-                  />
-                </Button>
+                <Row className='d-flex align-items-center'>
+                  <Col className='col-8'>
+                     Created At
+                  </Col>
+                  <Col className='col-4'>
+                    <Button
+                      onClick={() => sortTable()}
+                      size='sm'
+                      className='btn-link btn-icon'
+                      color='success'
+                    >
+                      <i
+                        style={{ marginTop: '-2px ' }}
+                        className={(variables.sort[0].direction === 'DESCENDING') ? 'pl-1 tim-icons icon-minimal-up' : 'pl-1 tim-icons icon-minimal-down'}
+                      />
+                    </Button>
+                  </Col>
+                </Row>
               </th>
               <th scope='col' className='text-center'>Account User name</th>
               <th scope='col' className='text-center'>Actions</th>
