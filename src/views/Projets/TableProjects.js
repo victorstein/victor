@@ -206,8 +206,8 @@ const TableProyects = (props) => {
       return (
         data.projects.docs.map((value, index) => (
           <tr key={index}>
-            <td className='text-center'>{value.siteName}</td>
-            <td className='text-center'>{value.domain}</td>
+            <td className='text-left'>{value.siteName}</td>
+            <td className='text-left'>{value.domain}</td>
             <td className='text-center'>{value.createdBy.fullName}</td>
             <td className='text-center'>{moment(value.createdAt).format('MMMM DD YYYY')}</td>
             <td className='text-center'>{value.accountUsername}</td>
