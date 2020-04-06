@@ -23,9 +23,9 @@ const AdminLayout = props => {
   useEffect(() => {
     if (data && !loading) {
       if (data.me) {
-          verifyFullContent()
-          setVerifyLogin(true)
-          dispatch({ type: SET_USER, payload: { ...data.me } })
+        verifyFullContent()
+        setVerifyLogin(true)
+        dispatch({ type: SET_USER, payload: { ...data.me } })
       } else {
         logout(props.history)
       }
