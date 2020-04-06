@@ -33,10 +33,6 @@ const ModalDetailProject = (props) => {
   const myInputAlert = React.useRef()
   const { loading, error, data } = useQuery(projectByid, { variables: { id: props.idProject } })
 
-  if (data) {
-    console.log(data)
-  }
-
   const ButtonClouse = () => {
     props.setIdProject(null)
     props.setmodalDetailProject(false)
