@@ -79,9 +79,12 @@ const PageOne = (props) => {
           <Col className='col-6'>
             <UncontrolledTooltip className='Tooltip_wizard' placement='top' target='accountName' delay={0}>
               <div>
-                <p className='pl-2'>Password required at leat:</p>
+                <p className='pl-2'>Password required at least:</p>
                 <ul className='text-left pl-3 pt-0'>
-                  <p>The account name must contain 8 characters only. Please avoid the use of special characters.</p>
+                  <p>
+                  The account name must contain 8 characters only.
+                  Please avoid the use of special characters.
+                  </p>
                 </ul>
               </div>
             </UncontrolledTooltip>

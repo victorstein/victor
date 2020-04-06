@@ -10,7 +10,7 @@ const schemaPageOne = {
     }),
   accountName: Joi
     .string()
-    .pattern(/^[a-zA-Z]+$/)
+    .pattern(/^[a-z]+$/)
     .required()
     .strict()
     .trim()
@@ -22,7 +22,7 @@ const schemaPageOne = {
       'string.empty': 'Account Name is required',
       'string.min': ' Account Username should be exactly 8 characters',
       'string.max': 'Account Username should be exactly 8 characters',
-      'string.pattern.base': 'Account name cannot have special characters'
+      'string.pattern.base': 'Account name cannot have special characters or uppercase letters'
     }),
   domainURL: Joi.string()
     .strict()
