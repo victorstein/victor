@@ -182,7 +182,7 @@ const TableProyects = (props) => {
       if (error) {
         return (
           <tr>
-            <td colSpan={5}>
+            <td colSpan={6}>
               <div className='d-flex justify-content-center p-2 m-2'>
               No Data
               </div>
@@ -194,7 +194,7 @@ const TableProyects = (props) => {
       if (data.projects.docs.length === 0) {
         return (
           <tr>
-            <td colSpan={5}>
+            <td colSpan={6}>
               <div className='d-flex justify-content-center p-2 m-2'>
                 No Data
               </div>
@@ -206,8 +206,8 @@ const TableProyects = (props) => {
       return (
         data.projects.docs.map((value, index) => (
           <tr key={index}>
-            <td className='text-center'>{value.siteName}</td>
-            <td className='text-center'>{value.domain}</td>
+            <td className='text-left'>{value.siteName}</td>
+            <td className='text-left'>{value.domain}</td>
             <td className='text-center'>{value.createdBy.fullName}</td>
             <td className='text-center'>{moment(value.createdAt).format('MMMM DD YYYY')}</td>
             <td className='text-center'>{value.accountUsername}</td>
@@ -248,12 +248,12 @@ const TableProyects = (props) => {
     } else {
       return (
         <tr>
-          <td colSpan={5}>
+          <td colSpan={6}>
             <div className='d-flex justify-content-center p-2 m-2'>
               <BeatLoader
                 color='#4A90E2'
                 size={20}
-                loading={loading}
+                loading
               />
             </div>
           </td>
@@ -375,128 +375,130 @@ const TableProyects = (props) => {
         </Row>
       </CardHeader>
       <CardBody>
-        <Table responsive className='table'>
-          <thead className='text-primary'>
-            <tr>
-              <th scope='col' style={{ maxWidth: '255px', width: '255px' }}>
-                <Row>
-                  <Col style={{ paddingTop: '0.6rem' }} className='text-center col-4'>
+        <div className='table-responsive'>
+          <Table responsive className='table'>
+            <thead className='text-primary'>
+              <tr>
+                <th scope='col' style={{ maxWidth: '255px', width: '255px' }}>
+                  <Row>
+                    <Col style={{ paddingTop: '0.6rem' }} className='text-center col-4'>
                       Site Name
-                  </Col>
-                  <Col className='col-8' style={{ paddingTop: '0.6rem' }}>
-                    <InputGroup
-                      size='sm'
-                      className={`text-left ${classnames({
+                    </Col>
+                    <Col className='col-8' style={{ paddingTop: '0.6rem' }}>
+                      <InputGroup
+                        size='sm'
+                        className={`text-left ${classnames({
                           'input-group-focus': focusInput.inputSiteName.focus
                         })}`}
-                    >
-                      <InputGroupAddon addonType='prepend'>
-                        <InputGroupText><i className='fas fa-search' /></InputGroupText>
-                      </InputGroupAddon>
-                      <Input
-                        type='text'
-                        placeholder='Site Name'
-                        bsSize='sm'
-                        onChange={(e) => {
-                          e.preventDefault()
-                          setFiltersValue({
-                            ...filtersValue,
-                            SITENAME: e.target.value
-                          })
+                      >
+                        <InputGroupAddon addonType='prepend'>
+                          <InputGroupText><i className='fas fa-search' /></InputGroupText>
+                        </InputGroupAddon>
+                        <Input
+                          type='text'
+                          placeholder='Site Name'
+                          bsSize='sm'
+                          onChange={(e) => {
+                            e.preventDefault()
+                            setFiltersValue({
+                              ...filtersValue,
+                              SITENAME: e.target.value
+                            })
                           // updateFilter(e.target.value, 'SITENAME')
-                        }}
-                        onFocus={(e) => setFocusInput({
-                          ...focusInput,
-                          inputSiteName: {
-                            focus: true
-                          }
-                        })}
-                        onBlur={(e) => setFocusInput({
-                          ...focusInput,
-                          inputSiteName: {
-                            focus: false
-                          }
-                        })}
-                      />
-                    </InputGroup>
-                  </Col>
-                </Row>
-              </th>
-              <th scope='col' style={{ maxWidth: '255px', width: '255px' }}>
-                <Row>
-                  <Col style={{ paddingTop: '1rem' }} className='text-center col-4'>
+                          }}
+                          onFocus={(e) => setFocusInput({
+                            ...focusInput,
+                            inputSiteName: {
+                              focus: true
+                            }
+                          })}
+                          onBlur={(e) => setFocusInput({
+                            ...focusInput,
+                            inputSiteName: {
+                              focus: false
+                            }
+                          })}
+                        />
+                      </InputGroup>
+                    </Col>
+                  </Row>
+                </th>
+                <th scope='col' style={{ maxWidth: '255px', width: '255px' }}>
+                  <Row>
+                    <Col style={{ paddingTop: '1rem' }} className='text-center col-4'>
                       Domain
-                  </Col>
-                  <Col className='col-8' style={{ paddingTop: '0.6rem' }}>
-                    <InputGroup
-                      size='sm'
-                      className={`text-left ${classnames({
-                          'input-group-focus': focusInput.inputDomain.focus
+                    </Col>
+                    <Col className='col-8' style={{ paddingTop: '0.6rem' }}>
+                      <InputGroup
+                        size='sm'
+                        className={`text-left ${classnames({
+                           'input-group-focus': focusInput.inputDomain.focus
                         })}`}
-                    >
-                      <InputGroupAddon addonType='prepend'>
-                        <InputGroupText><i className='fas fa-search' /></InputGroupText>
-                      </InputGroupAddon>
-                      <Input
-                        type='text'
-                        placeholder='Domain'
-                        bsSize='sm'
-                        onChange={(e) => {
-                          e.preventDefault()
-                          setFiltersValue({
-                            ...filtersValue,
-                            DOMAIN: e.target.value
-                          })
-                        }}
-                        onFocus={(e) => setFocusInput({
-                          ...focusInput,
-                          inputDomain: {
-                            focus: true
-                          }
-                        })}
-                        onBlur={(e) => setFocusInput({
-                          ...focusInput,
-                          inputDomain: {
-                            focus: false
-                          }
-                        })}
-                      />
-                    </InputGroup>
-                  </Col>
-                </Row>
-              </th>
-              <th scope='col' className='text-center'>Created By</th>
-              <th
-                scope='col'
-                className='text-center'
-              >
-                <Row className='d-flex align-items-center'>
-                  <Col className='col-8'>
+                      >
+                        <InputGroupAddon addonType='prepend'>
+                          <InputGroupText><i className='fas fa-search' /></InputGroupText>
+                        </InputGroupAddon>
+                        <Input
+                          type='text'
+                          placeholder='Domain'
+                          bsSize='sm'
+                          onChange={(e) => {
+                            e.preventDefault()
+                            setFiltersValue({
+                              ...filtersValue,
+                              DOMAIN: e.target.value
+                            })
+                          }}
+                          onFocus={(e) => setFocusInput({
+                            ...focusInput,
+                            inputDomain: {
+                              focus: true
+                            }
+                          })}
+                          onBlur={(e) => setFocusInput({
+                            ...focusInput,
+                            inputDomain: {
+                              focus: false
+                            }
+                          })}
+                        />
+                      </InputGroup>
+                    </Col>
+                  </Row>
+                </th>
+                <th scope='col' className='text-center'>Created By</th>
+                <th
+                  scope='col'
+                  className='text-center'
+                >
+                  <Row className='d-flex align-items-center'>
+                    <Col className='col-8'>
                      Created At
-                  </Col>
-                  <Col className='col-4'>
-                    <Button
-                      onClick={() => sortTable()}
-                      size='sm'
-                      className='btn-link btn-icon'
-                      color='success'
-                    >
-                      <i
-                        style={{ marginTop: '-2px ' }}
-                        className={(variables.sort[0].direction === 'DESCENDING') ? 'pl-1 tim-icons icon-minimal-up' : 'pl-1 tim-icons icon-minimal-down'}
-                      />
-                    </Button>
-                  </Col>
-                </Row>
-              </th>
-              <th scope='col' className='text-center'>Account User name</th>
-              <th scope='col' className='text-center'>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {contendTable()}
-          </tbody>
-        </Table>
+                    </Col>
+                    <Col className='col-4'>
+                      <Button
+                        onClick={() => sortTable()}
+                        size='sm'
+                        className='btn-link btn-icon'
+                        color='success'
+                      >
+                        <i
+                          style={{ marginTop: '-2px ' }}
+                          className={(variables.sort[0].direction === 'DESCENDING') ? 'pl-1 tim-icons icon-minimal-up' : 'pl-1 tim-icons icon-minimal-down'}
+                        />
+                      </Button>
+                    </Col>
+                  </Row>
+                </th>
+                <th scope='col' className='text-center'>Account User name</th>
+                <th scope='col' className='text-center'>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {contendTable()}
+            </tbody>
+          </Table>
+        </div>
       </CardBody>
       <CardFooter>
         <Row>
